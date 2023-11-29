@@ -9,7 +9,7 @@
 	</settings>
 	
 	<typeAliases>
-		<typeAlias type="kr.or.ddit.vo.exampleVO" alias="exampleVO" />
+		<typeAlias type="kr.or.dduk.vo.ExampleVO" alias="exampleVO" />
 	</typeAliases>
 	
 </configuration>

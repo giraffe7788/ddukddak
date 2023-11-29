@@ -8,15 +8,15 @@
 	<!-- 
 	CustomAccessDeniedHandler customAccessDenied = new customAccessDenied();
 	 -->
-	<bean id="customAccessDenied" class="kr.or.ddit.security.CustomAccessDeniedHandler"></bean>
-	<bean id="customLoginSuccess" class="kr.or.ddit.security.CustomLoginSuccessHandler"></bean>
+	<bean id="customAccessDenied" class="kr.or.dduk.security.CustomAccessDeniedHandler"></bean>
+	<bean id="customLoginSuccess" class="kr.or.dduk.security.CustomLoginSuccessHandler"></bean>
 <!-- 	<bean id="customPasswordEncoder"  -->
-<!-- 		class="kr.or.ddit.security.CustomNoOpPasswordEncoder"></bean> -->
+<!-- 		class="kr.or.dduk.security.CustomNoOpPasswordEncoder"></bean> -->
 	<bean id="bcryptPasswordEncoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	<!-- 인증/인가 처리 시 사용자 정의 테이블 및 컬럼 사용 -->
 <!-- 	<bean id="customUserDetailsService"  -->
-<!-- 		class="kr.or.ddit.security.CustomUserDetailsService"></bean> -->
+<!-- 		class="kr.or.dduk.security.CustomUserDetailsService"></bean> -->
 
 	<security:http>
 		<!-- URI 패턴으로 접근 제한을 설정함 -->

@@ -7,6 +7,6 @@
 <title>테스트</title>
 </head>
 <body>
-어쩔
+어쩔가입완료
 </body>
 </html>

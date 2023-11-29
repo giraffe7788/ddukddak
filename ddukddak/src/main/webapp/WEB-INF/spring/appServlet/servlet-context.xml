@@ -41,7 +41,7 @@ http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 	</beans:bean>
 	<!-- Tiles 설정 끝 -->
 	
-	<context:component-scan base-package="kr.or.ddit" />
+	<context:component-scan base-package="kr.or.dduk" />
 	
 	<!-- 스프링 시큐리티 애너테이션을 활성화
 	 - pre-post-annotations="enabled" -> 골뱅이PreAuthorize, 골뱅이PostAuthorize 활성화
