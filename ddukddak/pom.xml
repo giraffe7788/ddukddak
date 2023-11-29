@@ -276,11 +276,12 @@
 		public String write(골뱅이ModelAttribute ArticleVO articleVO)
 		-->
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
-		<dependency>
-		    <groupId>org.hibernate</groupId>
-		    <artifactId>hibernate-validator</artifactId>
-		    <version>5.2.5.Final</version>
-		</dependency>
+		<!-- 일단 임시로 막아둠 오류떠서 -->
+<!-- 		<dependency> -->
+<!-- 		    <groupId>org.hibernate</groupId> -->
+<!-- 		    <artifactId>hibernate-validator</artifactId> -->
+<!-- 		    <version>5.2.5.Final</version> -->
+<!-- 		</dependency> -->
 
 		<!-- 입력값을 검증하기 위한 라이브러리 의존 관계 정의 끝 -->
 		
@@ -354,6 +355,7 @@
 		</dependency>
 		
 		<!-- json 사용을 위한 의존관계 정의 끝 -->
+		
 	</dependencies>
     <build>
         <plugins>

@@ -5,58 +5,32 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- 
-	CustomAccessDeniedHandler customAccessDenied = new customAccessDenied();
-	 -->
-	<bean id="customAccessDenied" class="kr.or.dduk.security.CustomAccessDeniedHandler"></bean>
-	<bean id="customLoginSuccess" class="kr.or.dduk.security.CustomLoginSuccessHandler"></bean>
-<!-- 	<bean id="customPasswordEncoder"  -->
-<!-- 		class="kr.or.dduk.security.CustomNoOpPasswordEncoder"></bean> -->
-	<bean id="bcryptPasswordEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-	<!-- 인증/인가 처리 시 사용자 정의 테이블 및 컬럼 사용 -->
-<!-- 	<bean id="customUserDetailsService"  -->
-<!-- 		class="kr.or.dduk.security.CustomUserDetailsService"></bean> -->
+	<!-- 로그인 성공 처리자 bean객체 생성 -->
+	<bean id="customLoginSuccess" class="kr.or.dduk.security.CustomLoginSuccessHandler" />
+	<!-- 비밀번호 암호화를 위한 bean객체 생성 -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	<!-- 내 입맛대로 테이블, 컬럼을 가져와서 비교해주기 위한 bean객체 생성 -->
+	<bean id="customUserDetailsService" class="kr.or.dduk.security.CustomUserDetailsService" />
+
 
 	<security:http>
-		<!-- URI 패턴으로 접근 제한을 설정함 -->
-<!-- 		<security:intercept-url pattern="/board/list" access="permitAll" /> -->
-<!-- 		<security:intercept-url pattern="/board/register" access="hasRole('ROLE_MEMBER')" /> -->
-<!-- 		<security:intercept-url pattern="/notice/list" access="permitAll"  /> -->
-<!-- 		<security:intercept-url pattern="/notice/register" access="hasRole('ROLE_ADMIN')" /> -->
+		<!-- URL패턴 접근제한, pattern url 기준은 controller의 urlMapping임, jsp가 아님 -->
+		<security:intercept-url pattern="/emp/main" access="isAuthenticated()" />
+		<security:intercept-url pattern="/emp/docOnly" access="hasRole('ROLE_DOC')" />
 		
-		<!-- 폼 기반 인증 기능 사용 -->
-<!-- 		<security:form-login /> -->
-		<!-- 사용자 정의 로그인 페이지 사용
-		요청URL : /login
-		요청방식 : get
-		 -->
-		<!-- 로그인 성공 처리자 -->
-		<security:form-login login-page="/login" 
-			authentication-success-handler-ref="customLoginSuccess" />
+		<!-- 로그인 페이지 처리 / 로그인 성공시 페이지 처리-->
+		<security:form-login login-page="/emp/login" authentication-success-handler-ref="customLoginSuccess" />
 		
-		<!-- 로그아웃 처리를 위해 URI를 지정하고, 로그아웃 후에 세션을 무효화 -->
+		<!-- 로그아웃 처리, 해당 링크로 post방식으로 보내면 로그아웃 됨 / 로그아웃 후에 세션을 무효화 -->
 		<security:logout logout-url="/logout" invalidate-session="true" />
 		
-		<!-- 사용자 정의 접근 거부 처리자 
-		ref : reference(참조하다)
-		-->
-		<security:access-denied-handler ref="customAccessDenied" />
-		<!-- 접근 거부 처리자의 URI를 지정 -->
-<!-- 		<security:access-denied-handler error-page="/accessError" /> -->
-<!-- 		<security:csrf disabled="true" /> -->
+		<!-- 접근거부 페이지 처리 -->
+		<security:access-denied-handler error-page="/security/accessError" />
 	</security:http>
-	<!-- 메모리상에 아이디와 비밀번호를 지정하고 로그인을 처리함 
-		스프링 시큐리티 5버전부터는 비밀번호 암호화 처리기를 반드시 이용하도록 변경이 됨
-		암호화 처리기를 사용하지 않도록 하려면 "{noop}" 문자열을 비밀번호 앞에 사용하면 됨
-	-->
+
 	<security:authentication-manager>
-		<!-- 지정된 아이디와 패스워드로 로그인이 가능하도록 설정함 -->
-<!-- 		<security:authentication-provider user-service-ref="customUserDetailsService"> -->
-		<security:authentication-provider>
-			<!-- dataSource : root-content.xml에 정의되어 있음 -->
-			<security:jdbc-user-service data-source-ref="dataSource" />
-<!-- 			<security:password-encoder ref="customPasswordEncoder" /> -->
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+			<!-- 비밀번호 암호화 처리기 등록 -->
 			<security:password-encoder ref="bcryptPasswordEncoder"/>
 		</security:authentication-provider>
 	</security:authentication-manager>

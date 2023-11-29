@@ -3,48 +3,25 @@ package kr.or.dduk.security;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 각종 시큐리티 관련 로직을 처리하는 클래스
+ * @author 영남
+ */
 @Slf4j
 @Controller
+@RequestMapping("/security")
 public class CommonController {
-	//접근 거부 처리
-	//요청URI : /accessError
-	//요청방식 : get
-	@GetMapping("/accessError")
-	public String accessError(Authentication auth, Model model) {
-		log.info("accessError->auth : " + auth);
-		model.addAttribute("msg", "Access Denied");
-		
-		//forwarding : jsp
-		return "security/accessError";
-	}
 	
-	/*사용자 정의 로그인 페이지 사용
-	요청URL : /login
-			 /login?error=error
-			 /login?logout=logout
-	요청방식 : get
-	*/
-	@GetMapping("/login")
-	public String login(String error, String logout, Model model) {
-		//오류 발생 시
-		if(error!=null) {
-			model.addAttribute("error", "Login Error!!");
-		}
-		
-		if(logout!=null) {
-			model.addAttribute("logout", "Logout!!!");
-		}
-		
-		//forwarding : jsp
-		return "security/loginForm";
+	/**
+	 *	권한이 없는 사이트 접속 시 접근거부 사이트로 보냄 
+	 */
+	@RequestMapping("/accessError")
+	public void accessDenied(Authentication auth, Model model) {
+		log.info("access Denied : " + auth);
+		model.addAttribute("msg", "Access Denied");
 	}
 }
-
-
-
-
-

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.EmployeeMapper">
+
+	<select id="getMemberAuth" resultMap="employeeMap">
+		SELECT A.EMP_NO, A.EMP_PW, A.EMP_ACNT_STATE, B.AUTH_NAME
+		FROM EMPLOYEE A LEFT OUTER JOIN AUTHORITY B ON A.EMP_NO = B.EMP_NO
+		WHERE A.EMP_NO = #{empNo}
+	</select>
+
+	<resultMap type="employeeVO" id="employeeMap">
+		<result property="empNo" column="EMP_NO" />
+		<result property="empPh" column="EMP_PH" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="empPw" column="EMP_PW" />
+		<result property="empAcntState" column="EMP_ACNT_STATE" />
+		<result property="empIn" column="EMP_IN" />
+		<result property="empOut" column="EMP_OUT" />
+		<result property="empMail" column="EMP_MAIL" />
+		<result property="empReg" column="EMP_REG" />
+		<result property="empZip" column="EMP_ZIP" />
+		<result property="empAdd1" column="EMP_ADD1" />
+		<result property="empAdd2" column="EMP_ADD2" />
+		<result property="fileCd" column="FILE_CD" />
+		<result property="empDeptcd" column="EMP_DEPTCD" />
+		<result property="empJbpscd" column="EMP_JBPSCD" />
+		<collection property="authorityVOList" resultMap="authorityMap" />
+	</resultMap>
+	
+	<resultMap type="authorityVO" id="authorityMap">
+		<result property="empNo" column="EMP_NO" />
+		<result property="authName" column="AUTH_NAME" />
+	</resultMap>
+</mapper>
