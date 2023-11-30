@@ -187,7 +187,7 @@ a {
 }
 
 .dduk-nav-header {
-	width: 1920px;
+	width: 1679px;
 	height: 100px;
 	flex-shrink: 0;
 	border-bottom: 1px solid var(--border, #E0E8E6);
@@ -238,10 +238,45 @@ a {
 	font-family: 'Pretendard5';
 }
 
+.header-div {
+	height:100%;
+	margin-inline-start: 40px;
+    margin-inline-end: 64px;
+}
+
 .header-text-bold {
 	color: var(--black-01, #333);
 	font-family: 'Pretendard5';
-	font-size: 24px;
+	font-size: 22px;
+}
+
+.header-text {
+	color: var(--black-02, #647675);
+	font-family: 'Pretendard4';
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+}
+
+#header-profile {
+	width: 48px;
+	height: 48px;
+	flex-shrink: 0;
+	fill: var(--bg-02, #DBF2F4);
+	stroke-width: 4px;
+	margin-inline-start: 32px;
+	border-radius: 100%;
+}
+
+.header-icon-set {
+	gap:24px;
+	margin-inline-start: 40px !important;
+}
+
+.header-icon {
+	width: 32px;
+	height: 32px;
 }
 
 /*# sourceMappingURL=bootstrap.css.map */
