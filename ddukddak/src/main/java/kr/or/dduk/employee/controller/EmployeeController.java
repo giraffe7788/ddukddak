@@ -3,6 +3,7 @@ package kr.or.dduk.employee.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ public class EmployeeController {
 		return "emp/main";
 	}
 	
-	// 의사만 접근가능한 페이지로 이동(의사만 이동가능)
+	// 의사만 접근가능한 페이지로 이동(의사만 이동가능) 
 	@GetMapping("/docOnly")
 	public String docOnly() {
 		return "emp/onlyDoctor";
@@ -43,5 +44,10 @@ public class EmployeeController {
 	@GetMapping("/logout")
 	public String logout() {
 		return "emp/logoutForm";
+	}
+	
+	@GetMapping("/create")
+	public String create() {
+		return "emp/create";
 	}
 }
