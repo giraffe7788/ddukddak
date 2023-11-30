@@ -15,7 +15,7 @@
 
 	<security:http>
 		<!-- URL패턴 접근제한, pattern url 기준은 controller의 urlMapping임, jsp가 아님 -->
-		<security:intercept-url pattern="/emp/main" access="isAuthenticated()" />
+<!-- 		<security:intercept-url pattern="/emp/main" access="isAuthenticated()" /> -->
 		<security:intercept-url pattern="/emp/docOnly" access="hasRole('ROLE_DOC')" />
 		
 		<!-- 로그인 페이지 처리 / 로그인 성공시 페이지 처리-->
