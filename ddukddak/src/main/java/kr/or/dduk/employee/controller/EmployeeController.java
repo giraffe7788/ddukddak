@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class EmployeeController {
 
-	// 메인화면으로 이동(인증된 사람만 이동가능)
+	// 메인화면으로 이동(인증된 사람만 이동가능)h
 	@GetMapping("/main")
 	public String main() {
 		return "emp/main";
