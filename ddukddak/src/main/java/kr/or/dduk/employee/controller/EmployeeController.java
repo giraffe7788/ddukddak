@@ -1,11 +1,21 @@
 package kr.or.dduk.employee.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+import kr.or.dduk.util.FileController;
+import kr.or.dduk.vo.EmployeeVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -13,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class EmployeeController {
 
+	@Autowired
+	FileController fileController;
+	
 	// 메인화면으로 이동(인증된 사람만 이동가능)
 	@GetMapping("/main")
 	public String main() {
@@ -49,5 +62,25 @@ public class EmployeeController {
 	@GetMapping("/create")
 	public String create() {
 		return "emp/create";
+	}
+	
+	@PostMapping("/createPost")
+	public String createPost(EmployeeVO employeeVO) {
+		log.info("createEmp -> employeeVO : " + employeeVO);
+		
+		// 파일 컨트롤러를 통해
+		// 1. 파일을 로컬에 저장(컨트롤러에 있음)
+		// 2. 파일 메타데이터들을 DB에 저장(컨트롤러에 있음)
+		// 3. 파일코드를 가져와
+		Map<String, Object> map = this.fileController.uploadFile(employeeVO.getUploadFile(), "사원프로필사진");
+		
+		int reuslt = (Integer)map.get("result"); // db에 insert 성공한 개수
+		String fileCd = (String)map.get("fileCd"); // 파일코드
+		
+		employeeVO.setFileCd(fileCd);
+		
+		// 이제 남은작업 -> employeeVO를 db에 넣어주면 끝
+		
+		return "redirect:/emp/create";
 	}
 }
