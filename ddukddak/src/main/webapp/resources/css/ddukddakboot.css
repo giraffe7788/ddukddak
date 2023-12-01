@@ -180,14 +180,14 @@ a {
 
 .dduk-nav-var {
 	width: 224px;
-	height: 1080px;
+	height: 1051px;
 	flex-shrink: 0;
 	border-right: 1px solid var(--border, #E0E8E6);
 	background: var(--bg-01, #F8F9FC);
 }
 
 .dduk-nav-header {
-	width: 1679px;
+	width: 1696px;
 	height: 100px;
 	flex-shrink: 0;
 	border-bottom: 1px solid var(--border, #E0E8E6);
