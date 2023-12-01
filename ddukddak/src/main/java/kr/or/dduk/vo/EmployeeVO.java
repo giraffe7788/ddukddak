@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class EmployeeVO {
-	private String empNo;
+	private String empNo;			//사번
     private String empPh;
     private String empName;
     private String empPw;
