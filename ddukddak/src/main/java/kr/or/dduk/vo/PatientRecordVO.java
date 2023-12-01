@@ -10,5 +10,5 @@ public class PatientRecordVO {
 	private String paNo;        //환자번호
 	private String pareCont;    //기록내용
 	private Date pareEndt;      //기록일시
-	private String empNo;       //사번
+	private String empNo;       //사번ㅇㅇㅇ
 }
