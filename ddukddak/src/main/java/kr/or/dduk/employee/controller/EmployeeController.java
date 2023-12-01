@@ -18,7 +18,7 @@ public class EmployeeController {
 		return "emp/main";
 	}
 	
-	// 의사만 접근가능한 페이지로 이동(의사만 이동가능) 
+	// 의사만 접근가능한 페이지로 이동ff(의사만 이동가능) 
 	@GetMapping("/docOnly")
 	public String docOnly() {
 		return "emp/onlyDoctor";
