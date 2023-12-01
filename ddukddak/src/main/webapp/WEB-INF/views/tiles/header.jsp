@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" 
 %>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <style>
@@ -38,8 +39,15 @@ $(document).ready(function(){
 	});
 	
 	function getPopoverContent() {
-        return "<a class='d-flex dduk-popover'>마이페이지</a>"
-        +"</br><a class='d-flex dduk-popover popover-b'>로그아웃</a>";
+        return `
+        		<a class="d-flex dduk-popover">
+        			마이페이지
+        		</a>
+        		</br>
+        		<a href="/emp/logout.do" class="d-flex dduk-popover popover-b">
+        			로그아웃
+        		</a>
+   			`;
      }
 	
 	$('[data-toggle="popover"]').popover({
@@ -52,24 +60,22 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(document).on('click', '.popover-b', function(){
-	    fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'logout',
-        }).then(response => {
-            if (response.ok) {
-                // 로그아웃이 성공했을 때 수행할 동작
-                console.log('Logged out successfully');
-            } else {
-                // 로그아웃이 실패했을 때 수행할 동작
-                console.error('Logout failed');
-            }
-        });
+// 	$(document).on('click', '.popover-b', function(){
+// 		 $.ajax({
+// 	          type: 'POST',
+// 	          url: '/logout', // 로그아웃을 처리할 서버 엔드포인트 URL로 변경해야 합니다.
+// 	          success: function(response) {
+// 	            // 로그아웃 성공 시 처리
+// 	            window.location.href = '/emp/login';
+// 	            console.log('로그아웃 성공:', response);
+// 	          },
+// 	          error: function(error) {
+// 	            // 로그아웃 실패 시 처리
+// 	            console.error('로그아웃 실패:', error);
+// 	          }
+// 	        });
 
-	})
+// 	})
 });
 
 	
@@ -134,7 +140,6 @@ $(document).ready(function(){
 				</sec:authorize>
 				${getCurrentLoginName}
 			</span> 
-			
 			<span>님
 				안녕하세요😊
 			</span>
