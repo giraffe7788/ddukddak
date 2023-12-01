@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.dduk.mms.service.MmsService;
+import kr.or.dduk.vo.MmsFormVO;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
@@ -31,7 +32,9 @@ public class MmsController {
 	//양식 생성
 	@GetMapping("/addForm")
 	@ResponseBody
-	public String addForm(@RequestParam("form") String form){  	
-		return mmsService.addForm(form);
+	public int addForm(@RequestParam("form") String form){
+		MmsFormVO mmsFormVO = new MmsFormVO();
+		mmsFormVO.setMmsFormCont(form);
+		return mmsService.addForm(mmsFormVO);
 	}
 }

@@ -2,14 +2,20 @@ package kr.or.dduk.mms.service;
 
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.or.dduk.mapper.MmsMapper;
+import kr.or.dduk.vo.MmsFormVO;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Service
 public class MmsServiceImpl implements MmsService{
 
+	@Autowired
+	MmsMapper mmsMapper;
+	
 	@Override
 	public String sendMMS(String to) throws CoolsmsException {
 		String api_key = "NCS42FKIBPDIKGW5";
@@ -39,8 +45,7 @@ public class MmsServiceImpl implements MmsService{
 	}
 
 	@Override
-	public String addForm(String form) {
-		// TODO Auto-generated method stub
-		return null;
+	public int addForm(MmsFormVO mmsFormVO) {
+		return mmsMapper.addForm(mmsFormVO);
 	}
 }

@@ -67,33 +67,33 @@ $('#addForm').click(function() {
 	})
 });
 
-$('#updateForm').click(function() {
-	alert("잘돼요");
-	$.ajax ({
-		url: '/sendMMS',
-		type: 'GET',
-		data: {
-			"to" : to
-		},
-		success: function(data) {
-			console.log(data);
-		}
-	})
-});
+// $('#updateForm').click(function() {
+// 	alert("잘돼요");
+// 	$.ajax ({
+// 		url: '/sendMMS',
+// 		type: 'GET',
+// 		data: {
+// 			"to" : to
+// 		},
+// 		success: function(data) {
+// 			console.log(data);
+// 		}
+// 	})
+// });
 
-$('#deleteForm').click(function() {
-	alert("잘돼요");
-	$.ajax ({
-		url: '/sendMMS',
-		type: 'GET',
-		data: {
-			"to" : to
-		},
-		success: function(data) {
-			console.log(data);
-		}
-	})
-});
+// $('#deleteForm').click(function() {
+// 	alert("잘돼요");
+// 	$.ajax ({
+// 		url: '/sendMMS',
+// 		type: 'GET',
+// 		data: {
+// 			"to" : to
+// 		},
+// 		success: function(data) {
+// 			console.log(data);
+// 		}
+// 	})
+// });
 
 </script>
 

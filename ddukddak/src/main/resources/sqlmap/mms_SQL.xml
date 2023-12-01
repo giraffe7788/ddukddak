@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.dduk.mapper.MmsMapper">
 
+	<insert id="addForm" parameterType="mmsFormVO">
+		<selectKey resultType="String" keyProperty="mmsFormCd" order="BEFORE">
+			SELECT 'M'||TRIM(TO_CHAR(SUBSTR(MAX(MMS_FORM_CD),2)+1,'00'))
+			FROM MMS_FORM
+		</selectKey>
+			INSERT INTO MMS_FORM(MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_TYPE)
+			VALUES (#{mmsFormCd}, #{mmsFormCont}, '예약안내')
+	</insert>
+	
 </mapper>
