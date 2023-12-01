@@ -1,7 +1,6 @@
-package kr.or.dduk.mms;
+package kr.or.dduk.mms.service;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -9,10 +8,10 @@ import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Service
-public class MMSService {
+public class MmsServiceImpl implements MmsService{
 
-	public String PhoneNumberCheck(String to) throws CoolsmsException {
-
+	@Override
+	public String sendMMS(String to) throws CoolsmsException {
 		String api_key = "NCS42FKIBPDIKGW5";
 		String api_secret = "M7JSW28ULSFPUA8TVAFI0LBXW2IVTEKO";
 		Message coolsms = new Message(api_key, api_secret);
@@ -29,11 +28,19 @@ public class MMSService {
 		params.put("from", "01023208258"); // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
 		params.put("type", "sms");
 		params.put("text", "문자내용");
-
-		coolsms.send(params); // 메시지 전송
+		
+		try {
+			coolsms.send(params);  // 메시지 전송
+		} catch (CoolsmsException e) {
+			e.printStackTrace();
+		}
 
 		return numStr;
-
 	}
 
+	@Override
+	public String addForm(String form) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
