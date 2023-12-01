@@ -1,57 +1,112 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" 
+%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
-
+<style>
+	 /* 팝오버 창 크기 조절 */
+.popover {
+    width: 160px; /* 원하는 최대 폭 설정 */
+    height: 102px;
+    border-radius: 16px;
+	border: 1px solid var(--border, #E0E8E6);
+	background: var(--white, #FFF);
+	box-shadow: 0px 4px 16px 0px rgba(0, 48, 47, 0.08);
+}
+.popover-body {
+	width: 160px; /* 원하는 최대 폭 설정 */
+    height: 102px;
+}
+    /* 팝오버 내용 컨텐츠 크기 조절 */
+.popover-content {
+    max-height: 200px; /* 원하는 최대 높이 설정 */
+    overflow-y: auto; /* 컨텐츠가 넘칠 경우 스크롤 표시 */
+}	
+</style>
 <script>
-$(document).ready(function() {
+
+$(document).ready(function(){
 	$('span').mouseenter(
-			function()	{
-				$(this).find('svg').find('path').attr('fill', 'var(--ci-02, #00A9A4)');
-			}
-		);
-		
-		$('span').mouseleave(
-			function()	{
-				$(this).find('svg').find('path').attr('fill', '#647675');
-			}	
-		);
+			function() {
+				$(this).find('svg').find('path').attr('fill',
+						'var(--ci-02, #00A9A4)');
+			});
 	
+	$('span').mouseleave(function() {
+		$(this).find('svg').find('path').attr('fill', '#647675');
+	});
+	
+	function getPopoverContent() {
+        return "<a class='d-flex dduk-popover'>마이페이지</a>"
+        +"</br><a class='d-flex dduk-popover popover-b'>로그아웃</a>";
+     }
+	
+	$('[data-toggle="popover"]').popover({
+		trigger : 'click', // 이벤트를 hover로 설정 (마우스를 올렸을 때)
+		placement : 'bottom', // 팝오버가 표시될 위치 (top, bottom, left, right 등)
+		offset: '-10,16',
+		html: true,
+		content: function () {
+	        return getPopoverContent();
+		}
+	});
+	
+	$(document).on('click', '.popover-b', function(){
+	    fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'logout',
+        }).then(response => {
+            if (response.ok) {
+                // 로그아웃이 성공했을 때 수행할 동작
+                console.log('Logged out successfully');
+            } else {
+                // 로그아웃이 실패했을 때 수행할 동작
+                console.error('Logout failed');
+            }
+        });
+
+	})
 });
 
-function setClock(){
-    var dateInfo = new Date(); 
-    var hour = modifyNumber(dateInfo.getHours());
-    var min = modifyNumber(dateInfo.getMinutes());
-    var sec = modifyNumber(dateInfo.getSeconds());
-    document.getElementById("time").innerHTML = hour + ":" + min  + ":" + sec;
-       
-}
+	
 
-function setDayLabel() {
-	var dateInfo = new Date(); 
-	var dayLabel = dateInfo.getDay();
-	 
-    var week = new Array('일', '월', '화', '수', '목', '금', '토');        
-    var today = new Date().getDay();    
-    var todayLabel = week[today];    
-    document.getElementById("todayLabel").innerHTML ="("+ todayLabel +")";
-}
+	function setClock() {
+		var dateInfo = new Date();
+		var hour = modifyNumber(dateInfo.getHours());
+		var min = modifyNumber(dateInfo.getMinutes());
+		var sec = modifyNumber(dateInfo.getSeconds());
+		document.getElementById("time").innerHTML = hour + ":" + min + ":"
+				+ sec;
 
+	}
 
-function modifyNumber(time){
-    if(parseInt(time)<10){
-        return "0"+ time;
-    }
-    else
-        return time;
-}
+	function setDayLabel() {
+		var dateInfo = new Date();
+		var dayLabel = dateInfo.getDay();
 
-window.onload = function(){
-    setClock();
-    setDayLabel();
-    setInterval(setClock,1000); //1초마다 setClock 함수 실행
-}
+		var week = new Array('일', '월', '화', '수', '목', '금', '토');
+		var today = new Date().getDay();
+		var todayLabel = week[today];
+		document.getElementById("todayLabel").innerHTML = "(" + todayLabel
+				+ ")";
+	}
+
+	function modifyNumber(time) {
+		if (parseInt(time) < 10) {
+			return "0" + time;
+		} else
+			return time;
+	}
+
+	window.onload = function() {
+		setClock();
+		setDayLabel();
+		setInterval(setClock, 1000); //1초마다 setClock 함수 실행
+	}
 </script>
 <%
 	Date date = new Date();
@@ -64,12 +119,29 @@ window.onload = function(){
 	<div
 		class="d-flex justify-content-between align-items-center header-div">
 		<div class="header-text-bold">
-			<span style="font-family: 'Pretendard6';">(직무) (이름)</span> <span>님
-				안녕하세요😊</span>
+			<span style="font-family: 'Pretendard6';">
+				<sec:authorize access="hasRole('ROLE_DOC')">
+					의사
+				</sec:authorize>
+				<sec:authorize access="hasRole('ROLE_NUR')">
+					간호사
+				</sec:authorize>
+				<sec:authorize access="hasRole('ROLE_AMS')">
+					원무과
+				</sec:authorize>
+				<sec:authorize access="hasRole('ROLE_TRM')">
+					치료사
+				</sec:authorize>
+				(이름)
+			</span> 
+			
+			<span>님
+				안녕하세요😊
+			</span>
 		</div>
 
 		<div class="d-flex dduk-nav-header-right align-items-center">
-			<div style="width:215px;">
+			<div style="width:220px;">
 				<span class="header-text"><%=strDate%> <span id="todayLabel"></span> &nbsp;</span> 
 				<span id="time" class="header-text time"><%=strTime%></span>
 			</div>
@@ -94,18 +166,8 @@ window.onload = function(){
 						<svg class="header-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 32v19.2c73 14.83 128 79.4 128 156.8v18.8c0 47.1 17.3 92.4 48.5 127.6l7.4 8.3c8.4 9.5 10.5 22.9 5.3 34.4S428.6 416 416 416H32c-12.6 0-24.029-7.4-29.191-18.9-5.162-11.5-3.097-24.9 5.275-34.4l7.416-8.3C46.74 319.2 64 273.9 64 226.8V208c0-77.4 54.1-141.97 128-156.8V32c0-17.67 14.3-32 32-32s32 14.33 32 32zm-32 480c-17 0-33.3-6.7-45.3-18.7S160 464.1 160 448h128c0 16.1-6.7 33.3-18.7 45.3S240.1 512 224 512z" fill="#647675"></path></svg>
 					</a>
 				</span>
-				<span>
-					<a> 
-						<svg class="header-icon" viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg">
-						<circle cx="12" cy="8" fill="#647675" r="4"></circle>
-						<path
-							d="M20 19v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6Z"
-							fill="#647675"></path></svg>
-					</a>
-				</span>
 			</div>
-			<img id="header-profile"
+			<img id="header-profile" role="button" data-toggle="popover" data-placement="bottom"
 				src="/resources/images/403022_business man_male_user_avatar_profile_icon.png">
 		</div>
 	</div>

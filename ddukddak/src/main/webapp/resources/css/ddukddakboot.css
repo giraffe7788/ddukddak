@@ -279,4 +279,43 @@ a {
 	height: 32px;
 }
 
+.dduk-body-border {
+	border-radius: 24px;
+	border: 1px solid var(--border, #E0E8E6);
+	background: var(--white, #FFF);
+}
+
+.dduk-popover {
+	align-items: center;
+	height:36px;
+	margin-left: 4px;
+	margin-right: 4px;
+	padding: 0px 12px;
+	font-family:'Pretendard4'; 
+	color: var(--black-02, #647675); 
+	font-size: 16px;
+}
+
+.dduk-popover:hover {
+	align-items: center;
+	height:36px;
+	margin-left: 4px;
+	margin-right: 4px;
+	padding: 0px 12px;
+	font-family:'Pretendard4'; 
+	color: var(--ci-01, #0ABAB5);
+	font-size: 16px;
+	background-color: var(--bg-02, #DBF2F4);
+}
+
+.popover-b {
+	margin-top: -12px !important;
+}
+
+.dduk-body {
+	margin: 40px 40px auto 40px;
+	width: 1592px;
+	height: 800px;
+}
+
 /*# sourceMappingURL=bootstrap.css.map */
