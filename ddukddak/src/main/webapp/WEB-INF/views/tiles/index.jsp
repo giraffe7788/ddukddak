@@ -30,7 +30,9 @@
     <div id="wrapper">
 
         <!-- Sidebar /// aside.jsp 시작 ///// -->
-        <tiles:insertAttribute name="aside" />
+        <sec:authorize access="isAuthenticated()">
+        	<tiles:insertAttribute name="aside" />
+        </sec:authorize>
         <!-- End of Sidebar  /// aside.jsp 끝 /////-->
 
         <!-- Content Wrapper -->
@@ -40,7 +42,9 @@
             <div id="content">
 
                 <!-- Topbar ///// header.jsp 시작 /////// -->
-                <tiles:insertAttribute name="header" />
+                <sec:authorize access="isAuthenticated()">
+               		<tiles:insertAttribute name="header" />
+               	</sec:authorize>
                 <!-- End of Topbar /////header.jsp 끝///// -->
 
 				<div class="dduk-body">

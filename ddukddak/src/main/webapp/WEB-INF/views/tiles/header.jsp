@@ -132,7 +132,7 @@ $(document).ready(function(){
 				<sec:authorize access="hasRole('ROLE_TRM')">
 					치료사
 				</sec:authorize>
-				(이름)
+				${getCurrentLoginName}
 			</span> 
 			
 			<span>님
