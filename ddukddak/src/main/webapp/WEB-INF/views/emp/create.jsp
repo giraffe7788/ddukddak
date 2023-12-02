@@ -104,16 +104,16 @@ $(function() {
 						</a></li>
 						<li class="list-group-item"><b>우편번호</b> <a
 							class="float-right"> <input type="text" id="empZip" name="empZip"
-								class="form-control form-control-sm" style="width: 100px;"  />
+								class="form-control form-control-sm" style="width: 80px; text-align:right"  />
 								<button type="button" id="btnPost" style="width: 80px;" >검색</button>
 						</a></li>
 						<li class="list-group-item"><b>주소</b> <a
 							class="float-right"> <input id="empAdd1" name="empAdd1"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text" style="width: 180px; text-align:right" />
 						</a></li>
 						<li class="list-group-item"><b>상세주소</b> <a
 							class="float-right"> <input id="empAdd2" name="empAdd2"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text" style="width: 100px; text-align:right" />
 						</a></li>
 						<li class="list-group-item"><b>직무</b> <a
 							class="float-right"> <select name="empDeptcd"
@@ -152,9 +152,9 @@ $(function(){
 		new daum.Postcode({
 		//다음 창에서 검색이 완료되면 콜백함수에 의해 결과 데이터가 data 객체로 들어옴
 			oncomplete:function(data){
-				$("#postNum").val(data.zonecode);
-				$("#eAddress").val(data.address);
-				$("#eAddress2").val(data.buildingName);
+				$("#empZip").val(data.zonecode);
+				$("#empAdd1").val(data.address);
+				$("#empAdd2").val(data.buildingName);
 			}
 		}).open();
 	});
