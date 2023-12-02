@@ -31,4 +31,9 @@
 		<result property="empNo" column="EMP_NO" />
 		<result property="authName" column="AUTH_NAME" />
 	</resultMap>
+	
+	<insert id="createEmp" parameterType="employeeVO">
+		INSERT INTO EMPLOYEE(EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD)
+		VALUES(#{empNo},#{empPh},#{empName},#{empPw},#{empAcntState},#{empIn},#{empOut},#{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{fileCd},#{empDeptcd},#{empJbpscd})
+	</insert>
 </mapper>

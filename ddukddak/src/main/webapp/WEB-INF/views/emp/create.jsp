@@ -42,7 +42,7 @@ $(function() {
 </script>
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 <form name="frm"
-	action="/emp/createPost?${_csrf.parameterName}=${_csrf.token}"
+	action="/emp/createEmp?${_csrf.parameterName}=${_csrf.token}"
 	method="post" enctype="multipart/form-data">
 	<div class="row">
 		<div class="col-md-3">
@@ -174,13 +174,13 @@ $(function(){
         if (selectedValue === 'DTCD01') {
             labelElement.text('일반의');
             radioElement.val('일반의');
-            labelElement.text('전문의');
-            radioElement.val('전문의');
+            labelElement2.text('전문의');
+            labelElement2.val('전문의');
         } else if (selectedValue === 'DTCD02') {
         	labelElement.text('일반간호사');
             radioElement.val('일반간호사');
-            labelElement.text('수간호사');
-            radioElement.val('수간호사');
+            labelElement2.text('수간호사');
+            labelElement2.val('수간호사');
         }
     });
 });

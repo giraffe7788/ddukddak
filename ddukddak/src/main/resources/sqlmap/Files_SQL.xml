@@ -4,7 +4,7 @@
 
 	<insert id="insertFiles" parameterType="filesVO">
 		<selectKey resultType="String" order="BEFORE" keyProperty="fileCd">
-			SELECT 'F' || TRIM(TO_CHAR(SUBSTR(MAX(FILE_CD),3)+1,'0000')) FROM FILES
+			SELECT 'F' || TRIM(TO_CHAR(SUBSTR(MAX(FILE_CD),2)+1,'0000000000')) FROM FILES
 		</selectKey>
 		INSERT INTO FILES(FILE_CD, FILE_SEQ, FILE_ORLNG, FILE_SAVENM, FILE_EXT, FILE_PATH)
 		VALUES(#{fileCd}, 1, #{fileOrlng}, #{fileSavenm}, #{fileExt}, #{filePath}) <!-- FILE_SEQ는 회원 당 프로필 사진 하나니까 1 고정 -->

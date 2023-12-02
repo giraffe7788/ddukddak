@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.or.dduk.service.EmployeeService;
 import kr.or.dduk.util.FileController;
 import kr.or.dduk.vo.EmployeeVO;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ public class EmployeeController {
 
 	@Autowired
 	FileController fileController;
+	
+	@Autowired
+	EmployeeService employeeService;
 	
 	// 메인화면으로 이동(인증된 사람만 이동가능)
 	@GetMapping("/main")
@@ -64,8 +68,8 @@ public class EmployeeController {
 		return "emp/create";
 	}
 	
-	@PostMapping("/createPost")
-	public String createPost(EmployeeVO employeeVO) {
+	@PostMapping("/createEmp")
+	public String createEmp(EmployeeVO employeeVO) {
 		log.info("createEmp -> employeeVO : " + employeeVO);
 		
 		// 파일 컨트롤러를 통해
@@ -80,6 +84,8 @@ public class EmployeeController {
 		employeeVO.setFileCd(fileCd);
 		
 		// 이제 남은작업 -> employeeVO를 db에 넣어주면 끝
+		int res = this.employeeService.createEmp(employeeVO);
+		log.info("createEmp -> res : " + res);
 		
 		return "redirect:/emp/create";
 	}
