@@ -5,7 +5,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<script src="/resources/sbadmin/vendor/jquery/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -14,10 +15,9 @@
     <title>SB Admin 2 - Dashboard</title>
 
     <!-- Custom fonts for this template-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="/resources/sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="/resources/css/ddukddakboot.css" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template-->
     <link href="/resources/sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
@@ -30,24 +30,30 @@
     <div id="wrapper">
 
         <!-- Sidebar /// aside.jsp 시작 ///// -->
-        <tiles:insertAttribute name="aside" />
+        <sec:authorize access="isAuthenticated()">
+        	<tiles:insertAttribute name="aside" />
+        </sec:authorize>
         <!-- End of Sidebar  /// aside.jsp 끝 /////-->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
 
                 <!-- Topbar ///// header.jsp 시작 /////// -->
-                <tiles:insertAttribute name="header" />
+                <sec:authorize access="isAuthenticated()">
+               		<tiles:insertAttribute name="header" />
+               	</sec:authorize>
                 <!-- End of Topbar /////header.jsp 끝///// -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-					<tiles:insertAttribute name="body" />
-                </div>
-                <!-- /.container-fluid -->
+				<div class="dduk-body">
+	                <!-- Begin Page Content -->
+    	            <div class="container-fluid">
+							<tiles:insertAttribute name="body" />
+                	</div>
+                	<!-- /.container-fluid -->
+				</div>
 
             </div>
             <!-- End of Main Content -->
@@ -91,13 +97,8 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="/resources/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="/resources/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="/resources/sbadmin/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
 <!--     <script src="/resources/sbadmin/vendor/chart.js/Chart.min.js"></script> -->
