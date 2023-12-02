@@ -11,4 +11,19 @@
 			VALUES (#{mmsFormCd}, #{mmsFormCont}, '예약안내')
 	</insert>
 	
+	<select id="getAllForm" resultType="mmsFormVO">
+		SELECT MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_TYPE 
+		FROM MMS_FORM ORDER BY MMS_FORM_CD ASC
+	</select>
+	
+	<update id="updateForm" parameterType="mmsFormVO">
+		UPDATE MMS_FORM
+		SET MMS_FORM_CONT = #{mmsFormCont}
+		WHERE MMS_FORM_CD = #{mmsFormCd}
+	</update>
+	
+	<delete id="deleteForm" parameterType="mmsFormVO">
+		DELETE FROM MMS_FORM
+		WHERE MMS_FORM_CD = #{mmsFormCd}
+	</delete>
 </mapper>

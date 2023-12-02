@@ -1,8 +1,13 @@
 package kr.or.dduk.mms.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,7 +23,10 @@ public class MmsController {
 	
 	// coolSMS 테스트 화면
 	@GetMapping("/mms")
-	public String mySms() {
+	public String mySms(Model model) {
+		//모든 양식 가져오기
+		List<MmsFormVO> mmsFormVOList = mmsService.getAllForm();
+		model.addAttribute("mmsFormVOList", mmsFormVOList);
 		return "MMS";
 	}
 	    
@@ -30,11 +38,26 @@ public class MmsController {
 	}
 	
 	//양식 생성
-	@GetMapping("/addForm")
+	@PostMapping("/addForm")
 	@ResponseBody
-	public int addForm(@RequestParam("form") String form){
-		MmsFormVO mmsFormVO = new MmsFormVO();
-		mmsFormVO.setMmsFormCont(form);
+	public int addForm(@RequestBody MmsFormVO mmsFormVO){
 		return mmsService.addForm(mmsFormVO);
+	}
+	
+	//양식 수정
+	@PostMapping("/updateForm")
+	@ResponseBody
+	public int updateForm(@RequestBody MmsFormVO mmsFormVO){
+//		MmsFormVO mmsFormVO = new MmsFormVO();
+//		mmsFormVO.setMmsFormCont(formCont);
+//		mmsFormVO.setMmsFormCd(formCd);
+		return mmsService.updateForm(mmsFormVO);
+	}
+	
+	//양식 삭제
+	@PostMapping("/deleteForm")
+	@ResponseBody
+	public int deleteForm(@RequestBody MmsFormVO mmsFormVO){
+		return mmsService.deleteForm(mmsFormVO);
 	}
 }

@@ -1,6 +1,7 @@
 package kr.or.dduk.mms.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,27 @@ public class MmsServiceImpl implements MmsService{
 		return numStr;
 	}
 
+	//양식 추가
 	@Override
 	public int addForm(MmsFormVO mmsFormVO) {
 		return mmsMapper.addForm(mmsFormVO);
+	}
+
+	//모든 양식 가져오기
+	@Override
+	public List<MmsFormVO> getAllForm() {
+		return mmsMapper.getAllForm();
+	}
+
+	//양식 수정
+	@Override
+	public int updateForm(MmsFormVO mmsFormVO) {
+		return mmsMapper.updateForm(mmsFormVO);
+	}
+
+	//양식 삭제
+	@Override
+	public int deleteForm(MmsFormVO mmsFormVO) {
+		return mmsMapper.deleteForm(mmsFormVO);
 	}
 }
