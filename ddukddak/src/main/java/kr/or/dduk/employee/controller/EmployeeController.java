@@ -1,5 +1,7 @@
 package kr.or.dduk.employee.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,13 @@ public class EmployeeController {
 	// 메인화면으로 이동(인증된 사람만 이동가능)
 	@GetMapping("/main")
 	public String main() {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+	    if (authentication != null && authentication.isAuthenticated()) {
+	        log.info("로그인된 사번 : " + authentication.getName());
+	    }
+
 		return "emp/main";
 	}
 	
@@ -26,6 +35,7 @@ public class EmployeeController {
 	
 	@GetMapping("/login")
 	public String loginForm(String error, String logout, Model model) {
+		
 		log.info("error : " + error);
 		log.info("logout : " + logout);
 		

@@ -12,5 +12,6 @@
 <sec:authorize access="hasRole('ROLE_DOC')">
 <p>의사한테만 보이는거유~, 스프링 시큐리티 이용해서 어사이드 이렇게 구현하면 돼유~</p>
 </sec:authorize>
+
 </body>
 </html>
