@@ -118,8 +118,9 @@ $(function() {
 						<li class="list-group-item"><b>직무</b> <a
 							class="float-right"> <select name="empDeptcd"
 								id="empDeptcd" class="form-control form-control-sm">
-									<option value="DTCD01">의사</option>
-									<option value="DTCD02">간호사</option>
+									<option value="">직무 선택</option>
+									<option value="JBCD1">의사</option>
+									<option value="JBCD2">간호사</option>
 							</select>
 						</a></li>
 						<li class="list-group-item"><b>직책</b> <a
@@ -133,7 +134,7 @@ $(function() {
 						</a></li>
 					</ul>
 					<button type="submit" class="btn btn-primary btn-block">
-						<b>강사 등록</b>
+						<b>사원 등록</b>
 					</button>
 				</div>
 s			</div>
@@ -148,7 +149,6 @@ $(function(){
 	
 	// 다음 우편 번호 검색
 	$("#btnPost").on("click", function(){
-		console.log("우편번호 검색!");
 		new daum.Postcode({
 		//다음 창에서 검색이 완료되면 콜백함수에 의해 결과 데이터가 data 객체로 들어옴
 			oncomplete:function(data){
@@ -162,26 +162,42 @@ $(function(){
 
 // 직무 따라서 직책 선택지 바꾸기 -> 테스트용임 수정필
 $(function(){
-    $('#empDeptcd').change(function(){
-        var selectedValue = $(this).val();
-        console.log(selectedValue);
-        var labelElement = $('label[for="empJbpscd1"]');
-        var radioElement = $('#empJbpscd1');
-        var labelElement2 = $('label[for="empJbpscd2"]');
-        var radioElement2 = $('#empJbpscd2');
+//     $('#empDeptcd').change(function(){
+//         var selectedValue = $(this).val();
+//         console.log(selectedValue);
+//         var labelElement = $('label[for="empJbpscd1"]');
+//         var radioElement = $('#empJbpscd1');
+//         var labelElement2 = $('label[for="empJbpscd2"]');
+//         var radioElement2 = $('#empJbpscd2');
 
-        // 예시: DTCD01이면 의사, DTCD02이면 간호사로 변경
-        if (selectedValue === 'DTCD01') {
-            labelElement.text('일반의');
-            radioElement.val('일반의');
-            labelElement2.text('전문의');
-            labelElement2.val('전문의');
-        } else if (selectedValue === 'DTCD02') {
-        	labelElement.text('일반간호사');
-            radioElement.val('일반간호사');
-            labelElement2.text('수간호사');
-            labelElement2.val('수간호사');
-        }
-    });
+//         // 예시: DTCD01이면 의사, DTCD02이면 간호사로 변경
+//         if (selectedValue === 'DTCD01') {
+//             labelElement.text('일반의');
+//             radioElement.val('일반의');
+//             labelElement2.text('전문의');
+//             labelElement2.val('전문의');
+//         } else if (selectedValue === 'DTCD02') {
+//         	labelElement.text('일반간호사');
+//             radioElement.val('일반간호사');
+//             labelElement2.text('수간호사');
+//             labelElement2.val('수간호사');
+//         }
+//     });
+	$('#empDeptcd').on("change", function(){
+		let empDeptcd = $(this).val();
+		console.log(empDeptcd);
+		
+		$.ajax({
+			url : "",
+			contentType : "text/html; charset=UTF-8",
+			data : empDeptcd,
+			type : "post",
+			dataType:"json",
+			success : function(result){
+				console.log(result); // 일반간호사,수간호사,간호과장,간호부장
+			}
+		})
+	})
+	
 });
 </script>

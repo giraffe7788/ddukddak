@@ -27,6 +27,11 @@ public class FileController {
 	@Autowired
 	FilesMapper filesMapper;
 	
+	/**
+	 * 파일 타입이 이미지인지 체크하는 메서드
+	 * @param file
+	 * @return 이미지 여부
+	 */
 	public boolean checkImageType(File file) {
 		//MIME 타입 알아냄
 		String contentType;
@@ -41,6 +46,7 @@ public class FileController {
 		// 파일이 이미지가 아닐 경우
 		return false;
 	}
+	
 	
 	/**
 	 * 파일 업로드를 해주는 메소드 (로컬에 저장 + DB에 저장)
