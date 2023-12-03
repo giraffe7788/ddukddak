@@ -3,14 +3,12 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"  %>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-<p>메인화면이유</p>
-<sec:authorize access="hasRole('ROLE_DOC')">
-<p>의사한테만 보이는거유~, 스프링 시큐리티 이용해서 어사이드 이렇게 구현하면 돼유~</p>
-</sec:authorize>
-</body>
+		<div>
+			<div class="main-title-set">
+				<div class="main-fir">환자를 내 가족같이</div>
+				<div class="main-title">뚝딱 정형외과</div>
+				<div class="main-sub">SINCE 2013</div>
+			</div>
+			<img class="main-img" src="/resources/images/dduk-main.png">		
+		</div>
 </html>
