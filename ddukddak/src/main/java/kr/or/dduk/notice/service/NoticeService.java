@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.or.dduk.mapper.NoticeMapper;
+import kr.or.dduk.vo.NoticeVO;
 
-@Service
-public class NoticeService {
+public interface NoticeService {
+
+	public List<NoticeVO> list();
+
+	public void createNotice(NoticeVO notice);
+
 	
-	@Autowired
-	private NoticeMapper noticeMapper;
 	
-	public List<Notice> list() {
-		return noticeMapper.
-	}
 }

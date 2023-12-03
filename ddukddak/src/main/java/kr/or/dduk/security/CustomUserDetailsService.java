@@ -21,6 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String empNo) throws UsernameNotFoundException {
 		EmployeeVO employeeVO = this.empMapper.getMemberAuth(empNo);
-		return employeeVO == null ? null : new CustomUser(employeeVO);
+//		return employeeVO == null ? null : new CustomUser(employeeVO);
+		return null;
 	}
 }

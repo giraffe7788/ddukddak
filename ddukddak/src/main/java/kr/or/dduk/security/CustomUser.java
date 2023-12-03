@@ -23,10 +23,10 @@ public class CustomUser extends User {
 		super(username, password, authorities);
 	}
 	
-	public CustomUser(EmployeeVO employeeVO) {
-		super(employeeVO.getEmpNo(), employeeVO.getEmpPw(), employeeVO.getAuthorityVOList().stream().map(auth -> new SimpleGrantedAuthority(auth.getAuthName())).collect(Collectors.toList()));
-		this.employeeVO = employeeVO;
-	}
+//	public CustomUser(EmployeeVO employeeVO) {
+//		super(employeeVO.getEmpNo(), employeeVO.getEmpPw(), employeeVO.getAuthorityVOList().stream().map(auth -> new SimpleGrantedAuthority(auth.getAuthName())).collect(Collectors.toList()));
+//		this.employeeVO = employeeVO;
+//	}
 	
 	public EmployeeVO getEmployeeVO() {
 		return employeeVO;

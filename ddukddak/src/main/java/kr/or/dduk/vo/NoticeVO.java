@@ -6,11 +6,12 @@ import lombok.Data;
 
 @Data
 public class NoticeVO {
-	private String ntNo;
-	private String ntTitle;
-	private String ntCont;
-	private Date ntEndt;
-	private String ntState;
+	private String noticeNo;
 	private String empNo;
+	private String noticeTitle;
+	private String noticeCont;
+	private Date noticeDt;
+	private int noticeViews;
+	private String fileCd;
 
 }

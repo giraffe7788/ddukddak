@@ -11,6 +11,7 @@
 	<typeAliases>
 		<typeAlias type="kr.or.dduk.vo.EmployeeVO" alias="employeeVO" />
 		<typeAlias type="kr.or.dduk.vo.AuthorityVO" alias="authorityVO" />
+		<typeAlias type="kr.or.dduk.vo.NoticeVO" alias="noticeVO" />
 	</typeAliases>
 	
 </configuration>
