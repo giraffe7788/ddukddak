@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.ChatMapper">
+	
+	<resultMap type="chatRoomVO" id="chatRoomMap">
+		<result property="chatRmNo" column="CHAT_RM_NO" />
+		<result property="chatRmNm" column="CHAT_RM_NM" />
+		<collection property="chatMemberVOList" resultMap="chatMemberMap"></collection>
+	</resultMap>
+
+	<resultMap type="chatMemberVO" id="chatMemberMap">
+		<result property="chatRmListNo" column="CHAT_RM_LIST_NO" />
+		<result property="chatRmNo" column="CHAT_RM_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="atchfileCd" column="ATCH_FILE_CD" />
+		<collection property="chatVOList" resultMap="chatMap"></collection>
+	</resultMap>
+	
+	<resultMap type="chatVO" id="chatMap">
+		<result property="chatNo" column="CHAT_NO" />
+		<result property="chatRmListNo" column="CHAT_RM_LIST_NO" />
+		<result property="chatRmNo" column="CHAT_RM_NO" />
+		<result property="chatCont" column="CHAT_CONT" />
+		<result property="chatFileCd" column="CHAT_FILE_CD" />
+		<result property="chatDate" column="CHAT_DATE" />
+		<result property="empNo" column="EMP_NO" />
+	</resultMap>
+	
+	<!-- 직원목록 불러오기 -->
+	<select id="employeeList" resultType="employeeVO">
+		SELECT 
+			EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD
+		FROM 
+			EMPLOYEE
+	</select>
+	
+	<!-- 채팅방 리스트 불러오기 -->
+	<select id="chatRoomList" resultMap="chatRoomMap">
+		SELECT
+			CR.CHAT_RM_NO,
+			CR.CHAT_RM_NM,
+			CM.EMP_NO,
+			CM.EMP_NAME,
+			CM.EMP_DEPT_CD,
+			CM.ATCH_FILE_CD,
+			C.CHAT_CONT,
+			C.CHAT_DATE
+		FROM
+			CHAT_ROOM CR
+		JOIN
+			CHAT_MEMBER CM ON CR.CHAT_RM_NO = CM.CHAT_RM_NO
+		JOIN
+			CHAT C ON CM.CHAT_RM_LIST_NO = C.CHAT_RM_LIST_NO
+		ORDER BY
+			C.CHAT_DATE DESC
+	</select>
+	
+	<!-- 채팅방 생성 -->
+	<insert id="createRoom" parameterType="chatRoomVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="chatRmNo">
+			SELECT CHAT_RM_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>	
+	    INSERT INTO CHAT_ROOM(
+	    	CHAT_RM_NO, CHAT_RM_NM
+	   	) VALUES (
+	    	#{chatRmNo}, #{chatRmNm}
+	    )
+	</insert>
+	
+	<!-- 채팅방 생성시 채팅멤버 -->
+	<insert id="insertChatEmployee" parameterType="chatMemberVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="chatRmListNo">
+			SELECT CHAT_RM_LIST_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	
+	    INSERT INTO CHAT_MEMBER(
+	    	CHAT_RM_LIST_NO, CHAT_RM_NO, EMP_NO, EMP_NAME, EMP_DEPT_CD, ATCH_FILE_CD
+	    ) VALUES (
+	    	#{chatRmListNo}, #{chatRmNo}, #{empNo}
+	    		, (SELECT EMP_NAME FROM EMPLOYEE WHERE EMP_NO = #{empNo})
+	    		, (SELECT EMP_DEPT_CD FROM EMPLOYEE WHERE EMP_NO = #{empNo})
+	    		, (SELECT ATCH_FILE_CD FROM EMPLOYEE WHERE EMP_NO = #{empNo})
+	    )
+	</insert>
+	<!-- 채팅방 생성시 채팅데이터 -->
+	<insert id="insertFirstChat" parameterType="chatVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="chatNo">
+			SELECT CHAT_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	
+	    INSERT INTO CHAT(
+	    	CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE, EMP_NO
+	    ) VALUES (
+	    	#{chatNo}, #{chatRmListNo}, #{chatRmNo}, null, null, SYSDATE, #{empNo}
+	    )
+	</insert>
+	
+	<!-- 채팅내역 출력 -->
+	<select id="chatList" parameterType="Map" resultType="chatVO">
+		SELECT
+		CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD,
+		CHAT_DATE,
+		A.EMP_NO, EMP_NAME, EMP_DEPT_CD, CHAT_FILE_CD
+		FROM CHAT A, EMPLOYEE B
+		WHERE A.EMP_NO = B.EMP_NO
+		ORDER BY CHAT_DATE
+
+	</select>
+	
+	<!-- 채팅입력 -->
+	<insert id="chatInsert" parameterType="Map">
+		INSERT INTO CHAT(
+		CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE,
+		EMP_NO
+		)VALUES(
+		CHAT_NO_SEQ.NEXTVAL, #{chatRmListNo}, #{chatRmNo}, #{chatCont},
+		#{chatFileCd}, SYSDATE, #{empNo}
+		)
+	</insert>
+
+</mapper>
