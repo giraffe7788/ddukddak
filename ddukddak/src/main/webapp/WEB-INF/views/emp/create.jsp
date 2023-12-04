@@ -30,12 +30,27 @@ $(function() {
 	});
 </script>
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+<style>
+.dduk-login-input {
+	width: 320px;
+	height: 48px;
+	flex-shrink: 0;
+}
 
+.dduk-login-d{
+	gap: 24px;
+}
+
+.dduk-row {
+	display: flex;
+    gap: 24px;
+}
+</style>
 <div class="d-flex">
 	<div class="login-left">
 		<img class="login-img" src="/resources/images/login-img.png">
 	</div>
-	<div class="dduk-login-form" style="width: 824px; margin-left: 72px; padding: 80px;">
+	<div class="dduk-login-form" style="width: 824px; margin-left: 72px; padding: 60px;">
 		<form name="frm"
 			action="/emp/create?${_csrf.parameterName}=${_csrf.token}"
 			method="post" enctype="multipart/form-data">
@@ -52,64 +67,87 @@ $(function() {
 						</div>
 					</div>
 				</div>
-						<li class="list-group-item"><b>사원번호</b> 
-							<input id="empNo" name="empNo" class="dduk-login-input" type="text" />
-						</li>
-						<li class="list-group-item"><b>전화번호</b> 
-							<input id="empPh" name="empPh" class="dduk-login-input" type="text"/>
-						</li>
-						<li class="list-group-item"><b>성명</b>
-							<input id="empName" name="empName" class="dduk-login-input" type="text"/>
-						</li>
-						<li class="list-group-item"><b>비밀번호</b>
-							<input id="empPw" name="empPw" class="dduk-login-input" type="text"/>
-						</li>
-						<li class="list-group-item"><b>계정상태</b> 
-							<input id="empAcntState" name="empAcntState" class="dduk-login-input" type="text"/>
-						</li>
-						<li class="list-group-item"><b>입사일</b> 
-							<input id="empIn" name="empIn" class="dduk-login-input" type="date" style="width: 100px;" />
-						</li>
-						<li class="list-group-item"><b>퇴사일</b>
-							<input id="empOut" name="empOut" class="dduk-login-input" type="date" style="width: 100px;" />
-						</li>
-						<li class="list-group-item"><b>이메일</b>
-							<input id="empMail" name="empMail" class="dduk-login-input" type="text" style="width: 100px;" />
-						</li>
-						<li class="list-group-item"><b>주민번호</b>
-							<input id="empReg" name="empReg" class="dduk-login-input" type="text" style="width: 100px;" />
-						</li>
-						<li class="list-group-item"><b>우편번호</b>
-							<input type="text" id="empZip" name="empZip" class="dduk-login-input" style="text-align:right"  />
-								<button type="button" id="btnPost" style="width: 80px;" >검색</button>
-						</li>
-						<li class="list-group-item"><b>주소</b>
-							<input id="empAdd1" name="empAdd1" class="dduk-login-input" type="text" style="text-align:right" />
-						</li>
-						<li class="list-group-item"><b>상세주소</b>
-							<input id="empAdd2" name="empAdd2" class="dduk-login-input" type="text" style="width: 100px; text-align:right" />
-						</a></li>
-						<li class="list-group-item"><b>직무</b> <a
-							class="float-right"> <select name="empDeptcd"
-								id="empDeptcd" class="form-control form-control-sm">
-									<option value="">직무 선택</option>
-									<option value="JBCD1">의사</option>
-									<option value="JBCD2">간호사</option>
-							</select>
-						</a></li>
-						<li class="list-group-item"><b>직책</b> <a
-							class="float-right">
-							<div class="form-group">
-								<label for="empJbpscd1">부장</label>
-								<input type="radio" id="empJbpscd1" name="empJbpscd" value="부장" />
-								<label for="empJbpscd2">사원</label>
-								<input type="radio" id="empJbpscd2" name="empJbpscd" value="사원" />
+						<div class="dduk-row">
+							<div class="dduk-login-d">
+								<div class="login-input-label">사번</div> 
+								<input id="empNo" name="empNo" class="dduk-login-input" type="text" />
 							</div>
-						</a></li>
+							<div class="dduk-login-d">
+								<div class="login-input-label">성명</div>
+								<input id="empName" name="empName" class="dduk-login-input" type="text"/>
+								
+							</div>
+						</div>
+						<div class="dduk-row">
+							<div class="dduk-login-d">
+								<div class="login-input-label">비밀번호</div>
+								<input id="empPw" name="empPw" class="dduk-login-input" type="text"/>
+							</div>
+							<div class="dduk-login-d">
+								<div class="login-input-label">비밀번호 확인</div>
+								<input id="empPw" name="empPw" class="dduk-login-input" type="text"/>
+							</div>
+						</div>
+						
+						<div style="margin: 12px 0px;">
+							<div class="dduk-row">
+							<div class="dduk-login-d"  style="margin-bottom: 0px;">
+								<div class="login-input-label">주소</div>
+								<input type="text" id="empZip" name="empZip" class="dduk-login-input" />
+								<button type="button" class="dduk-btn-nomal" id="btnPost" style="margin-left: 8px; padding: 9px 16px; border-radius: 12px;" >우편번호 찾기</button>
+								
+							</div>
+						</div>
+						<div class="dduk-row" style="gap: 8px;">
+							<div class="dduk-login-d">
+								<input id="empAdd1" name="empAdd1" class="dduk-login-input" type="text" style="width:328px;"/>
+							</div>
+							<div class="dduk-login-d">
+								<input id="empAdd2" name="empAdd2" class="dduk-login-input" type="text" style="width:328px;" placeholder="상세주소"/>
+							</div>
+						</div>
+						</div>
+						
+						
+						<div class="dduk-row">
+							<div class="dduk-login-d">
+								<div class="login-input-label">전화번호</div> 
+								<input id="empPh" name="empPh" class="dduk-login-input" type="text"/>
+							</div>
+							<div class="dduk-login-d">
+								<div class="login-input-label">이메일</div> 
+								<input id="empMail" name="empMail" class="dduk-login-input" type="text"/>
+							</div>
+						</div>
+						<div class="dduk-login-d">
+							<div class="login-input-label">주민번호</div> 
+							<input id="empReg" name="empReg" class="form-control form-control-sm" type="text" style="width: 100px;" />
+							
+						</div>
+						
+						
+						<div class="dduk-row">
+							<div class="dduk-login-d">
+								<div class="login-input-label">직무</div>
+								<select name="empDeptcd" id="empDeptcd" class="form-control form-control-sm">
+										<option value="">직무 선택</option>
+										<option value="JBCD1">의사</option>
+										<option value="JBCD2">간호사</option>
+								</select>
+							</div>
+							<div class="dduk-login-d">
+								<div class="login-input-label">직책</div>
+								<div class="form-group">
+									<label for="empJbpscd1">부장</label>
+									<input type="radio" id="empJbpscd1" name="empJbpscd" value="부장" />
+									<label for="empJbpscd2">사원</label>
+									<input type="radio" id="empJbpscd2" name="empJbpscd" value="사원" />
+								</div>
+							</div>
+						</div>
 					<button type="submit" class="btn btn-primary btn-block">
-						<b>사원 등록</b>
+						<div class="login-input-label">사원 등록</div>
 					</button>
-				</div>
 			</div>
 			<sec:csrfInput />
 		</form>

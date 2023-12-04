@@ -578,6 +578,22 @@ h3 {
 	font-family: 'Pretendard5';
 	font-style: normal;
 	line-height: 160%; /* 22.4px */
+	border: 0px;
+}
+
+button {
+	display: flex;
+	padding: 5px 10px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 1px solid var(--ci-01, #0ABAB5);
+	background: var(--ci-01, #0ABAB5);
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	border: 0px;
 }
 
 .dduk-btn-active {
@@ -592,6 +608,7 @@ h3 {
 	font-family: 'Pretendard5';
 	font-style: normal;
 	line-height: 160%; /* 22.4px */
+	border: 0px;
 }
 
 .dduk-btn-disabled {
@@ -604,6 +621,7 @@ h3 {
 	background: var(--black-05, #E0E6E9);
 	font-family: 'Pretendard5';
 	color: var(--black-03, #8D9EA5);
+	border: 0px;
 }
 
 .dduk-btn-danger {
@@ -619,6 +637,7 @@ h3 {
 	font-family: 'Pretendard5';
 	font-style: normal;
 	line-height: 160%; /* 22.4px */
+	border: 0px;
 }
 
 
