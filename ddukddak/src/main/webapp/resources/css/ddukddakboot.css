@@ -171,15 +171,63 @@ a {
   text-decoration-line: none !important;
 }
 
+h1 {
+	color: var(--black-01, #333) !important;
+	font-family: 'Pretendard7' !important;
+	font-size: 24px !important;
+	font-style: normal !important;
+	line-height: normal !important;
+}
+
+h2{
+	color: var(--black-01, #333) !important;
+	font-family: 'Pretendard6' !important;
+	font-size: 18px !important;
+	font-style: normal !important;
+	line-height: 32px !important;
+}
+
+h3 {
+	color: var(--black-01, #333) !important;
+	font-family: 'Pretendard6' !important;
+	font-size: 16px !important;
+	font-style: normal !important;
+	line-height: 24px !important;
+}
+
+.gray-text {
+	color: var(--black-03, #8D9EA2);
+}
+
+.dduck-input {
+	border-radius: 12px;
+	border: 1px solid var(--border, #EBEFF0);
+	background: var(--bg-01, #F8F9FC);
+	padding-left: 16px;
+}
+
 .dduk-nav-ci{
 	width: 160px;
 	height: 64px;
 	flex-shrink: 0;
 	margin: 24px 32px 0px 32px;
+	display: flex;
+    align-items: center;
+}
+
+.aside-title {
+	color: var(--black-01, #333);
+	/* Title/Midium */
+	font-family: 'Pretendard7';
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 160%; /* 32px */
+	padding-top: 4px;
 }
 
 .dduk-nav-var {
-	width: 11.7vw;
+	width: 224px;
 	height: 100vh;
 	flex-shrink: 0;
 	border-right: 1px solid var(--border, #E0E8E6);
@@ -187,7 +235,7 @@ a {
 }
 
 .dduk-nav-header {
-	width: 88.3vw;
+	width: 1696px;
 	height: 100px;
 	flex-shrink: 0;
 	border-bottom: 1px solid var(--border, #E0E8E6);
@@ -198,7 +246,7 @@ a {
 	display: inline-flex;
 	flex-direction: column;
 	align-items: flex-start;
-	gap: 24px;
+	gap: 8px; /*구현 끝나면 24로 수정 */
 	margin-block-start: 52px !important;
     margin-block-end: 0px !important;
     margin-inline-start: 24px !important;
@@ -207,22 +255,52 @@ a {
 }
 
 .dduk-nav-li {
-	display: flex;
+	display:flex;
+	width: 200px;
 	padding: 13px 24px;
 	justify-content: center;
 	align-items: center;
 	gap: 8px;
 	border-radius: 16px 0px 0px 16px;
 	box-sizing: border-box;
+	cursor: pointer;
+	transition: color 0.3s linear;
 }
 
-.dduk-nav-li:hover{
-	padding: 13px 20px 13px 24px;
-	border-radius: 16px 0px 0px 16px;
-	box-sizing: border-box;
-	border-right: 4px solid var(--ci-01, #0ABAB5);
-	background: var(--bg-02, #DBF2F4);
+.dduk-nav-li:hover {
+	color: var(--ci-01, #0ABAB5);
+	z-index: 100;
 }
+
+.dduk-nav-li::before {
+	content: "";
+	width: 190px;
+	height: 0px;
+	margin-left: 10px;
+	position: absolute;
+	border-radius: 16px 0px 0px 16px;
+	background: var(--bg-02, #DBF2F4);
+	z-index: -1;
+	transition: 0.3s;
+}
+
+.dduk-nav-li:hover::before {
+	height: 56px;
+}
+
+.dduk-nav-li:after {
+	content: "";
+	position: absolute;
+	margin-left: 195px;
+	height: 0px;
+	border-right: 4px solid var(--ci-01, #0ABAB5);
+	transition: 0.3s;
+}
+
+.dduk-nav-li:hover:after {
+	height: 56px;
+}
+
 
 .dduk-nav-menu {
 	width: 120px;
@@ -253,7 +331,7 @@ a {
 .header-text {
 	color: var(--black-02, #647675);
 	font-family: 'Pretendard4';
-	font-size: 18px;
+	font-size: 16px;
 	font-style: normal;
 	font-weight: 500;
 	line-height: normal;
@@ -270,26 +348,34 @@ a {
 }
 
 .header-icon-set {
-	gap:24px;
-	margin-inline-start: 40px !important;
+	gap: 8px;
+	margin-inline-start: 24px !important;
 }
 
 .header-icon {
-	width: 32px;
-	height: 32px;
+	width: 48px;
+	height: 48px;
+	padding: 8px;
 }
 
+.header-icon:hover {
+	border-radius: 16px;
+	background: var(--bg-02, #DBF2F4);
+}
+ 
+/*************************** 모든 구역 분할에 쓰는 보더!!!! *******************************/
 .dduk-body-border {
 	border-radius: 24px;
 	border: 1px solid var(--border, #E0E8E6);
 	background: var(--white, #FFF);
+	padding: 24px;
 }
 
 .dduk-popover {
 	align-items: center;
 	height:36px;
-	margin-left: 4px;
-	margin-right: 4px;
+	margin-left: 8px;
+	margin-right: 8px;
 	padding: 0px 12px;
 	font-family:'Pretendard4'; 
 	color: var(--black-02, #647675); 
@@ -297,15 +383,20 @@ a {
 }
 
 .dduk-popover:hover {
-	align-items: center;
+	color: var(--ci-01, #0ABAB5);
+	z-index: 100;
+	background-color: var(--bg-02, #DBF2F4);
+}
+
+.dduk-popover::after {
+	position: absolute;
 	height:36px;
+	width: 120px;
 	margin-left: 4px;
 	margin-right: 4px;
 	padding: 0px 12px;
-	font-family:'Pretendard4'; 
-	color: var(--ci-01, #0ABAB5);
-	font-size: 16px;
 	background-color: var(--bg-02, #DBF2F4);
+	transition: 0.3s;
 }
 
 .popover-b {
@@ -313,9 +404,167 @@ a {
 }
 
 .dduk-body {
-	margin: 40px 40px auto 40px;
+	margin: 24px 64px 116px 24px;
 	width: 1592px;
-	height: 800px;
+	height: 723px;
+	display: flex;
+	gap: 16px;
 }
+
+.main-title-set {
+	position: absolute;
+	margin: 80px 40px;
+}
+
+.main-img {
+	width: 1100px;
+	height: 680px;
+	flex-shrink: 0;
+	margin: 60px 276px auto 200px;
+}
+
+.main-fir{
+	color: var(--ci-01, #0ABAB5);
+	font-family: 'Pretendard7';
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	margin-bottom: 0px;
+}
+
+.main-title{
+	color: var(--black-01, #333);
+	font-family: 'Pretendard7';
+	font-size: 64px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	margin-top: 12px;
+	margin-bottom: 0px;
+}
+
+.main-sub{
+	color: var(--black-03, #8D9EA2);
+	font-family: Pretendard;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	margin-top: 20px;
+}
+
+.login-img{
+	margin: 104px auto auto 176px;
+	width: 780px;
+}
+
+.dduk-login-form {
+	width: 640px;
+	height: 880px;
+	flex-shrink: 0;
+	border-radius: 40px;
+	border: 1px solid var(--border, #EBEFF0);
+	background: var(--white, #FFF);
+	margin-left: 240px;
+	margin-top: 16px;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-ci {
+	display: flex;
+	margin-top: 80px;
+    margin-bottom: 64px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-ci-title {
+	color: var(--black-01, #333);
+	/* Title/Large */
+	font-family: 'Pretendard6';
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 40px; /* 166.667% */	
+}
+
+.login-input-label {
+	color: var(--black-01, #333);
+	font-family: 'Pretendard6';
+	font-size: 14px;
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+}
+
+.dduk-login-d{
+	margin-bottom: 24px;
+}
+
+.dduk-login-input {
+	width: 320px;
+	height: 48px;
+	flex-shrink: 0;
+	border-radius: 12px;
+	border: 1px solid var(--border, #EBEFF0);
+	background: var(--bg-01, #F8F9FC);
+	color: var(--black-01, #333);
+	/* Body/Small */
+	font-family: 'Pretendard5';
+	font-size: 14px;
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	padding-left: 16px;
+	margin: 8px 0px;
+}
+
+.dduk-login-btn {
+	width: 320px;
+	height: 56px;
+	flex-shrink: 0;
+	border-radius: 12px;
+	background: var(--black-01, #333);
+	color: #FFF;
+	/* Title/XSmall */
+	font-family: 'Pretendard6';
+	font-size: 16px;
+	font-style: normal;
+	line-height: 24px; /* 150% */
+	margin-top: 16px;
+}
+
+.search-passwd{
+	color: var(--black-03, #8D9EA2);
+	font-family: 'Pretendard5';
+	font-size: 14px;
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	text-decoration-line: underline !important;
+	margin-left: 4px;
+/* 	border-bottom: 1px solid var(--black-03, #8D9EA2); */
+}
+
+.search-passwd:hover {
+	color: var(--ci-01, #0ABAB5);
+}
+
+.join-link {
+	display: flex;
+	justify-content: center;
+	margin-top: 144px;
+	gap: 16px;
+	font-family: 'Pretendard5';
+	color: var(--black-01, #333);
+	font-size: 16px;
+	line-height: 160%;
+}
+
+.join-link a {
+	color: var(--ci-01, #0ABAB5) !important;
+	text-decoration-line: underline !important;
+}
+
 
 /*# sourceMappingURL=bootstrap.css.map */
