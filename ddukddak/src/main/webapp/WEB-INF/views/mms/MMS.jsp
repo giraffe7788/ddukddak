@@ -71,8 +71,10 @@ $('#addForm').click(function() {
 
 	var mmsFormCont = $('#textArea').val();
 	
+	var mmsFormVO = {"mmsFormCont":mmsFormCont}
+	
 	$.ajax ({
-		url: '/addForm',
+		url: '/mms/addForm',
 		type: 'POST',
 		data: JSON.stringify(mmsFormVO),
 // 		dataType: "json",
@@ -84,7 +86,6 @@ $('#addForm').click(function() {
 			console.log(data);
 			if(data>0){
 				alert("추가 성공");	
-				$('#formSlct').append("<option data-cont='${mmsFormVO.getMmsFormCont()}'>${mmsFormVO.getMmsFormCd()}</option><br/>");
 			}
 		}
 	})
@@ -98,7 +99,7 @@ $('#updateForm').click(function() {
 	var mmsFormVO = {"mmsFormCd":mmsFormCd, "mmsFormCont":mmsFormCont}
 	
 	$.ajax ({
-		url: '/updateForm',
+		url: '/mms/updateForm',
 		type: 'POST',
 		data: JSON.stringify(mmsFormVO),
 // 		dataType: "json",
@@ -122,7 +123,7 @@ $('#deleteForm').click(function() {
 	var mmsFormVO = {"mmsFormCd":mmsFormCd}
 	
 	$.ajax ({
-		url: '/deleteForm',
+		url: '/mms/deleteForm',
 		type: 'POST',
 		data: JSON.stringify(mmsFormVO),
 // 		dataType: "json",

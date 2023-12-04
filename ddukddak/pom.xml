@@ -353,6 +353,13 @@
 		    <artifactId>json-simple</artifactId>
 		    <version>1.1.1</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>xerces</groupId>
+		    <artifactId>xercesImpl</artifactId>
+		    <version>2.9.1</version>
+		</dependency>
+		
 		<!-- json 사용을 위한 의존관계 정의 끝 -->
 		
 		<!-- 문자 발신 의존성 -->
