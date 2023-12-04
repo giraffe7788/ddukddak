@@ -4,6 +4,8 @@ import kr.or.dduk.vo.EmployeeVO;
 
 public interface EmployeeService {
 
-	public int createEmp(EmployeeVO employeeVO);
+	public int create(EmployeeVO employeeVO);
+
+	public EmployeeVO detail(String empNo);
 
 }

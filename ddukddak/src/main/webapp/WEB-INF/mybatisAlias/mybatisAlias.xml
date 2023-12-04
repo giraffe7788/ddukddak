@@ -11,7 +11,8 @@
 	<typeAliases>
 		<typeAlias type="kr.or.dduk.vo.EmployeeVO" alias="employeeVO" />
 		<typeAlias type="kr.or.dduk.vo.AuthorityVO" alias="authorityVO" />
-		<typeAlias type="kr.or.dduk.vo.FilesVO" alias="filesVO" />
+		<typeAlias type="kr.or.dduk.vo.AtchFileVO" alias="atchFileVO" />
+		<typeAlias type="kr.or.dduk.vo.AtchFileDetailVO" alias="atchFileDetailVO" />
 	</typeAliases>
 	
 </configuration>

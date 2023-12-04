@@ -7,6 +7,12 @@
 		FROM EMPLOYEE A LEFT OUTER JOIN AUTHORITY B ON A.EMP_NO = B.EMP_NO
 		WHERE A.EMP_NO = #{empNo}
 	</select>
+	
+	<select id="detail" parameterType="String" resultMap="employeeMap">
+		SELECT EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, EMP_DEPT_CD, EMP_JBPS_CD
+		FROM EMPLOYEE
+		WHERE EMP_NO = #{empNo}
+	</select>
 
 	<resultMap type="employeeVO" id="employeeMap">
 		<result property="empNo" column="EMP_NO" />
@@ -21,10 +27,21 @@
 		<result property="empZip" column="EMP_ZIP" />
 		<result property="empAdd1" column="EMP_ADD1" />
 		<result property="empAdd2" column="EMP_ADD2" />
-		<result property="fileCd" column="FILE_CD" />
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
 		<result property="empDeptcd" column="EMP_DEPTCD" />
 		<result property="empJbpscd" column="EMP_JBPSCD" />
+		<association property="atchFileVO" resultMap="atchFileMap"/>
 		<collection property="authorityVOList" resultMap="authorityMap" />
+	</resultMap>
+	
+	<resultMap type="atchFileVO" id="atchFileMap">
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="atchFileEndt" column="ATCH_FILE_ENDT" />
+		<collection property="atchFileDetailVOList" resultMap="atchFileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="atchFileDetailVO" id="atchFileDetailMap">
+		
 	</resultMap>
 	
 	<resultMap type="authorityVO" id="authorityMap">
@@ -32,8 +49,8 @@
 		<result property="authName" column="AUTH_NAME" />
 	</resultMap>
 	
-	<insert id="createEmp" parameterType="employeeVO">
-		INSERT INTO EMPLOYEE(EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD)
-		VALUES(#{empNo},#{empPh},#{empName},#{empPw},#{empAcntState},#{empIn},#{empOut},#{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{fileCd},#{empDeptcd},#{empJbpscd})
+	<insert id="create" parameterType="employeeVO">
+		INSERT INTO EMPLOYEE(EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD)
+		VALUES(#{empNo},#{empPh},#{empName},#{empPw},#{empAcntState},#{empIn},#{empOut},#{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{atchFileCd},#{empDeptcd},#{empJbpscd})
 	</insert>
 </mapper>

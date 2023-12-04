@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.or.dduk.mapper.FilesMapper;
-import kr.or.dduk.vo.FilesVO;
+import kr.or.dduk.mapper.AtchFileMapper;
+import kr.or.dduk.vo.AtchFileDetailVO;
+import kr.or.dduk.vo.AtchFileVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,7 +26,7 @@ public class FileController {
 	String uploadFolder;
 	
 	@Autowired
-	FilesMapper filesMapper;
+	AtchFileMapper atchFilelMapper;
 	
 	/**
 	 * 파일 타입이 이미지인지 체크하는 메서드
@@ -53,7 +54,7 @@ public class FileController {
 	 * @param uploadFile 업로드할 파일들
 	 * @param folderName 저장시키고 싶은 폴더 이름
 	 * @Param voObject 파일코드를 설정해줄 vo
-	 * @return map(result = db에 insert 성공한 횟수, fileCd = db에들어간 파일코드 시퀀스)
+	 * @return map(result = db에 insert 성공한 횟수, atchFileCd = db에들어간 파일코드 시퀀스)
 	 */
 	public Map<String, Object> uploadFile(MultipartFile[] uploadFile, String folderName) {
 		
@@ -62,7 +63,7 @@ public class FileController {
 		// 첨부파일 성공건수
 		int result = 0;
 		// 리턴시켜줄 fileCd(파일코드 시퀀스)
-		String fileCd = "";
+		String atchFileCd = "";
 		
 		// 파일 설정
 		File uploadPath = new File(uploadFolder, folderName);
@@ -80,29 +81,33 @@ public class FileController {
 			
 			File saveFile = new File(uploadPath, uploadFileNm);
 			
+			AtchFileVO atchFileVO = new AtchFileVO();
+			result += this.atchFilelMapper.insertFile();
+			log.info("atchFileVO : " + atchFileVO);
+			atchFileCd = atchFileVO.getAtchFileCd();
+			
 			try {
 				multipartFile.transferTo(saveFile);
 				
-				FilesVO filesVO = new FilesVO();
-				filesVO.setFileSeq(0);
-				filesVO.setFilePath(uploadPath + "/" + uploadFileNm);
-				filesVO.setFileSavenm(folderName.replace("\\\\", "/") + "/" + uploadFileNm);
-				filesVO.setFileOrlng(multipartFile.getOriginalFilename());
-				filesVO.setFileExt(uploadFileNm.substring(uploadFileNm.lastIndexOf(".") + 1));
+				AtchFileDetailVO atchFileDetailVO = new AtchFileDetailVO();
+				atchFileDetailVO.setAtchFileCd(atchFileCd);
+				atchFileDetailVO.setAtchFileDetailPath(uploadPath + "/" + uploadFileNm);
+				atchFileDetailVO.setAtchFileDetailSavenm(folderName.replace("\\\\", "/") + "/" + uploadFileNm);
+				atchFileDetailVO.setAtchFileDetailOrlng(multipartFile.getOriginalFilename());
+				atchFileDetailVO.setAtchFileDetailExt(uploadFileNm.substring(uploadFileNm.lastIndexOf(".") + 1));
 				
-				log.info("filesVO : " + filesVO);
+				log.info("atchFileDetailVO : " + atchFileDetailVO);
 				
-				result += this.filesMapper.insertFiles(filesVO);
+				result += this.atchFilelMapper.insertFileDetail(atchFileDetailVO);
 				
-				fileCd = filesVO.getFileCd();
-
+				
 			} catch (IllegalStateException | IOException e) {
 	            log.error(e.getMessage());
 	         }
 	      }
 
 		map.put("result", result);
-		map.put("fileCd", fileCd);
+		map.put("atchFileCd", atchFileCd);
 		return map;
 	}
 }

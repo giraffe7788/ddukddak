@@ -4,12 +4,6 @@
 	uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-	// 전역변수 function 밖으로
-	// 경력사항 카운터
-	let cntCrerQlfc = 0;
-	// 보유자격 카운터
-	let cntCotnLic = 0;
-	
 $(function() {
 		// 이미지 미리보기 시작
 		$("#uploadFile").on("change", fileSelected);
@@ -37,23 +31,22 @@ $(function() {
 </script>
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 <form name="frm"
-	action="/emp/create?${_csrf.parameterName}=${_csrf.token}"
+	action="/emp/updateEmp?${_csrf.parameterName}=${_csrf.token}"
 	method="post" enctype="multipart/form-data">
 	<div class="row">
 		<div class="col-md-3">
-
 			<div class="card card-primary card-outline">
 				<div class="card-body box-profile">
-					<div class="text-center">
-						<img class="profile-user-img img-fluid img-circle"
-							src="/resources/images/bpfl.jpg"
-							alt="User profile picture" id="atchFileCd">
-						<div class="custom-file">
-							<input type="file" class="custom-file-input" name="uploadFile"
-								id="uploadFile" /> <label class="custom-file-label"
-								for="uploadFile">프로필</label>
-						</div>
-					</div>
+<!-- 					<div class="text-center"> -->
+<!-- 						<img class="profile-user-img img-fluid img-circle" -->
+<%-- 							src="/resources/upload/${employeeVO.}" --%>
+<!-- 							alt="User profile picture" id="atchFileCd"> -->
+<!-- 						<div class="custom-file"> -->
+<!-- 							<input type="file" class="custom-file-input" name="uploadFile" -->
+<!-- 								id="uploadFile" /> <label class="custom-file-label" -->
+<!-- 								for="uploadFile">프로필</label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 					<h3 class="profile-username text-center">
 					</h3>
 					<p class="text-muted text-center">
@@ -62,60 +55,75 @@ $(function() {
 					<ul class="list-group list-group-unbordered mb-3">
 						<li class="list-group-item"><b>사원번호</b> <a
 							class="float-right"> <input id="empNo" name="empNo"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empNo}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>전화번호</b> <a
 							class="float-right"> <input id="empPh" name="empPh"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empPh}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>성명</b> <a
 							class="float-right"> <input id="empName"
-								name="empName" class="form-control form-control-sm"
-								type="text" style="width: 60px;" />
+								name="empName" class="form-control form-control-sm" type="text"
+								value="${employeeVO.empName}" style="width: 60px;" />
 						</a></li>
 						<li class="list-group-item"><b>비밀번호</b> <a
 							class="float-right"> <input id="empPw" name="empPw"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empPw}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>계정상태</b> <a
 							class="float-right"> <input id="empAcntState" name="empAcntState"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empAcntState}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>입사일</b> <a
 							class="float-right"> <input id="empIn" name="empIn"
-								class="form-control form-control-sm" type="date" style="width: 100px;" />
+								class="form-control form-control-sm" type="date"
+								value="${employeeVO.empIn}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>퇴사일</b> <a
 							class="float-right"> <input id="empOut" name="empOut"
-								class="form-control form-control-sm" type="date" style="width: 100px;" />
+								class="form-control form-control-sm" type="date"
+								value="${employeeVO.empOut}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>이메일</b> <a
 							class="float-right"> <input id="empMail" name="empMail"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empMail}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>주민번호</b> <a
 							class="float-right"> <input id="empReg" name="empReg"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empReg}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>우편번호</b> <a
 							class="float-right"> <input type="text" id="empZip" name="empZip"
-								class="form-control form-control-sm" style="width: 80px; text-align:right"  />
+								class="form-control form-control-sm" style="width: 80px; text-align:right"
+								value="${employeeVO.empZip}"  />
 								<button type="button" id="btnPost" style="width: 80px;" >검색</button>
 						</a></li>
 						<li class="list-group-item"><b>주소</b> <a
 							class="float-right"> <input id="empAdd1" name="empAdd1"
-								class="form-control form-control-sm" type="text" style="width: 180px; text-align:right" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empAdd1}" style="width: 180px; text-align:right" />
 						</a></li>
 						<li class="list-group-item"><b>상세주소</b> <a
 							class="float-right"> <input id="empAdd2" name="empAdd2"
-								class="form-control form-control-sm" type="text" style="width: 100px; text-align:right" />
+								class="form-control form-control-sm" type="text"
+								value="${employeeVO.empAdd2}" style="width: 100px; text-align:right" />
 						</a></li>
 						<li class="list-group-item"><b>직무</b> <a
 							class="float-right"> <select name="empDeptcd"
 								id="empDeptcd" class="form-control form-control-sm">
 									<option value="">직무 선택</option>
-									<option value="JBCD1">의사</option>
-									<option value="JBCD2">간호사</option>
+									<option value="JBCD1"
+										<c:if test="${employeeVO.empDeptcd=='JBCD1'}">selected="selected"</c:if>
+									>의사</option>
+									<option value="JBCD2"
+										<c:if test="${employeeVO.empDeptcd=='JBCD2'}">selected="selected"</c:if>
+									>간호사</option>
 							</select>
 						</a></li>
 						<li class="list-group-item"><b>직책</b> <a
@@ -129,7 +137,7 @@ $(function() {
 						</a></li>
 					</ul>
 					<button type="submit" class="btn btn-primary btn-block">
-						<b>사원 등록</b>
+						<b>저장</b>
 					</button>
 				</div>
 s			</div>
@@ -178,22 +186,7 @@ $(function(){
             labelElement2.val('수간호사');
         }
     });
-    
-// 	$('#empDeptcd').on("change", function(){
-// 		let empDeptcd = $(this).val();
-// 		console.log(empDeptcd);
-		
-// 		$.ajax({
-// 			url : "",
-// 			contentType : "text/html; charset=UTF-8",
-// 			data : empDeptcd,
-// 			type : "post",
-// 			dataType:"json",
-// 			success : function(result){
-// 				console.log(result); // 일반간호사,수간호사,간호과장,간호부장
-// 			}
-// 		})
-// 	})
+
 	
 });
 </script>

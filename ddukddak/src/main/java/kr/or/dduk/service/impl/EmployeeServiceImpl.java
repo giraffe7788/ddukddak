@@ -14,8 +14,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeMapper employeeMapper;
 
 	@Override
-	public int createEmp(EmployeeVO employeeVO) {
-		return this.employeeMapper.createEmp(employeeVO);
+	public int create(EmployeeVO employeeVO) {
+		return this.employeeMapper.create(employeeVO);
+	}
+
+	@Override
+	public EmployeeVO detail(String empNo) {
+		return this.employeeMapper.detail(empNo);
 	}
 
 }

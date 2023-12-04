@@ -24,11 +24,15 @@ public class EmployeeVO {
     private int empZip;
     private String empAdd1;
     private String empAdd2;
-    private String fileCd;
+    private String atchFileCd;
     private String empDeptcd;
     private String empJbpscd;
     
+    // <input type="file" class="custom-file-input"... />
     private MultipartFile[] uploadFile;
+    
+    // 사원 기본  : 첨부파일 = 1 : 1
+    private AtchFileVO atchFileVO;
     
     private List<AuthorityVO> authorityVOList;
 }

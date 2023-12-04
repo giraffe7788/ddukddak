@@ -1,21 +1,19 @@
 package kr.or.dduk.employee.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.dduk.service.EmployeeService;
 import kr.or.dduk.util.FileController;
+import kr.or.dduk.vo.AtchFileVO;
 import kr.or.dduk.vo.EmployeeVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,9 +66,9 @@ public class EmployeeController {
 		return "emp/create";
 	}
 	
-	@PostMapping("/createEmp")
-	public String createEmp(EmployeeVO employeeVO) {
-		log.info("createEmp -> employeeVO : " + employeeVO);
+	@PostMapping("/create")
+	public String create(EmployeeVO employeeVO) {
+		log.info("create -> employeeVO : " + employeeVO);
 		
 		// 파일 컨트롤러를 통해
 		// 1. 파일을 로컬에 저장(컨트롤러에 있음)
@@ -79,14 +77,27 @@ public class EmployeeController {
 		Map<String, Object> map = this.fileController.uploadFile(employeeVO.getUploadFile(), "사원프로필사진");
 		
 		int reuslt = (Integer)map.get("result"); // db에 insert 성공한 개수
-		String fileCd = (String)map.get("fileCd"); // 파일코드
+		String atchFileCd = (String)map.get("atchFileCd"); // 파일코드
 		
-		employeeVO.setFileCd(fileCd);
+		employeeVO.setAtchFileCd(atchFileCd);
 		
 		// 이제 남은작업 -> employeeVO를 db에 넣어주면 끝
-		int res = this.employeeService.createEmp(employeeVO);
+		int res = this.employeeService.create(employeeVO);
 		log.info("createEmp -> res : " + res);
 		
-		return "redirect:/emp/create";
+		return "redirect:/emp/detail?empNo="+employeeVO.getEmpNo();
+	}
+	
+	@GetMapping("/detail")
+	public String detail(String empNo, Model model, String atchFileCd) {
+		log.info("detail -> empNo : " + empNo);
+		EmployeeVO employeeVO = this.employeeService.detail(empNo);
+		log.info("detail -> employeeVO : " + employeeVO);
+		
+//		List<AtchFileVO> atchFileVOList = this.employeeService.getAtchFile(atchFileCd);
+		
+		model.addAttribute("employeeVO", employeeVO);
+		
+		return "emp/detail";
 	}
 }
