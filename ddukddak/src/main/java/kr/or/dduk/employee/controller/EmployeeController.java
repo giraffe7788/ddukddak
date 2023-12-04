@@ -33,7 +33,7 @@ public class EmployeeController {
 	
 	@GetMapping("/login")
 	public String loginForm(String error, String logout, Model model) {
-		log.info("error : " + error);
+		log.info("errorr : " + error);
 		log.info("logout : " + logout);
 		
 		if (error != null) {
