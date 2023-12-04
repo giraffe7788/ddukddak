@@ -52,6 +52,11 @@ public class EmployeeController {
 		return "emp/logoutForm";
 	}
 	
+	@GetMapping("/chat")
+	public String Chat() {
+		return "emp/chat";
+	}
+	
 	 @RequestMapping(value = "/logout.do", method = RequestMethod.GET)    
 	 public String loout(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		 Authentication auth = SecurityContextHolder.getContext().getAuthentication();    
