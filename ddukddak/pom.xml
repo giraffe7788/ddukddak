@@ -378,6 +378,13 @@
 			<scope>provided</scope>
 		</dependency>
 		
+		<!-- 메세징 -->
+		<dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-messaging</artifactId>
+	        <version>${org.springframework-version}</version>
+	    </dependency>
+		
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.json</artifactId>

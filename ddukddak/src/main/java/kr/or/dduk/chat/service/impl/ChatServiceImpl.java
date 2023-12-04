@@ -66,31 +66,13 @@ public class ChatServiceImpl implements IChatService{
         }
         return result;
 	}
-//	@Override
-//	@Transactional
-//	public String chatRoomCreate(String chatRmNm, List<String> selectEmployee) {
-//		
-//		int result = chatMapper.createRoom(chatRmNm);
-//		
-//		ChatRoomVO chatRoomVO = new ChatRoomVO();
-//		ChatMemberVO chatMemberVO = new ChatMemberVO();
-//		ChatVO chatVO = new ChatVO();
-//		
-//		if (result > 0) {
-//			for (String chatEmployeeNo : selectEmployee) {
-//				chatMemberVO.setEmpNo(chatEmployeeNo);
-//				
-//				chatMapper.insertChatEmployee(chatMemberVO);
-//			}
-//			
-//			chatMapper.insertFirstChat(chatVO);
-//			
-//			return "Success";
-//		}else {
-//			return "Failed";
-//		}
-//	}
 
+//	@Override
+//	public List<ChatRoomVO> chatRoomEmployee(Map<String, String> map) {
+//		List<ChatRoomVO> chatRoomEmployee = chatMapper.chatRoomEmployee(map);
+//		return chatRoomEmployee;
+//	}
+	
 	@Override
 	public List<ChatVO> chatList(Map<String, Object> map) {
 		List<ChatVO> chatList = chatMapper.chatList(map);
@@ -107,5 +89,6 @@ public class ChatServiceImpl implements IChatService{
 			return "Failed";
 		}
 	}
+
 
 }

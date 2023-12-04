@@ -3,8 +3,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <style>
-.employee.selectedEmployee {
-	background-color: #dff0d8; /* 배경색 변경 */
+.selectedEmployee {
+	background-color: #dff0d8;
 }
 .dayoung{
 	text-align:right;
@@ -56,7 +56,6 @@ $(document).ready(function() {
 	});
 	
 	$('#chatRmPrint').click(function(){
-		console.log("클릭되니?");
 		$('.card-notification').attr('style','display:none');
 		$('#chatRoomWindow').attr('style', 'display:block');
 	});
@@ -68,6 +67,10 @@ $(document).ready(function() {
 
 });
 </script>
+
+<input type="hidden" id="sessionUserId" value="${employee.empNo}" />
+<input type="hidden" id="sessionUserNm" value="${employee.empName}" />
+
 <body>
 	<div>
 		<!-- 실시간 채팅 아이콘 -->
@@ -153,7 +156,24 @@ $(document).ready(function() {
 					<!-- 채팅창 -->
 				</div>
 				<div id="chatRoomWindow" class="row pt-0" style=" display:none; height: 100%;">
+					<input type="hidden" id="hiddenChatRmNo" />
 					<button class="back-btn" style="width: 100px;">뒤로가기</button>
+					<div class="container">
+			            <div class="col-6">
+			                <label class="col-8" id="chatRoomHeader">채팅방</label>
+			            </div>
+			            <div>
+			                <div id="chatArea" class="col"></div>
+			                <div class="col-6">
+			                    <div class="input-group mb-3">
+			                        <input type="text" id="chatMessage" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+			                        <div class="input-group-append">
+			                            <button class="btn btn-outline-secondary" type="button" id="sendButton">전송</button>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+        			</div>
 				</div>					
 			</div>
 		</li>
@@ -165,6 +185,8 @@ $(document).ready(function() {
 <script	src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	
+	console.log("현재 세션에 로그인한 아이디 >>> " + sessionUserId);
 	
 	var header = $("meta[name='_csrf_header']").attr("content");
 	var token = $("meta[name='_csrf']").attr("content");
@@ -186,6 +208,8 @@ $(document).ready(function() {
 		 $("#chatArea").html("");
 		 console.log("Token : ", token);
 		 console.log("Header : ", header);
+		 
+		 //var sessionUserId = $("#sessionUserId").val();
 		 // 채팅 직원 목록 출력
 		 $.ajax({
 			url : "/ddukddak/chatting/employee/list",
@@ -221,6 +245,7 @@ $(document).ready(function() {
 		        			dept = "인사과"
 		        		}
 		        		// 로그인/회원가입되면 나중에 추가해야함
+// 		        		var sessionUserId = $("#sessionUserId").val();
 // 		        		if(this.empNo != sessionUserId){
 		        			
 			        		employeeListHtml += "<tr class='employee' data-employee-id='" + result[i].empNo + "' style='height: 40px;'>";
@@ -245,12 +270,17 @@ $(document).ready(function() {
 		 });
 	});
 	
+// 	var sessionUserId = $("#sessionUserId").val();
+// 	var userChat = {
+// 			sessionUserId : sessionUserId
+// 	}
 	//채팅탭 클릭 시
 	$('#tab-button2').click(function(){
 		console.log("채팅탭 클릭했다리");
         $.ajax({
 			url : "/ddukddak/chatting/room/list",
 			type : "POST",
+// 			data : JSON.stringify(userChat),
 			contentType : "application/json; charset=utf-8",
 			async: false,
 			beforeSend : function(xhr){            
@@ -360,7 +390,7 @@ $(document).ready(function() {
 	});
 	
 	$(document).ready(function() {
-		
+// 		var sessionUserId = $("#sessionUserId").val();
 		var chatRmNm = $("#chatRmNm");
 		console.log("chatRmNm2 : ", chatRmNm)
 		
@@ -413,35 +443,113 @@ $(document).ready(function() {
 	$("#chatRmPrint").on("click",".room",function(){
 		$("#container").html("");
 			console.log("채팅방 클릭되었다.");
-			var chatRoomHidden = $("#chatRoomHidden")
+			
+			var sendButton = $("#sendButton");
+			var chatMessage = $("#chatMessage");
+			
+			//눌러진 해당 방의 정보를 가져오고 담아서 data에 넣어주자
+			
+			//var roomInfo = $(this).attr("id"); 이건 왜 안돼...?
+			var roomInfo = $(this);
+			var roomInfoId = roomInfo.attr("id");
+			
+			var hiddenChatRmNo = $("#hiddenChatRmNo");
+			hiddenChatRmNo.val(roomInfo);
+			
+			var roomInfoId = {
+					chatRmNo : roomInfo
+			}
+			console.log("roomInfoId : ", roomInfoId);
+			
+			//채팅방멤버불러오기
+// 			$.ajax({
+// 				url : "/ddukddak/chatting/room/employee",
+// 				type : "POST",
+// 				data : JSON.stringify(),
+// 				contentType : "application/json; charset=utf-8",
+// 				async : false,
+// 				beforeSend : function(xhr){            
+// 		            xhr.setRequestHeader(header,token);
+// 		        },
+// 		        success : function(result){
+// 		        	console.log("채팅방에 속해있는 직원정보 : ", result);
+// 		        }
+// 			});
 			
 			//채팅목록불러오기
+			$("#container").html("");
 			$.ajax({
 				url : "/ddukddak/chatting/chat/list",
 				type : "POST",
-				data : JSON.stringify(),
+				data : JSON.stringify(roomInfoId),
 				contentType : "application/json; charset=utf-8",
 				async : false,
 				beforeSend : function(xhr){            
 		            xhr.setRequestHeader(header,token);
 		        },
 		        success : function(result){
-		        	console.log("채팅내용 불러온다리");
-		        }				
-			});
-			//채팅방멤버불러오기
-			$.ajax({
-				url : "/ddukddak/chatting/chat/employeeList",
-				data : JSON.stringify(),
-				contentType : "application/json; charset=utf-8",
-				async : false,
-				beforeSend : function(xhr){            
-		            xhr.setRequestHeader(header,token);
-		        },
-		        success : function(result){
-		        	console.log("채팅방 멤버 불러온다리");
+		        	console.log("채팅방열때 정보불러오기 : ", result);
+		        	var chatMemberVOList = result.chatMemberVOList; //직원정보들 -> 프로필사진같은거 쓸때
+		        	$("#chatRoomHeader").html(result.chatRmNm);
+					
+		        	$(result).each(function(){
+		        		//var session = $("#sessionUserId").val();
+		        		
+		        		var date = new Date();
+		        		var hours = date.getHours();
+	        			var minutes = date.getMinutes();	
+        				var second = date.getSeconds();
+        				
+        				var str_ampm, dsp_ampm;
+        				
+        				if(hours == 0){
+        					str_ampm = "오후";
+        				}else if(hours < 13){
+        					str_ampm = "오전";
+        				}else{
+        					hours -=12;
+        					str_ampm = "오후";
+        				}
+        				
+        				hours = (hours == 0) ? 12:hours;
+        				
+        				if(hours<10)
+        					hours="0"+hours;
+        				if(minutes<10)
+        					minutes="0"+minutes;
+        				if(second<10)
+        					second="0"+second;
+        				console.log("hours : ", hours);
+        				
+        				dsp_ampm = str_ampm + (hours.toString()).slice(1,2) + "시 " + (minutes.toString()) + "분";
+		        		
+// 		        		if(session == this.empNo){
+		        			var str = "";
+		        			
+		        			str += "<div class='chat-message'>";
+		        			str += "<p>"+ this.chatCont + "</p>";
+		        			str += "</div>";
+		        			str += "<div" + dsp_ampm + "</div>";
+		        			
+		        			$("#chatArea").append(str);
+// 		        		}
+		        	  
+		        	});
 		        }
+		        
+		        //채팅을 치게되면 오래된 메세지는 위로올라가는데...그걸 어케함...?
+		        		        
+		        //전송버튼 클릭시
+// 		        sendButton.on("click", function(){
+// 		        	sendMessage();
+// 		        	//메세지 전송하면스크롤위치 제일 아래로 내리기
+// 		        	document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
+// 		        	chatMessage.val("");
+// 		        });
+		        
+		        
 			});
+
 	});
 	
 // 	//채팅방 안에서 채팅 보내기/채팅 수신/채팅방 닫기 => 여기서 웹소켓
@@ -529,7 +637,7 @@ $(document).ready(function() {
 			
 // 			$("#msgArea").append(str);	
 // 		}
-// // 	});
+// //	 });
 });
 </script>
 </body>

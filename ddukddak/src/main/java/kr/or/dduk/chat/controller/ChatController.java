@@ -1,6 +1,7 @@
 package kr.or.dduk.chat.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/ddukddak")
 public class ChatController {
-	
+		
 	@Autowired
 	private IChatService chatService;
 	
@@ -76,13 +77,29 @@ public class ChatController {
 	    return chatRoomCreate;
 	    
 	}
+	//채팅방에 속한 직원정보
+//	@ResponseBody
+//	@RequestMapping(value="/chatting/room/employee", method=RequestMethod.POST)
+//	public List<ChatRoomVO> chatRoomEmployee() {
+//		Map<String, String> map = new HashMap<String, String>();
+//		log.info("chatRoomEmployee->map : ", map);
+//		List<ChatRoomVO> chatRoomEmployee = chatService.chatRoomEmployee(map);
+//		log.info("chatRoomEmployee : ", chatRoomEmployee);
+//		return chatRoomEmployee;
+//	}
+	
+	
 	//채팅내용목록
 	@ResponseBody
 	@RequestMapping(value="/chatting/chat/list", method=RequestMethod.POST)
-	public List<ChatVO> chatList(@RequestBody Map<String, Object> map){
+	public List<ChatVO> chatList(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		log.info("chatList->map : ", map);
 		List<ChatVO> chatList = chatService.chatList(map);
+		log.info("chatList : ", chatList);
 		return chatList;
 	}
+	
 	//채팅내용입력
 	@ResponseBody
 	@RequestMapping(value="/chatting/chat/Insert", method=RequestMethod.POST)
@@ -92,8 +109,4 @@ public class ChatController {
 		return chatInsert;
 	}
 	
-	@RequestMapping(value = "/chatting", method = { RequestMethod.GET })
-	public String chat (HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
-		return "chat";
-	}
 }
