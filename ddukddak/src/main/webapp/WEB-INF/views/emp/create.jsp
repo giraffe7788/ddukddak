@@ -30,13 +30,16 @@ $(function() {
 	});
 </script>
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
-<form name="frm"
-	action="/emp/create?${_csrf.parameterName}=${_csrf.token}"
-	method="post" enctype="multipart/form-data">
-	<div class="row">
-		<div class="col-md-3">
 
-			<div class="card card-primary card-outline">
+<div class="d-flex">
+	<div class="login-left">
+		<img class="login-img" src="/resources/images/login-img.png">
+	</div>
+	<div class="dduk-login-form" style="width: 824px; margin-left: 72px; padding: 80px;">
+		<form name="frm"
+			action="/emp/create?${_csrf.parameterName}=${_csrf.token}"
+			method="post" enctype="multipart/form-data">
+			<div class="login-form-content">
 				<div class="card-body box-profile">
 					<div class="text-center">
 						<img class="profile-user-img img-fluid img-circle"
@@ -48,61 +51,43 @@ $(function() {
 								for="uploadFile">프로필</label>
 						</div>
 					</div>
-					<h3 class="profile-username text-center">
-					</h3>
-					<p class="text-muted text-center">
-					
-					</p>
-					<ul class="list-group list-group-unbordered mb-3">
-						<li class="list-group-item"><b>사원번호</b> <a
-							class="float-right"> <input id="empNo" name="empNo"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>전화번호</b> <a
-							class="float-right"> <input id="empPh" name="empPh"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>성명</b> <a
-							class="float-right"> <input id="empName"
-								name="empName" class="form-control form-control-sm"
-								type="text" style="width: 60px;" />
-						</a></li>
-						<li class="list-group-item"><b>비밀번호</b> <a
-							class="float-right"> <input id="empPw" name="empPw"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>계정상태</b> <a
-							class="float-right"> <input id="empAcntState" name="empAcntState"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>입사일</b> <a
-							class="float-right"> <input id="empIn" name="empIn"
-								class="form-control form-control-sm" type="date" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>퇴사일</b> <a
-							class="float-right"> <input id="empOut" name="empOut"
-								class="form-control form-control-sm" type="date" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>이메일</b> <a
-							class="float-right"> <input id="empMail" name="empMail"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>주민번호</b> <a
-							class="float-right"> <input id="empReg" name="empReg"
-								class="form-control form-control-sm" type="text" style="width: 100px;" />
-						</a></li>
-						<li class="list-group-item"><b>우편번호</b> <a
-							class="float-right"> <input type="text" id="empZip" name="empZip"
-								class="form-control form-control-sm" style="width: 80px; text-align:right"  />
+				</div>
+						<li class="list-group-item"><b>사원번호</b> 
+							<input id="empNo" name="empNo" class="dduk-login-input" type="text" />
+						</li>
+						<li class="list-group-item"><b>전화번호</b> 
+							<input id="empPh" name="empPh" class="dduk-login-input" type="text"/>
+						</li>
+						<li class="list-group-item"><b>성명</b>
+							<input id="empName" name="empName" class="dduk-login-input" type="text"/>
+						</li>
+						<li class="list-group-item"><b>비밀번호</b>
+							<input id="empPw" name="empPw" class="dduk-login-input" type="text"/>
+						</li>
+						<li class="list-group-item"><b>계정상태</b> 
+							<input id="empAcntState" name="empAcntState" class="dduk-login-input" type="text"/>
+						</li>
+						<li class="list-group-item"><b>입사일</b> 
+							<input id="empIn" name="empIn" class="dduk-login-input" type="date" style="width: 100px;" />
+						</li>
+						<li class="list-group-item"><b>퇴사일</b>
+							<input id="empOut" name="empOut" class="dduk-login-input" type="date" style="width: 100px;" />
+						</li>
+						<li class="list-group-item"><b>이메일</b>
+							<input id="empMail" name="empMail" class="dduk-login-input" type="text" style="width: 100px;" />
+						</li>
+						<li class="list-group-item"><b>주민번호</b>
+							<input id="empReg" name="empReg" class="dduk-login-input" type="text" style="width: 100px;" />
+						</li>
+						<li class="list-group-item"><b>우편번호</b>
+							<input type="text" id="empZip" name="empZip" class="dduk-login-input" style="text-align:right"  />
 								<button type="button" id="btnPost" style="width: 80px;" >검색</button>
-						</a></li>
-						<li class="list-group-item"><b>주소</b> <a
-							class="float-right"> <input id="empAdd1" name="empAdd1"
-								class="form-control form-control-sm" type="text" style="width: 180px; text-align:right" />
-						</a></li>
-						<li class="list-group-item"><b>상세주소</b> <a
-							class="float-right"> <input id="empAdd2" name="empAdd2"
-								class="form-control form-control-sm" type="text" style="width: 100px; text-align:right" />
+						</li>
+						<li class="list-group-item"><b>주소</b>
+							<input id="empAdd1" name="empAdd1" class="dduk-login-input" type="text" style="text-align:right" />
+						</li>
+						<li class="list-group-item"><b>상세주소</b>
+							<input id="empAdd2" name="empAdd2" class="dduk-login-input" type="text" style="width: 100px; text-align:right" />
 						</a></li>
 						<li class="list-group-item"><b>직무</b> <a
 							class="float-right"> <select name="empDeptcd"
@@ -121,17 +106,15 @@ $(function() {
 								<input type="radio" id="empJbpscd2" name="empJbpscd" value="사원" />
 							</div>
 						</a></li>
-					</ul>
 					<button type="submit" class="btn btn-primary btn-block">
 						<b>사원 등록</b>
 					</button>
 				</div>
 			</div>
-		</div>
-
+			<sec:csrfInput />
+		</form>
 	</div>
-	<sec:csrfInput />
-</form>
+</div>
 <script type="text/javascript">
 $(function(){
 	console.log("ㅎㅇ");

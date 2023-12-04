@@ -2,6 +2,16 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <style>
+.aside-ams-patient::before {
+	width: 196px;
+	border-radius: 16px 0px 0px 16px;
+	background: var(--bg-02, #DBF2F4);
+	height: 56px;
+	border-right: 4px solid var(--ci-01, #0ABAB5);
+	margin-left: 4px;
+	position: absolute;
+}
+
 .patient-list {
 	width: 324px;
 	height: 100%;
