@@ -30,118 +30,121 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-	
+	$('#formSlct').change(formSlctChange);
+	sendMMS();
+	addForm();
+	updateForm();
+	deleteForm();
 });
 
-$('#formSlct').change(function(){
+function formSlctChange(){
 	let MmsFormCont = $('#formSlct option:selected').data('cont');
-// 	alert(MmsFormCd);
-	$('#textArea').html(MmsFormCont);
-});
+	$('#textArea').val(MmsFormCont);
+};
 
-$('#send').click(function() {
-	
-	const to = $('#to').val();
-	
-	$.ajax ({
-		url: '/sendMMS',
-		type: 'GET',
-		data: {
-			"to" : to
-		},
-		success: function(data) {
-			console.log(data);
-// 			const checkNum = data;
-// 			alert('checkNum:'+ checkNum);
-			
-// 			$('#enterBtn').click(function() {	
-// 				const userNum = $('#userNum').val();
-				
-// 				if(checkNum === userNum) {
-// 					alert('인증 성공하였습니다.');
-// 				}
-// 				else {
-// 					alert('인증 실패하였습니다. 다시 입력해주세요.');
-// 				}
-		}
-	})
-});
-	
-$('#addForm').click(function() {
-
-	var mmsFormCont = $('#textArea').val();
-	
-	var mmsFormVO = {"mmsFormCont":mmsFormCont}
-	
-	$.ajax ({
-		url: '/mms/addForm',
-		type: 'POST',
-		data: JSON.stringify(mmsFormVO),
-// 		dataType: "json",
-		contentType:"application/json;charset=utf-8",
-		beforeSend:function(xhr){
-			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		},
-		success: function(data) {
-			console.log(data);
-			if(data>0){
-				alert("추가 성공");	
+function sendMMS(){
+	$('#send').click(function() {
+		
+		var to = $('#to').val();
+		
+		$.ajax ({
+			url: '/sendMMS',
+			type: 'GET',
+			data: {
+				"to" : to
+			},
+			success: function(data) {
+				console.log(data);
 			}
-		}
-	})
-});
+		});
+	});
+};
 
-$('#updateForm').click(function() {
+function addForm(){
+	$('#addForm').click(function() {
 	
-	var mmsFormCont = $('#textArea').val();
-	var mmsFormCd = $('#formSlct option:selected').val();
+		var mmsFormCont = $('#textArea').val();
+		
+		var mmsFormVO = {"mmsFormCont":mmsFormCont}
+		
+		$.ajax ({
+			url: '/mms/addForm',
+			type: 'POST',
+			data: JSON.stringify(mmsFormVO),
+	// 		dataType: "json",
+			contentType:"application/json;charset=utf-8",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			},
+			success: function(data) {
+				console.log(data);
+				if(data!=null){
+					alert("추가 성공");	
+					$('#formSlct option:selected').removeAttr('selected');
+					$('#formSlct').append("<option data-cont='"+data.mmsFormCont+"' selected>"+data.mmsFormCd+"</option>");
+				}
+			},
+		    error: function(jqXHR, textStatus, errorThrown) {
+		        // 에러 처리
+		        console.error('에이젝스 요청 중 에러 발생:', textStatus, errorThrown);
+		    }
+		});
+	});
+};
 
-	var mmsFormVO = {"mmsFormCd":mmsFormCd, "mmsFormCont":mmsFormCont}
+function updateForm(){
+	$('#updateForm').click(function() {
+		
+		var mmsFormCont = $('#textArea').val();
+		var mmsFormCd = $('#formSlct option:selected').val();
 	
-	$.ajax ({
-		url: '/mms/updateForm',
-		type: 'POST',
-		data: JSON.stringify(mmsFormVO),
-// 		dataType: "json",
-		contentType:"application/json;charset=utf-8",
-		beforeSend:function(xhr){
-			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		},
-		success: function(data) {
-			console.log(data);
-			if(data>0){
-				alert("수정 성공");				
+		var mmsFormVO = {"mmsFormCd":mmsFormCd, "mmsFormCont":mmsFormCont}
+		
+		$.ajax ({
+			url: '/mms/updateForm',
+			type: 'POST',
+			data: JSON.stringify(mmsFormVO),
+	// 		dataType: "json",
+			contentType:"application/json;charset=utf-8",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			},
+			success: function(data) {
+				console.log(data);
+				if(data>0){
+					alert("수정 성공");				
+				}
 			}
-		}
-	})
-});
+		});
+	});
+};
 
-$('#deleteForm').click(function() {
+function deleteForm(){
+	$('#deleteForm').click(function() {
+		
+		var mmsFormCd = $('#formSlct option:selected').val();
 	
-	var mmsFormCd = $('#formSlct option:selected').val();
-
-	var mmsFormVO = {"mmsFormCd":mmsFormCd}
-	
-	$.ajax ({
-		url: '/mms/deleteForm',
-		type: 'POST',
-		data: JSON.stringify(mmsFormVO),
-// 		dataType: "json",
-		contentType:"application/json;charset=utf-8",
-		beforeSend:function(xhr){
-			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
-		},
-		success: function(data) {
-			console.log(data);
-			if(data>0){
-				alert("삭제 성공");
-				$('#formSlct option:selected').remove(); // 선택된 옵션 삭제
-				$('#textArea').html("");
+		var mmsFormVO = {"mmsFormCd":mmsFormCd}
+		
+		$.ajax ({
+			url: '/mms/deleteForm',
+			type: 'POST',
+			data: JSON.stringify(mmsFormVO),
+	// 		dataType: "json",
+			contentType:"application/json;charset=utf-8",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			},
+			success: function(data) {
+				console.log(data);
+				if(data>0){
+					alert("삭제 성공");
+					$('#formSlct option:selected').remove(); // 선택된 옵션 삭제
+					$('#textArea').val("");
+				}
 			}
-		}
-	})
-});
-
+		});
+	});
+};
 </script>
-
 </html>

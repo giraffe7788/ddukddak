@@ -42,8 +42,9 @@ public class MmsController {
 	//양식 생성
 	@PostMapping("/addForm")
 	@ResponseBody
-	public int addForm(@RequestBody MmsFormVO mmsFormVO){
-		return mmsService.addForm(mmsFormVO);
+	public MmsFormVO addForm(@RequestBody MmsFormVO mmsFormVO){
+		mmsService.addForm(mmsFormVO);
+		return mmsFormVO;
 	}
 	
 	//양식 수정
