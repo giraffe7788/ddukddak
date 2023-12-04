@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +77,11 @@ public class EmployeeController {
 		String atchFileCd = (String)map.get("atchFileCd"); // 파일코드
 		
 		employeeVO.setAtchFileCd(atchFileCd);
+		
+		String rawPw = employeeVO.getEmpPw();
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String encodedPassword = encoder.encode(rawPw);
+		employeeVO.setEmpPw(encodedPassword);
 		
 		// 이제 남은작업 -> employeeVO를 db에 넣어주면 끝
 		int res = this.employeeService.create(employeeVO);

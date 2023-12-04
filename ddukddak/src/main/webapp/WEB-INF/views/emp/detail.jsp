@@ -140,7 +140,7 @@ $(function() {
 						<b>저장</b>
 					</button>
 				</div>
-s			</div>
+			</div>
 		</div>
 
 	</div>
