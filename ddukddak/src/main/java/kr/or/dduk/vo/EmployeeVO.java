@@ -3,6 +3,9 @@ package kr.or.dduk.vo;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -12,16 +15,24 @@ public class EmployeeVO {
     private String empName;
     private String empPw;
     private String empAcntState;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date empIn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date empOut;
     private String empMail;
     private String empReg;
     private int empZip;
     private String empAdd1;
     private String empAdd2;
-    private String fileCd;
+    private String atchFileCd;
     private String empDeptcd;
     private String empJbpscd;
+    
+    // <input type="file" class="custom-file-input"... />
+    private MultipartFile[] uploadFile;
+    
+    // 사원 기본  : 첨부파일 = 1 : 1
+    private AtchFileVO atchFileVO;
     
     private List<AuthorityVO> authorityVOList;
 }

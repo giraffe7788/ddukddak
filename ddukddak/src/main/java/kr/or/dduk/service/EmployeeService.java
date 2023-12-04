@@ -1,12 +1,11 @@
-package kr.or.dduk.mapper;
+package kr.or.dduk.service;
 
 import kr.or.dduk.vo.EmployeeVO;
 
-public interface EmployeeMapper {
-
-	public EmployeeVO getMemberAuth(String empNo);
+public interface EmployeeService {
 
 	public int create(EmployeeVO employeeVO);
 
 	public EmployeeVO detail(String empNo);
+
 }
