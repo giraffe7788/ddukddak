@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
 public class ModelAttributeUtil {
+	
 	 @ModelAttribute("getCurrentLoginName")
 	 public String getCurrentLoginName() {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
