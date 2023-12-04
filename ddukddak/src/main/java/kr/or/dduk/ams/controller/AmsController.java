@@ -15,6 +15,4 @@ public class AmsController {
 	public String patient() {
 		return "ams/patient";
 	}
-	
-
 }

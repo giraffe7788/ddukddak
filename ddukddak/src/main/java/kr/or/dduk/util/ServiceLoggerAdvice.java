@@ -1,18 +1,20 @@
-package kr.or.dduk.aop;
+package kr.or.dduk.util;
 
 import java.util.Arrays;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 스프링 AOP를 이용해 메소드 실행에 관한 로그를 찍는 클래스
+ * @author 영남
+ */
 @Slf4j
 @Component
 @Aspect
@@ -37,9 +39,3 @@ public class ServiceLoggerAdvice {
 		log.info("종료된 메소드 정보 : " + jp.getSignature());
 	}
 }
-
-
-
-
-
-
