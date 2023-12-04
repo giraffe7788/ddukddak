@@ -70,10 +70,6 @@ public class EmployeeController {
 	public String create(EmployeeVO employeeVO) {
 		log.info("create -> employeeVO : " + employeeVO);
 		
-		// 파일 컨트롤러를 통해
-		// 1. 파일을 로컬에 저장(컨트롤러에 있음)
-		// 2. 파일 메타데이터들을 DB에 저장(컨트롤러에 있음)
-		// 3. 파일코드를 가져와
 		Map<String, Object> map = this.fileController.uploadFile(employeeVO.getUploadFile(), "사원프로필사진");
 		
 		int reuslt = (Integer)map.get("result"); // db에 insert 성공한 개수

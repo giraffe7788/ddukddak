@@ -2,17 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.dduk.mapper.AtchFileMapper">
 
-	<insert id="insertFile">
+	<insert id="insertFile" parameterType="atchFileVO">
 		<selectKey resultType="String" order="BEFORE" keyProperty="atchFileCd">
-			SELECT 'F' || TRIM(TO_CHAR(SUBSTR(MAX(ATCH_FILE_CD),2)+1,'0000000000')) FROM ATCH_FILE
+			SELECT 'F' || TRIM(TO_CHAR(SUBSTR(MAX(ATCH_FILE_CD),2)+1,'0000000000')) AS ATCH_FILE_CD FROM ATCH_FILE
 		</selectKey>
 		INSERT INTO ATCH_FILE(ATCH_FILE_CD, ATCH_FILE_ENDT)
 		VALUES(#{atchFileCd}, sysdate)
 	</insert>
 
 	<insert id="insertFileDetail" parameterType="atchFileDetailVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="atchFileDetailSeq">
+		
+		</selectKey>
 		INSERT INTO ATCH_FILE_DETAIL(ATCH_FILE_CD, ATCH_FILE_DETAIL_SEQ, ATCH_FILE_DETAIL_ORLNG, ATCH_FILE_DETAIL_SAVENM, ATCH_FILE_DETAIL_EXT, ATCH_FILE_DETAIL_PATH)
-		VALUES(#{atchFileCd}, 1, #{atchFileDetailOrlng}, #{atchFileDetailSavenm}, #{atchFileDetailExt}, #{atchFileDetailPath}) <!-- FILE_SEQ는 회원 당 프로필 사진 하나니까 1 고정 -->
+		VALUES(#{atchFileCd}, #{atchFileDetailSeq}, #{atchFileDetailOrlng}, #{atchFileDetailSavenm}, #{atchFileDetailExt}, #{atchFileDetailPath}) <!-- FILE_SEQ는 회원 당 프로필 사진 하나니까 1 고정 -->
 	</insert>
 
 </mapper>

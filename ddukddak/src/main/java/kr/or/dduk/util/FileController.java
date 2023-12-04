@@ -67,10 +67,19 @@ public class FileController {
 		
 		// 파일 설정
 		File uploadPath = new File(uploadFolder, folderName);
+		
 		// 만약 존재하지 않는 파일 이름이면 새로 만듬
 		if(uploadPath.exists() == false) {
 			uploadPath.mkdirs();
 		}
+		
+		// DB에 AtchFile 넣기
+		AtchFileVO atchFileVO = new AtchFileVO();
+		result += this.atchFilelMapper.insertFile(atchFileVO);
+		log.info("atchFileVO : " + atchFileVO);
+		// ATCH_FILE_CD 얻기
+		atchFileCd = atchFileVO.getAtchFileCd();
+		log.info("atchFileCd머임 : " + atchFileCd);
 		
 		// 파일 업로드(로컬 + DB)
 		for(MultipartFile multipartFile : uploadFile) {
@@ -80,11 +89,6 @@ public class FileController {
 			uploadFileNm = uuid.toString() + "_" + uploadFileNm;
 			
 			File saveFile = new File(uploadPath, uploadFileNm);
-			
-			AtchFileVO atchFileVO = new AtchFileVO();
-			result += this.atchFilelMapper.insertFile();
-			log.info("atchFileVO : " + atchFileVO);
-			atchFileCd = atchFileVO.getAtchFileCd();
 			
 			try {
 				multipartFile.transferTo(saveFile);

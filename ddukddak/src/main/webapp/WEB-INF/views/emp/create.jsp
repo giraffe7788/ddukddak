@@ -4,12 +4,6 @@
 	uri="http://www.springframework.org/security/tags"%>
 <script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-	// 전역변수 function 밖으로
-	// 경력사항 카운터
-	let cntCrerQlfc = 0;
-	// 보유자격 카운터
-	let cntCotnLic = 0;
-	
 $(function() {
 		// 이미지 미리보기 시작
 		$("#uploadFile").on("change", fileSelected);
@@ -27,7 +21,7 @@ $(function() {
 				let reader = new FileReader();
 				reader.onload = function(e){
 					console.log(e.target.result);
-					$("#fileCd").attr("src", e.target.result)
+					$("#atchFileCd").attr("src", e.target.result)
 				}
 				reader.readAsDataURL(f);
 			});
@@ -132,7 +126,7 @@ $(function() {
 						<b>사원 등록</b>
 					</button>
 				</div>
-s			</div>
+			</div>
 		</div>
 
 	</div>
