@@ -53,7 +53,7 @@ a {
 					<sec:csrfInput/>
 				</form>
 				<div class="join-link">
-					<span>아직 회원이 아닌가요?</span><a>회원가입 신청하기</a>
+					<span>아직 회원이 아닌가요?</span><a href="/emp/create">회원가입 신청하기</a>
 				</div>
 			</div>
 		</div>
