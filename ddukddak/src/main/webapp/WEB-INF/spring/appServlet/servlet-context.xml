@@ -56,17 +56,6 @@ http://www.springframework.org/schema/websocket http://www.springframework.org/s
 	 <security:global-method-security pre-post-annotations="enabled" 
 	 	secured-annotations="enabled" />
 	 	
-	 	
-	<!-- 웹 소켓 설정 -->
-<!-- 	<beans:bean id="echoHandler" class="kr.or.dduk.websocketTest.EchoHandler" />     -->
-	
-<!-- 	<websocket:handlers> -->
-<!-- 	    <websocket:mapping handler="echoHandler" path="/echo"/> -->
-<!-- 	    <websocket:handshake-interceptors> -->
-<!-- 	        <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/> -->
-<!-- 	    </websocket:handshake-interceptors> -->
-<!-- 	    <websocket:sockjs/> -->
-<!-- 	</websocket:handlers> -->
 </beans:beans>
 
 
