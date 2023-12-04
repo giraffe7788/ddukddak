@@ -11,6 +11,10 @@
 	<typeAliases>
 		<typeAlias type="kr.or.dduk.vo.EmployeeVO" alias="employeeVO" />
 		<typeAlias type="kr.or.dduk.vo.AuthorityVO" alias="authorityVO" />
+		<!-- 채팅 -->
+		<typeAlias type="kr.or.dduk.vo.ChatVO" alias="chatVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatRoomVO" alias="chatRoomVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatMemberVO" alias="chatMemberVO" />
 	</typeAliases>
 	
 </configuration>
