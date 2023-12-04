@@ -82,6 +82,7 @@ function addForm(){
 					alert("추가 성공");	
 					$('#formSlct option:selected').removeAttr('selected');
 					$('#formSlct').append("<option data-cont='"+data.mmsFormCont+"' selected>"+data.mmsFormCd+"</option>");
+					
 				}
 			},
 		    error: function(jqXHR, textStatus, errorThrown) {
