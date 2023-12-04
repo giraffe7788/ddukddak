@@ -13,7 +13,12 @@
 		FROM EMPLOYEE
 		WHERE EMP_NO = #{empNo}
 	</select>
-
+	
+	<insert id="create" parameterType="employeeVO">
+		INSERT INTO EMPLOYEE(EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD)
+		VALUES(#{empNo},#{empPh},#{empName},#{empPw},#{empAcntState},#{empIn},#{empOut},#{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{atchFileCd},#{empDeptcd},#{empJbpscd})
+	</insert>
+	
 	<resultMap type="employeeVO" id="employeeMap">
 		<result property="empNo" column="EMP_NO" />
 		<result property="empPh" column="EMP_PH" />
@@ -27,16 +32,10 @@
 		<result property="empZip" column="EMP_ZIP" />
 		<result property="empAdd1" column="EMP_ADD1" />
 		<result property="empAdd2" column="EMP_ADD2" />
-<<<<<<< HEAD
-		<result property="fileCd" column="FILE_CD" />
-		<result property="empDeptCd" column="EMP_DEPT_CD" />
-		<result property="empJbpsCd" column="EMP_JBPS_CD" />
-=======
 		<result property="atchFileCd" column="ATCH_FILE_CD" />
 		<result property="empDeptcd" column="EMP_DEPTCD" />
 		<result property="empJbpscd" column="EMP_JBPSCD" />
 		<association property="atchFileVO" resultMap="atchFileMap"/>
->>>>>>> branch 'yunhahaha' of https://github.com/giraffe7788/ddukddak.git
 		<collection property="authorityVOList" resultMap="authorityMap" />
 	</resultMap>
 	
@@ -47,19 +46,16 @@
 	</resultMap>
 	
 	<resultMap type="atchFileDetailVO" id="atchFileDetailMap">
-		
+		<result property="atchFileCd" column="ATCH_FILE_CD"/>
+		<result property="atchFileDetailSeq" column="ATCH_FILE_DETAIL_SEQ"/>
+		<result property="atchFileDetailOrlng" column="ATCH_FILE_DETAIL_ORLNG"/>
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM"/>
+		<result property="atchFileDetailExt" column="ATCH_FILE_DETAIL_EXT"/>
+		<result property="atchFileDetailPath" column="ATCH_FILE_DETAIL_PATH"/>
 	</resultMap>
 	
 	<resultMap type="authorityVO" id="authorityMap">
 		<result property="empNo" column="EMP_NO" />
 		<result property="authName" column="AUTH_NAME" />
 	</resultMap>
-	
-<<<<<<< HEAD
-=======
-	<insert id="create" parameterType="employeeVO">
-		INSERT INTO EMPLOYEE(EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD)
-		VALUES(#{empNo},#{empPh},#{empName},#{empPw},#{empAcntState},#{empIn},#{empOut},#{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{atchFileCd},#{empDeptcd},#{empJbpscd})
-	</insert>
->>>>>>> branch 'yunhahaha' of https://github.com/giraffe7788/ddukddak.git
 </mapper>
