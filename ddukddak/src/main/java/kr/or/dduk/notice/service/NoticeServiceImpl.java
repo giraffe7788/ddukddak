@@ -20,7 +20,11 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	@Override
-	public void createNotice(NoticeVO notice) {
+	public int insetNotice(NoticeVO noticeVO) {
+		int result = this.noticeMapper.insetNotice(noticeVO);
+		
+		
+		return result;
 		
 	}
 

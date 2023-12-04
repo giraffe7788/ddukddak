@@ -12,8 +12,6 @@ public interface NoticeService {
 
 	public List<NoticeVO> list();
 
-	public void createNotice(NoticeVO notice);
+	public int insetNotice(NoticeVO noticevo);
 
-	
-	
 }

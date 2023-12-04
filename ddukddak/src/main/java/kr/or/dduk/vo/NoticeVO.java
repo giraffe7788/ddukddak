@@ -6,12 +6,13 @@ import lombok.Data;
 
 @Data
 public class NoticeVO {
-	private String noticeNo;
-	private String empNo;
-	private String noticeTitle;
-	private String noticeCont;
-	private Date noticeDt;
-	private int noticeViews;
-	private String fileCd;
-
+	private String noticeNo; //공지사항번호
+	private String empNo; //사번
+	private String noticeTitle; //제목
+	private String noticeCont; //내용
+	private Date noticeDt; //작성일시
+	private int noticeViews; //조회수
+	private String atchFileCd;; //첨부파일
+	private String RW; //로우넘
+	
 }

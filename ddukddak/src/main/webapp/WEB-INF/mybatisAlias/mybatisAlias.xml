@@ -14,6 +14,6 @@
 		<typeAlias type="kr.or.dduk.vo.NoticeVO" alias="noticeVO" />
 	</typeAliases>
 	
-</configuration>
+</configuration> 
 
 

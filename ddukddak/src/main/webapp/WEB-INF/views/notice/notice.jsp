@@ -73,7 +73,7 @@
 <%--                         <fmt:parseDate value="${list.reg_date}" var="noticeDt" pattern="yyyyMMddHHmmss"/>  --%>
 <%-- 	 				 <td><fmt:formatDate value="${dateValue}" pattern="yyyy-MM-dd"/></td> --%>
                         <td>${notice.noticeViews}</td>
-                        <td>${notice.fileCd}</td>
+                        <td>${notice.atchFileCd}</td>
                     </tr>
                 </c:forEach>
             </tbody>
