@@ -7,18 +7,19 @@
 			SELECT 'M'||TRIM(TO_CHAR(SUBSTR(MAX(MMS_FORM_CD),2)+1,'00'))
 			FROM MMS_FORM
 		</selectKey>
-			INSERT INTO MMS_FORM(MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_TYPE)
-			VALUES (#{mmsFormCd}, #{mmsFormCont}, '예약안내')
+			INSERT INTO MMS_FORM(MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_NM)
+			VALUES (#{mmsFormCd}, #{mmsFormCont}, #{mmsFormNm})
 	</insert>
 	
 	<select id="getAllForm" resultType="mmsFormVO">
-		SELECT MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_TYPE 
+		SELECT MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_NM
 		FROM MMS_FORM ORDER BY MMS_FORM_CD ASC
 	</select>
 	
 	<update id="updateForm" parameterType="mmsFormVO">
 		UPDATE MMS_FORM
-		SET MMS_FORM_CONT = #{mmsFormCont}
+		SET MMS_FORM_CONT = #{mmsFormCont},
+			MMS_FORM_NM = #{mmsFormNm}
 		WHERE MMS_FORM_CD = #{mmsFormCd}
 	</update>
 	
@@ -26,4 +27,13 @@
 		DELETE FROM MMS_FORM
 		WHERE MMS_FORM_CD = #{mmsFormCd}
 	</delete>
+	
+	<insert id="addHstr" parameterType="mmsHstrVO">
+		<selectKey resultType="String" keyProperty="mmsNo" order="BEFORE">
+			SELECT 'M'||TRIM(TO_CHAR(SUBSTR(MAX(MMS_FORM_CD),2)+1,'0000'))
+			FROM MMS_HSTR
+		</selectKey>
+			INSERT INTO MMS_HSTR(MMS_NO, MMS_FORM_CD, MMS_SENT, MMS_RECV, MMS_DATE, MMS_CONT)
+			VALUES(#{mmsNo},#{mmsFormCd},#{mmsSent},#{mmsRecv},sysdate,#{mmsCont})
+	</insert>
 </mapper>

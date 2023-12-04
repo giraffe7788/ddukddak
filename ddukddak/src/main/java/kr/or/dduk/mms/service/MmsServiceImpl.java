@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.dduk.mapper.MmsMapper;
 import kr.or.dduk.vo.MmsFormVO;
+import kr.or.dduk.vo.MmsHstrVO;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
@@ -45,16 +46,16 @@ public class MmsServiceImpl implements MmsService{
 		return numStr;
 	}
 
-	//양식 추가
-	@Override
-	public int addForm(MmsFormVO mmsFormVO) {
-		return mmsMapper.addForm(mmsFormVO);
-	}
-
 	//모든 양식 가져오기
 	@Override
 	public List<MmsFormVO> getAllForm() {
 		return mmsMapper.getAllForm();
+	}
+	
+	//양식 추가
+	@Override
+	public int addForm(MmsFormVO mmsFormVO) {
+		return mmsMapper.addForm(mmsFormVO);
 	}
 
 	//양식 수정
@@ -67,5 +68,10 @@ public class MmsServiceImpl implements MmsService{
 	@Override
 	public int deleteForm(MmsFormVO mmsFormVO) {
 		return mmsMapper.deleteForm(mmsFormVO);
+	}
+
+	@Override
+	public int addHstr(MmsHstrVO mmsHstrVO) {
+		return mmsMapper.addHstr(mmsHstrVO);
 	}
 }

@@ -6,7 +6,7 @@
 <body>
 	<div id="contents"> 
 		받는사람 : <input type="text" id="to" name="to"/>   <!-- 인증번호 받을사람 휴대폰 번호 -->
-		<button type="button" id="send" disabled>전송</button><br> <!-- 문자보내는 전송버튼 -->
+		<button type="button" id="send">전송</button><br> <!-- 문자보내는 전송버튼 -->
 		
 <!-- 		인증번호 : <input type="text" id="userNum">   인증번호 입력창 -->
 <!-- 		<button type="button" id="enterBtn">확인</button>  인증번호와 내가 입력창에 입력한 인증번호 비교하는 창 -->
@@ -16,18 +16,28 @@
 		<button type="button" id="deleteForm">양식 삭제</button>
 		<br/>
 		<br/>
+	양식제목 : <input type="text" id="formNm" name="formNm"/>
+		<br/>
+		<br/>
 	</div>
 	
 	<select id="formSlct">
-		<option>양식선택</option>
+		<option>양식 선택</option>
 			<c:forEach var="mmsFormVO" items="${mmsFormVOList}">
-				<option data-cont="${mmsFormVO.getMmsFormCont()}">${mmsFormVO.getMmsFormCd()}</option><br/>
+				<option 
+					data-json='{"cont": "${mmsFormVO.getMmsFormCont()}", "cd": "${mmsFormVO.getMmsFormCd()}" }'
+					>${mmsFormVO.getMmsFormNm()}
+					</option><br/>
 			</c:forEach>
     </select>
 	<textarea rows="20" cols="30" id="textArea" name="textArea"></textarea>
 </body>
 
 <script type="text/javascript">
+
+var dataJson="";
+var data="";
+var cd="";
 
 $(document).ready(function() {
 	$('#formSlct').change(formSlctChange);
@@ -38,8 +48,50 @@ $(document).ready(function() {
 });
 
 function formSlctChange(){
-	let MmsFormCont = $('#formSlct option:selected').data('cont');
-	$('#textArea').val(MmsFormCont);
+	//선택된 option에 들어있는 data-json 꺼내기
+	dataJson = $('#formSlct option:selected').attr('data-json');
+	data = JSON.parse(dataJson);
+	cd = data.cd;
+	cont = data.cont;
+	
+	$('#formNm').val($('#formSlct option:selected').val());
+    nm = $('#formNm').val()
+	$('#textArea').val(cont);
+};
+
+function addHstr(){
+	
+	var mmsCont = $('#textArea').val();
+	
+	var mmsHstrVO = {
+			"mmsFormCd" : cd,
+			"mmsSent" : '${getCurrentLoginName}',
+			"mmsRecv" : '김환자',
+			"mmsCont" : mmsCont
+			};
+	
+	console.log(mmsHstrVO);
+	
+	$.ajax ({
+		url: '/mms/addHstr',
+		type: 'POST',
+		data: JSON.stringify(mmsHstrVO),
+// 		dataType: "json",
+		contentType:"application/json;charset=utf-8",
+		beforeSend:function(xhr){
+			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+		},
+		success: function(data) {
+			console.log(data);
+			if(data!=null){
+				alert("addHstr");	
+			}
+		},
+	    error: function(jqXHR, textStatus, errorThrown) {
+	        // 에러 처리
+	        console.error('에이젝스 요청 중 에러 발생:', textStatus, errorThrown);
+	    }
+	});
 };
 
 function sendMMS(){
@@ -48,24 +100,31 @@ function sendMMS(){
 		var to = $('#to').val();
 		
 		$.ajax ({
-			url: '/sendMMS',
+			url: '/mms/sendMMS',
 			type: 'GET',
 			data: {
 				"to" : to
 			},
 			success: function(data) {
 				console.log(data);
-			}
+				addHstr();
+			},
+		    error: function(jqXHR, textStatus, errorThrown) {
+		        // 에러 처리
+		        console.error('sendMMS 에이젝스 요청 중 에러 발생:', textStatus, errorThrown);
+		    }
 		});
 	});
 };
 
 function addForm(){
 	$('#addForm').click(function() {
-	
+		var mmsFormNm = $('#formNm').val().trim();
 		var mmsFormCont = $('#textArea').val();
 		
-		var mmsFormVO = {"mmsFormCont":mmsFormCont}
+		var mmsFormVO = {
+				"mmsFormNm":mmsFormNm,
+				"mmsFormCont":mmsFormCont}
 		
 		$.ajax ({
 			url: '/mms/addForm',
@@ -81,8 +140,11 @@ function addForm(){
 				if(data!=null){
 					alert("추가 성공");	
 					$('#formSlct option:selected').removeAttr('selected');
-					$('#formSlct').append("<option data-cont='"+data.mmsFormCont+"' selected>"+data.mmsFormCd+"</option>");
-					
+					$('#formSlct').append(
+						    '<option data-json=\'{"cont":"' + data.mmsFormCont + '", "cd":"' + data.mmsFormCd + '"}\' selected>' 
+						    +data.mmsFormNm+
+						    '</option>'
+					);
 				}
 			},
 		    error: function(jqXHR, textStatus, errorThrown) {
@@ -95,11 +157,13 @@ function addForm(){
 
 function updateForm(){
 	$('#updateForm').click(function() {
-		
-		var mmsFormCont = $('#textArea').val();
-		var mmsFormCd = $('#formSlct option:selected').val();
+		cont = $("#textArea").val();
+		nm = $("#formNm").val();
 	
-		var mmsFormVO = {"mmsFormCd":mmsFormCd, "mmsFormCont":mmsFormCont}
+		var mmsFormVO = {
+				"mmsFormCd":cd,
+				"mmsFormCont":cont,
+				"mmsFormNm":nm}
 		
 		$.ajax ({
 			url: '/mms/updateForm',
@@ -113,7 +177,8 @@ function updateForm(){
 			success: function(data) {
 				console.log(data);
 				if(data>0){
-					alert("수정 성공");				
+					alert("수정 성공");	
+					$('#formSlct option:selected').html(nm);
 				}
 			}
 		});
@@ -123,9 +188,7 @@ function updateForm(){
 function deleteForm(){
 	$('#deleteForm').click(function() {
 		
-		var mmsFormCd = $('#formSlct option:selected').val();
-	
-		var mmsFormVO = {"mmsFormCd":mmsFormCd}
+		var mmsFormVO = {"mmsFormCd":cd}
 		
 		$.ajax ({
 			url: '/mms/deleteForm',

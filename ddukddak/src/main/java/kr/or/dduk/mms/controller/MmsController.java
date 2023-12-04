@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.dduk.mms.service.MmsService;
 import kr.or.dduk.vo.MmsFormVO;
+import kr.or.dduk.vo.MmsHstrVO;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
@@ -62,5 +63,14 @@ public class MmsController {
 	@ResponseBody
 	public int deleteForm(@RequestBody MmsFormVO mmsFormVO){
 		return mmsService.deleteForm(mmsFormVO);
+	}
+	
+	//내역 생성
+	@PostMapping("/addHstr")
+	@ResponseBody
+	public MmsHstrVO addHstr(@RequestBody MmsHstrVO mmsHstrVO){
+		mmsService.addHstr(mmsHstrVO);
+		System.out.println(mmsHstrVO);
+		return mmsHstrVO;
 	}
 }
