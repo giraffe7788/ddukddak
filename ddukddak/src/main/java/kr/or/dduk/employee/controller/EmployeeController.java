@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kr.or.dduk.clinic.controller.ClinicController;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,7 +29,7 @@ public class EmployeeController {
 	    if (authentication != null && authentication.isAuthenticated()) {
 	        log.info("로그인된 사번 : " + authentication.getName());
 	    }
-
+	    
 		return "emp/main";
 	}
 	
