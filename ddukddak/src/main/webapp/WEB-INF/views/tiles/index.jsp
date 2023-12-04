@@ -23,7 +23,12 @@
     <link href="/resources/sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
-
+<style>
+*{
+	font-family: 'Pretendard6';
+	font-size: 14px;
+}
+</style>
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -49,9 +54,7 @@
 
 				<div class="dduk-body">
 	                <!-- Begin Page Content -->
-    	            <div class="container-fluid">
-							<tiles:insertAttribute name="body" />
-                	</div>
+					<tiles:insertAttribute name="body" />
                 	<!-- /.container-fluid -->
 				</div>
 

@@ -30,6 +30,7 @@
 	
 	<insert id="addHstr" parameterType="mmsHstrVO">
 		<selectKey resultType="String" keyProperty="mmsNo" order="BEFORE">
+<!-- 		환자 코드가 들어오면 그거랑 조합해서 입력하자 -->
 			SELECT 'M'||TRIM(TO_CHAR(SUBSTR(MAX(MMS_FORM_CD),2)+1,'0000'))
 			FROM MMS_HSTR
 		</selectKey>

@@ -3,34 +3,99 @@
 <script src="/resources/js/jquery-3.6.0.js"></script>
 <title>문자인증</title>
 </head>
+
+<style>
+.left, .right {
+	width: 720px;
+	box-sizing: border-box;
+}
+
+.container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.bottom {
+	margin-top: 9px;
+	width: 100%;
+	height: 357px;
+}
+
+.crm-wrap {
+	display: flex;
+	height: 357px;
+	gap: 9px;
+}
+
+hr {
+	border-color: turquoise;
+	border-width: 4px; /* 선 굵기를 2px로 지정 */
+}
+</style>
+
 <body>
-	<div id="contents"> 
-		받는사람 : <input type="text" id="to" name="to"/>   <!-- 인증번호 받을사람 휴대폰 번호 -->
-		<button type="button" id="send">전송</button><br> <!-- 문자보내는 전송버튼 -->
-		
-<!-- 		인증번호 : <input type="text" id="userNum">   인증번호 입력창 -->
-<!-- 		<button type="button" id="enterBtn">확인</button>  인증번호와 내가 입력창에 입력한 인증번호 비교하는 창 -->
-		<br/>
-		<button type="button" id="addForm">양식 추가</button>
-		<button type="button" id="updateForm">양식 수정</button>
-		<button type="button" id="deleteForm">양식 삭제</button>
-		<br/>
-		<br/>
-	양식제목 : <input type="text" id="formNm" name="formNm"/>
-		<br/>
-		<br/>
+<div>
+<div class="crm-wrap">
+	<div class="dduk-body-border right">
+		<div class="contents"> 
+			<h2>문자 작성</h2>
+			<hr/>
+			받는사람 : <input class="dduck-input" type="text" id="to" name="to"/>   <!-- 인증번호 받을사람 휴대폰 번호 -->
+			<button type="button" id="send">전송</button><br> <!-- 문자보내는 전송버튼 -->
+			<br/>
+	<!-- 		인증번호 : <input type="text" id="userNum">   인증번호 입력창 -->
+	<!-- 		<button type="button" id="enterBtn">확인</button>  인증번호와 내가 입력창에 입력한 인증번호 비교하는 창 -->
+	
+			<div>
+			<button type="button" id="addForm">양식 추가</button>
+			<button type="button" id="updateForm">양식 수정</button>
+			<button type="button" id="deleteForm">양식 삭제</button>
+			</div>
+			<br/>
+			
+			<div>
+			양식제목 : <input class="dduck-input" type="text" id="formNm" name="formNm"/>
+				<select id="formSlct">
+					<option>양식 선택</option>
+						<c:forEach var="mmsFormVO" items="${mmsFormVOList}">
+							<option 
+								data-json='{"cont": "${mmsFormVO.getMmsFormCont()}", "cd": "${mmsFormVO.getMmsFormCd()}" }'
+								>${mmsFormVO.getMmsFormNm()}
+								</option><br/>
+						</c:forEach>
+			    </select>
+			</div>
+			<br/>
+		<textarea class="dduck-input" rows="5" cols="30" id="textArea" name="textArea"></textarea>
+		</div>
 	</div>
 	
-	<select id="formSlct">
-		<option>양식 선택</option>
-			<c:forEach var="mmsFormVO" items="${mmsFormVOList}">
-				<option 
-					data-json='{"cont": "${mmsFormVO.getMmsFormCont()}", "cd": "${mmsFormVO.getMmsFormCd()}" }'
-					>${mmsFormVO.getMmsFormNm()}
-					</option><br/>
-			</c:forEach>
-    </select>
-	<textarea rows="20" cols="30" id="textArea" name="textArea"></textarea>
+	<div class="dduk-body-border left">
+		<div class="contents"> 
+			<h2>문자 발송 내역</h2>
+			<hr/>
+		</div>
+	</div>
+</div>
+
+<br/>
+
+<div class="crm-wrap">
+	<div class="dduk-body-border right">
+		<div class="contents"> 
+			<h2>환자 검색 : <input class="dduck-input" type="text"/></h2>
+			<hr/>
+		</div>
+	</div>
+	
+	<div class="dduk-body-border left">
+		<div class="contents"> 
+			<h2>발송 대상</h2>
+			<hr/>
+		</div>
+	</div>
+</div>
+</div>
 </body>
 
 <script type="text/javascript">
