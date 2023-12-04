@@ -37,6 +37,6 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 		clearAuthenticationAttributes(request);
 		
 		// 메인 Url로 리다이렉트
-		response.sendRedirect("/emp/main");
+		response.sendRedirect("/common/main");
 	}
 }

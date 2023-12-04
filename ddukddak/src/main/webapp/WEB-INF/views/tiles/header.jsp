@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" 
-%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
@@ -44,7 +43,7 @@ $(document).ready(function(){
         			마이페이지
         		</a>
         		</br>
-        		<a href="/emp/logout.do" class="d-flex dduk-popover popover-b">
+        		<a href="/common/logout.do" class="d-flex dduk-popover popover-b">
         			로그아웃
         		</a>
    			`;
@@ -59,23 +58,6 @@ $(document).ready(function(){
 	        return getPopoverContent();
 		}
 	});
-	
-// 	$(document).on('click', '.popover-b', function(){
-// 		 $.ajax({
-// 	          type: 'POST',
-// 	          url: '/logout', // 로그아웃을 처리할 서버 엔드포인트 URL로 변경해야 합니다.
-// 	          success: function(response) {
-// 	            // 로그아웃 성공 시 처리
-// 	            window.location.href = '/emp/login';
-// 	            console.log('로그아웃 성공:', response);
-// 	          },
-// 	          error: function(error) {
-// 	            // 로그아웃 실패 시 처리
-// 	            console.error('로그아웃 실패:', error);
-// 	          }
-// 	        });
-
-// 	})
 });
 
 	

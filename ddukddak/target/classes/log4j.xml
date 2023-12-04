@@ -11,28 +11,28 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="kr.or.ddit">
+	<logger name="kr.or.dduk">
 		<level value="debug" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 	
 	<logger name="org.springframework.beans">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 	
 	<logger name="org.springframework.context">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 
-	<!-- Root Logger -->
+	<!-- Root Logger --> 
 	<!-- 
 	appender : 전달된 로그를 어디에 출력할지 결정(콘솔, 파일 기록, DB 저장)
 	priority : 로그 레벨

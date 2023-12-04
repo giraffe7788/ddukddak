@@ -455,13 +455,13 @@ h3 {
 }
 
 .login-img{
-	margin: 104px auto auto 176px;
+	margin: 136px auto auto 176px;
 	width: 780px;
 }
 
 .dduk-login-form {
 	width: 640px;
-	height: 880px;
+	height: 1000px;
 	flex-shrink: 0;
 	border-radius: 40px;
 	border: 1px solid var(--border, #EBEFF0);
@@ -565,6 +565,63 @@ h3 {
 	color: var(--ci-01, #0ABAB5) !important;
 	text-decoration-line: underline !important;
 }
+
+.dduk-btn-nomal {
+	display: inline-flex;
+	padding: 5px 12px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	background: var(--black-02, #64767C);
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+}
+
+.dduk-btn-active {
+	display: flex;
+	padding: 5px 10px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 1px solid var(--ci-01, #0ABAB5);
+	background: var(--ci-01, #0ABAB5);
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+}
+
+.dduk-btn-disabled {
+	display: flex;
+	padding: 5px 10px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 1px solid var(--black-05, #E0E6E9);
+	background: var(--black-05, #E0E6E9);
+	font-family: 'Pretendard5';
+	color: var(--black-03, #8D9EA5);
+}
+
+.dduk-btn-danger {
+	display: flex;
+	padding: 5px 12px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	background: #FFECEC;
+	color: var(--red, #FF4040);
+	/* Body/Small */
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+}
+
+
 
 
 /*# sourceMappingURL=bootstrap.css.map */
