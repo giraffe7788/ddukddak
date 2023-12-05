@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <style>
 .selectedEmployee {
@@ -68,9 +69,10 @@ $(document).ready(function() {
 });
 </script>
 
-<input type="hidden" id="sessionUserId" value="${employee.empNo}" />
-<input type="hidden" id="sessionUserNm" value="${employee.empName}" />
-<input type="hidden" id="sessionUserProfile" value="${employee.atchFilecd}" /> 
+<sec:authentication property="principal.employeeVO" var="empVO" />
+<input type="hidden" id="sessionEmpNo" value="${empVO.empNo}" />
+<input type="hidden" id="sessionEmpName" value="${empVO.empName}" />
+<input type="hidden" id="sessionAtchFileCd" value="${empVO.atchFileCd}" /> 
 
 <body>
 	<div>
@@ -156,7 +158,7 @@ $(document).ready(function() {
 					</div>
 					<!-- 채팅창 -->
 				</div>
-				<div id="chatRoomWindow" class="row pt-0" style=" display:none; height: 100%;">
+				<div id="chatRoomWindow" class="row pt-0" style=" display:none; height: 100%; " >
 					<input type="hidden" id="hiddenChatRmNo" />
 					<button class="back-btn" style="width: 100px;">뒤로가기</button>
 					<div class="container">
@@ -185,9 +187,15 @@ $(document).ready(function() {
 <!-- 웹소켓 객체를 가져올 수 있게해준다 -->
 <script	src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script type="text/javascript">
+
+
+
 $(document).ready(function() {
 	
-	console.log("현재 세션에 로그인한 아이디 >>> " + sessionUserId);
+	
+	
+	console.log("현재 세션에 로그인한 아이디 : " + sessionEmpNo);
+	console.log("현재 세션에 로그인한 이름 : " + sessionEmpName);
 	
 	var header = $("meta[name='_csrf_header']").attr("content");
 	var token = $("meta[name='_csrf']").attr("content");
@@ -210,7 +218,7 @@ $(document).ready(function() {
 		 console.log("Token : ", token);
 		 console.log("Header : ", header);
 		 
-		 //var sessionUserId = $("#sessionUserId").val();
+		 //var sessionEmpNo = $("#sessionEmpNo").val();
 		 // 채팅 직원 목록 출력
 		 $.ajax({
 			url : "/ddukddak/chatting/employee/list",
@@ -246,8 +254,8 @@ $(document).ready(function() {
 		        			dept = "인사과"
 		        		}
 		        		// 로그인/회원가입되면 나중에 추가해야함
-// 		        		var sessionUserId = $("#sessionUserId").val();
-// 		        		if(this.empNo != sessionUserId){
+// 		        		var sessionEmpNo = $("#sessionEmpNo").val();
+// 		        		if(this.empNo != sessionEmpNo){
 		        			
 			        		employeeListHtml += "<tr class='employee' data-employee-id='" + result[i].empNo + "' style='height: 40px;'>";
 							if (result[i].fileCd !== null && result[i].fileCd !== '') {
@@ -271,9 +279,9 @@ $(document).ready(function() {
 		 });
 	});
 	
-// 	var sessionUserId = $("#sessionUserId").val();
+// 	var sessionEmpNo = $("#sessionEmpNo").val();
 // 	var userChat = {
-// 			sessionUserId : sessionUserId
+// 			sessionEmpNo : sessionEmpNo
 // 	}
 	//채팅탭 클릭 시
 	$('#tab-button2').click(function(){
@@ -346,7 +354,7 @@ $(document).ready(function() {
 
 
 	        			
-	        			chatRmListHtml += "<tr class='room' id='' style='height: 80px;'>";
+	        			chatRmListHtml += "<tr class='room' data-roomno='"+ result[i].chatRmNo +"' style='height: 80px;'>";
 	        			chatRmListHtml += "<td class='col-2'>";
 	        			chatRmListHtml += "<img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-IIcYCTxyov5UIuoWBLrC2QmdBfT526Jk9g&usqp=CAU' class='rounded-circle' alt='프로필 사진 없음' style='width: 40px; height: 40px;' />";
 	        			chatRmListHtml += "</td>";
@@ -391,7 +399,7 @@ $(document).ready(function() {
 	});
 	
 	$(document).ready(function() {
-// 		var sessionUserId = $("#sessionUserId").val();
+// 		var sessionEmpNo = $("#sessionEmpNo").val();
 		var chatRmNm = $("#chatRmNm");
 		console.log("chatRmNm2 : ", chatRmNm)
 		
@@ -462,6 +470,13 @@ $(document).ready(function() {
 			}
 			console.log("roomInfoId : ", roomInfoId);
 			
+			// 지금 조회중인 방 번호
+			var currentRoomNo = "";
+			
+			currentRoomNo = $(this).data("roomno")
+			console.log("선택된 방번호 : ", currentRoomNo);
+			
+			
 			//채팅방멤버불러오기
 // 			$.ajax({
 // 				url : "/ddukddak/chatting/room/employee",
@@ -476,13 +491,15 @@ $(document).ready(function() {
 // 		        	console.log("채팅방에 속해있는 직원정보 : ", result);
 // 		        }
 // 			});
-			chatStart();
+			chatStart(currentRoomNo);
 			
 			var sendButton = $("#sendButton");
 			
-		function chatStart(){
+		//채팅방 열고나서...
+		function chatStart(selectedRoomNo){
 			//채팅목록불러오기
 			$("#container").html("");
+			//채팅내용 불러오기
 			$.ajax({
 				url : "/ddukddak/chatting/chat/list",
 				type : "POST",
@@ -498,7 +515,7 @@ $(document).ready(function() {
 		        	$("#chatRoomHeader").html(result.chatRmNm);
 					
 		        	$(result).each(function(){
-		        		//var session = $("#sessionUserId").val();
+		        		var session = $("#sessionEmpNo").val();
 		        		
 		        		var date = new Date();
 		        		var hours = date.getHours();
@@ -556,7 +573,9 @@ $(document).ready(function() {
 	        });
 		 
 		 	//웹소켓 시작!!!!!!!!!!!!!!!!!!!!!!!!!!
-		 	var chatRmNo = $("#hiddenChatRmNo").val(); // 방번호를 가져온다
+// 		 	var chatRmNo = $("#hiddenChatRmNo").val(); // 방번호를 가져온다
+// 		 	var chatRmNo = "String입니다"; // 방번호를 가져온다
+// 		 	console.log("ㅅㅂ왜안돼" + chatRmNo)
 			
 	     	//"ws://localhost/chatting/" + chatRmNo
 	 		//var socket = new WebSocket("ws://localhost/ddukddak/chat/");
@@ -573,30 +592,26 @@ $(document).ready(function() {
 		    
 		    //웹소켓 메세지 전송
 		    function sendMessage(){
+		    	
 		    	var header = $("meta[name='_csrf_header']").attr("content");
 		    	var token = $("meta[name='_csrf']").attr("content");
 		    	
-		    	var chatRmNo = $("#hiddenChatRmNo").val(); //방번호
-		    	var empNo = $("#sessionUserId").val(); //직원사번
-		    	var empName = $("#sessionUserNm").val(); // 직원이름
-		    	var empProfile = $("sessionUserProfile").val() // 직원프로필사진
-		    	var chatCont = $("#chatCont").val(); //대화
-		    	var chatDate = new Date();	//보낸날짜
+		    	//var currentRoomNo = $(this).data("roomno") //방번호
+		    	var chatRmNo =  selectedRoomNo;//방번호
+		    	var empNo = $('#sessionEmpNo').val(); //직원사번
+		    	var chatCont = $("#chatMessage").val(); //대화
 		    	
-		    	console.log("방번호" + chatRmNo);
+		    	console.log("방번호" + currentRoomNo);
 		    	console.log("사번" + empNo);
-		    	console.log("이름" + empName);
-		    	console.log("프사" + empProfile);
 		    	console.log("내용" + chatCont);
-		    	console.log("시간" + chatDate);
 		    	
 		    	var data = {
-		    		empNo : empNo,
-		    		chatCont : chatCont,
-		    		chatRmNo : chatRmNo
+		    		"chatRmNo" : chatRmNo,
+		    		"empNo" : empNo,
+		    		"chatCont" : chatCont
 		    	}
 		    	
-		    	socket.send($("#chatMessage").val());   	
+		    	socket.send(JSON.stringify(data));   	
 				$.ajax({
 					url : "/ddukddak/chatting/chat/Insert",
 					type : "POST",
@@ -607,8 +622,11 @@ $(document).ready(function() {
 			            xhr.setRequestHeader(header,token);
 			        },
 			        success : function(result){
-			        	console.log("채팅전송 : ",  result)
+			        	console.log("채팅전송 : ",  result);
 			        	$("#chatMessage").val();
+			        },
+			        error: function(){
+			        	console.log(data);
 			        }
 				});	    	
 			}

@@ -92,7 +92,7 @@ public class ChatController {
 	    return chatRoomCreate;
 	    
 	}
-	//채팅방에 속한 직원정보
+//	//채팅방에 속한 직원정보
 //	@ResponseBody
 //	@RequestMapping(value="/chatting/room/employee", method=RequestMethod.POST)
 //	public List<ChatRoomVO> chatRoomEmployee() {
@@ -125,9 +125,12 @@ public class ChatController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/chatting/chat/Insert", method=RequestMethod.POST)
-	public int chatInsert(@RequestBody Map<String, String> map) {
+	public int chatInsert(@RequestBody ChatVO chatVO) {
 		log.info("chatInsert() 실행~");
-		int chatInsert = this.chatService.chatInsert(map);
+		log.info("chatInsert->chatVO : " , chatVO);
+		System.out.println("charVO => " + chatVO);
+//		chatVO.setChatFileCd("1234");
+		int chatInsert = this.chatService.chatInsert(chatVO);
 		log.info("chatInsert : ", chatInsert);
 		return chatInsert;
 	}

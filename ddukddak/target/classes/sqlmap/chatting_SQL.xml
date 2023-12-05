@@ -128,12 +128,12 @@
 	</select>
 	
  	<!-- 채팅방에 속한 직원조회 -->
-<!-- 	<select id="chatRoomEmployee" resultMap="chatRoomMap"> -->
-<!-- 		SELECT CM.EMP_NO, CM.EMP_NAME -->
-<!-- 		FROM CHAT_ROOM CR -->
-<!-- 		JOIN CHAT_MEMBER CM ON CR.CHAT_RM_NO = CM.CHAT_RM_NO -->
-<!-- 		WHERE CR.CHAT_RM_NO = #{chatRmNo} -->
-<!-- 	</select> -->
+	<select id="chatRoomEmployee" resultMap="chatRoomMap">
+		SELECT CM.EMP_NO, CM.EMP_NAME
+		FROM CHAT_ROOM CR
+		JOIN CHAT_MEMBER CM ON CR.CHAT_RM_NO = CM.CHAT_RM_NO
+		WHERE CR.CHAT_RM_NO = #{chatRmNo}
+	</select>
 	
 	<!-- 채팅입력 -->
 <!-- 	<insert id="chatInsert" parameterType="Map"> -->
@@ -145,16 +145,17 @@
 <!-- 		#{chatFileCd}, SYSDATE, #{empNo} -->
 <!-- 		) -->
 <!-- 	</insert> -->
-	<insert id="chatInsert" parameterType="map">
+	<!-- 파일코드 null 허용인데 왜 안들어갔을까.... -->
+	<insert id="chatInsert" parameterType="chatVO">
 		<selectKey resultType="int" order="BEFORE" keyProperty="chatNo">
 			SELECT CHAT_NO_SEQ.NEXTVAL FROM DUAL
 		</selectKey>
 	
-	    INSERT INTO CHAT(
-	    	CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE, EMP_NO
-	    ) VALUES (
-	    	#{chatNo}, #{chatRmListNo}, #{chatRmNo}, #{chatCont}, #{chatFileCd}, SYSDATE, #{empNo}
-	    )
+	    INSERT INTO CHAT (
+		    CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_DATE, EMP_NO
+		) VALUES (
+		    #{chatNo}, #{chatRmListNo}, #{chatRmNo}, #{chatCont}, SYSDATE, #{empNo}
+		)
 	</insert>
 
 </mapper>

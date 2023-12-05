@@ -42,7 +42,16 @@ public class ChattingHandler extends TextWebSocketHandler{
 		
 		log.info("#ChattingHandler, handleMessage");
 		log.info(session.getId() + ": " + message);
-		
+//		String[] chat = (message.getPayload()).split("|");
+//	      
+//	      log.info("배열 ::: >>>>> ::: " + chat);
+//	      
+//	      String profile = chat[0];
+//	      String userName = chat[1];
+//	      String chatContent = chat[2];
+//	      String date = chat[3];
+//	      
+//	      session.sendMessage(new TextMessage(profile + "|" + userName + "|" + chatContent + "|" + date));
 		for(WebSocketSession s : sessionList) {
 			//이게 상대방에게 메세지 전달...?
 			s.sendMessage(new TextMessage(session.getPrincipal().getName() + ":" + message.getPayload()));

@@ -22,7 +22,7 @@ public interface ChatMapper {
 
 	List<ChatVO> chatList(Map<String, Object> map);
 
-	int chatInsert(Map<String, String> map);
+	int chatInsert(ChatVO chatVO);
 
 //	List<ChatRoomVO> chatRoomEmployee(Map<String, String> map);
 

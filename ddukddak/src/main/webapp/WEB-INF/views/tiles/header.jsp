@@ -120,7 +120,8 @@ $(document).ready(function(){
 				<sec:authorize access="hasRole('ROLE_TRM')">
 					치료사
 				</sec:authorize>
-				${getCurrentLoginName}
+				<sec:authentication property="principal.employeeVO" var="empVO" />
+				${empVO.empName}
 			</span> 
 			<span style="font-family: 'Pretendard5'; font-size: 24px;">님
 				안녕하세요😊

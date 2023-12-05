@@ -80,8 +80,8 @@ public class ChatServiceImpl implements IChatService{
 	}
 
 	@Override
-	public int chatInsert(Map<String, String> map) {
-		int result = chatMapper.chatInsert(map);
+	public int chatInsert(ChatVO chatVO) {
+		int result = chatMapper.chatInsert(chatVO);
 		
 		return result;
 	}

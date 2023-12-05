@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -21,7 +22,7 @@ $(function() {
 				let reader = new FileReader();
 				reader.onload = function(e){
 					console.log(e.target.result);
-					$("#fileCd").attr("src", e.target.result)
+					$("#atchFileCd").attr("src", e.target.result)
 				}
 				reader.readAsDataURL(f);
 			});
@@ -30,27 +31,25 @@ $(function() {
 	});
 </script>
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+<div class="dduk-body-border">
+
 <form name="frm"
-	action="/emp/updateEmp?${_csrf.parameterName}=${_csrf.token}"
+	action="/emp/update?${_csrf.parameterName}=${_csrf.token}"
 	method="post" enctype="multipart/form-data">
-	<div class="row">
-		<div class="col-md-3">
-			<div class="card card-primary card-outline">
-				<div class="card-body box-profile">
-<!-- 					<div class="text-center"> -->
-<!-- 						<img class="profile-user-img img-fluid img-circle" -->
-<%-- 							src="/resources/upload/${employeeVO.}" --%>
-<!-- 							alt="User profile picture" id="atchFileCd"> -->
-<!-- 						<div class="custom-file"> -->
-<!-- 							<input type="file" class="custom-file-input" name="uploadFile" -->
-<!-- 								id="uploadFile" /> <label class="custom-file-label" -->
-<!-- 								for="uploadFile">프로필</label> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
+				<div class="card-body box-profile" >
+					<div class="text-center">
+						<img class="profile-user-img img-fluid img-circle"
+							src="/resources/upload/${employeeVO.atchFileVO.atchFileDetailVOList[0].atchFileDetailSavenm}"
+							alt="User profile picture" id="atchFileCd">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" name="uploadFile"
+								id="uploadFile" /> <label class="custom-file-label"
+								for="uploadFile">${employeeVO.empOut}</label>
+						</div>
+					</div>
 					<h3 class="profile-username text-center">
 					</h3>
 					<p class="text-muted text-center">
-					
 					</p>
 					<ul class="list-group list-group-unbordered mb-3">
 						<li class="list-group-item"><b>사원번호</b> <a
@@ -70,7 +69,7 @@ $(function() {
 						</a></li>
 						<li class="list-group-item"><b>비밀번호</b> <a
 							class="float-right"> <input id="empPw" name="empPw"
-								class="form-control form-control-sm" type="text"
+								class="form-control form-control-sm" type="password"
 								value="${employeeVO.empPw}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>계정상태</b> <a
@@ -79,14 +78,14 @@ $(function() {
 								value="${employeeVO.empAcntState}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>입사일</b> <a
-							class="float-right"> <input id="empIn" name="empIn"
-								class="form-control form-control-sm" type="date"
-								value="${employeeVO.empIn}" style="width: 100px;" />
+							class="float-right"> <input type="date"
+								value='<fmt:formatDate value="${employeeVO.empIn}" pattern="yyyy-MM-dd"/>'
+								name="employeeVO.empIn" class="form-control form-control-sm empIn" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>퇴사일</b> <a
-							class="float-right"> <input id="empOut" name="empOut"
-								class="form-control form-control-sm" type="date"
-								value="${employeeVO.empOut}" style="width: 100px;" />
+							class="float-right"> <input type="date"
+								value='<fmt:formatDate value="${employeeVO.empOut}" pattern="yyyy-MM-dd"/>'
+								name="employeeVO.empOut" class="form-control form-control-sm empOut" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>이메일</b> <a
 							class="float-right"> <input id="empMail" name="empMail"
@@ -140,12 +139,10 @@ $(function() {
 						<b>저장</b>
 					</button>
 				</div>
-			</div>
-		</div>
 
-	</div>
 	<sec:csrfInput />
 </form>
+</div>
 <script type="text/javascript">
 $(function(){
 	console.log("ㅎㅇ");
