@@ -42,20 +42,23 @@ public class NoticeController {
 	}
     // 공지사항 작성 처리
     @PostMapping("/write/insertNotice")
-    public String write(NoticeVO notice,HttpServletRequest request, HttpServletResponse response) {
-        noticeService.insetNotice(notice);
+    public String write(NoticeVO noticeVO,HttpServletRequest request, HttpServletResponse response) {
         /*
          * 1. 화면단에서 받은 데이터 가공
          * 2. SERVICE 호출 
          * 3. INSERT 됐는지 확인 
          */
+    	//NoticeVO(noticeNo=null, empNo=test1, noticeTitle=카드 취소했는데 돈은 언제 들어오나요?, 
+    	//noticeCont=<p>이것은 샘플 내용입니다.ㄴㅇㄹㄴ</p>, noticeDt=null, noticeViews=0, atchFileCd=null
+    	//, RW=null, notification=[원무과, 치료사], file=org.springframewo..
+    	log.info("insertNotice : " + noticeVO);
         
         NoticeVO vo = new NoticeVO();
 //        vo.put("NOTICE_TITLE",request.getParameter("subject"));
         
         
-        int result = noticeService.insetNotice(vo);
-        
+        int result = noticeService.insetNotice(noticeVO);
+//        int result = 1;
         if(result > 0) {
         	log.info("성공");
         	return "redirect:/notice/list";

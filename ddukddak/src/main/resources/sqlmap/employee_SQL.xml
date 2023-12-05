@@ -66,5 +66,4 @@
 		<result property="atchFileDetailExt" column="ATCH_FILE_DETAIL_EXT"/>
 		<result property="atchFileDetailPath" column="ATCH_FILE_DETAIL_PATH"/>
 	</resultMap>
-	
 </mapper>
