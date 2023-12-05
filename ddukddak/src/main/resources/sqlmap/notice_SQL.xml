@@ -12,24 +12,38 @@
 			, NOTICE_VIEWS
 			, ATCH_FILE_CD
 	FROM NOTICE_BOARD
+	ORDER BY NOTICE_NO DESC
 	</select>
 	
+	<!-- 
+	//NoticeVO(noticeNo=null, empNo=ㄴㄴ, noticeTitle=배송지 변경, noticeCont=이것은 샘플 내용입니다.ㄴㅇㄹㄴㅇ
+    	//, noticeDt=null, noticeViews=0, atchFileCd=null, RW=null, notification=[간호사, 원무과], file=org.springframework.web..
+	 -->
 	<insert id="insetNotice" parameterType="noticeVO">
-	INSERT INTO NOTICE_BOARD 
-			(NOTICE_NO, 
-			 EMP_NO, 
-			 NOTICE_TITLE, 
-			 NOTICE_CONT, 
-			 NOTICE_DT, 
-			 NOTICE_VIEWS, 
-			 ATCH_FILE_CD) 
-	VALUES
-        (NOTICE_BOARD_SEQ.nextval, 
-        	'test4', 
-        	#{noticeTitle}, 
-        	#{noticeCont}, 
-        	SYSDATE, 
-        	0, 
-        	#{atchFileCd})	
+		<selectKey resultType="String" order="BEFORE" keyProperty="noticeNo">
+			SELECT NOTICE_BOARD_SEQ.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO NOTICE_BOARD 
+				(NOTICE_NO, 
+				 EMP_NO, 
+				 NOTICE_TITLE, 
+				 NOTICE_CONT, 
+				 NOTICE_DT, 
+				 NOTICE_VIEWS 
+				 <if test="atchFileCd!=null and atchFileCd!=''">
+				 	,ATCH_FILE_CD
+				 </if>
+				 ) 
+		VALUES
+	        (#{noticeNo}, 
+	        	#{empNo}, 
+	        	#{noticeTitle}, 
+	        	#{noticeCont}, 
+	        	SYSDATE, 
+	        	0
+	        	<if test="atchFileCd!=null and atchFileCd!=''"> 
+	        		,#{atchFileCd}	
+	        	</if>
+	        	)
 	</insert>
 </mapper>
