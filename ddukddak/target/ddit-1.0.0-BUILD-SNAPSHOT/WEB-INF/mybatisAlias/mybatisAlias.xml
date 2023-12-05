@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="kr.or.dduk.vo.EmployeeVO" alias="employeeVO" />
+		<typeAlias type="kr.or.dduk.vo.AuthorityVO" alias="authorityVO" />
+		<typeAlias type="kr.or.dduk.vo.MmsFormVO" alias="mmsFormVO" />
+		<typeAlias type="kr.or.dduk.vo.MmsHstrVO" alias="mmsHstrVO" />
+		<typeAlias type="kr.or.dduk.vo.NoticeVO" alias="noticeVO" />
+		<typeAlias type="kr.or.dduk.vo.AtchFileVO" alias="atchFileVO" />
+		<typeAlias type="kr.or.dduk.vo.AtchFileDetailVO" alias="atchFileDetailVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatVO" alias="chatVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatRoomVO" alias="chatRoomVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatMemberVO" alias="chatMemberVO" />
+	</typeAliases>
+	
+</configuration> 
+
+

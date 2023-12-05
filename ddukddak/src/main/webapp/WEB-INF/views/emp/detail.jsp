@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -21,7 +22,7 @@ $(function() {
 				let reader = new FileReader();
 				reader.onload = function(e){
 					console.log(e.target.result);
-					$("#fileCd").attr("src", e.target.result)
+					$("#atchFileCd").attr("src", e.target.result)
 				}
 				reader.readAsDataURL(f);
 			});
@@ -43,13 +44,12 @@ $(function() {
 						<div class="custom-file">
 							<input type="file" class="custom-file-input" name="uploadFile"
 								id="uploadFile" /> <label class="custom-file-label"
-								for="uploadFile">프로필</label>
+								for="uploadFile">${employeeVO.empOut}</label>
 						</div>
 					</div>
 					<h3 class="profile-username text-center">
 					</h3>
 					<p class="text-muted text-center">
-					
 					</p>
 					<ul class="list-group list-group-unbordered mb-3">
 						<li class="list-group-item"><b>사원번호</b> <a
@@ -78,14 +78,14 @@ $(function() {
 								value="${employeeVO.empAcntState}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>입사일</b> <a
-							class="float-right"> <input id="empIn" name="empIn"
-								class="form-control form-control-sm" type="date"
-								value="${employeeVO.empIn}" style="width: 100px;" />
+							class="float-right"> <input type="date"
+								value='<fmt:formatDate value="${employeeVO.empIn}" pattern="yyyy-MM-dd"/>'
+								name="employeeVO.empIn" class="form-control form-control-sm empIn" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>퇴사일</b> <a
-							class="float-right"> <input id="empOut" name="empOut"
-								class="form-control form-control-sm" type="date"
-								value="${employeeVO.empOut}" style="width: 100px;" />
+							class="float-right"> <input type="date"
+								value='<fmt:formatDate value="${employeeVO.empOut}" pattern="yyyy-MM-dd"/>'
+								name="employeeVO.empOut" class="form-control form-control-sm empOut" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>이메일</b> <a
 							class="float-right"> <input id="empMail" name="empMail"

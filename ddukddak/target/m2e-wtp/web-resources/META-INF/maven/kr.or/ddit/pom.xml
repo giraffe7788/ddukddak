@@ -410,6 +410,20 @@
 			<version>3.12.0</version>
 		</dependency>
 		
+		<!-- 웹소켓 라이브러리 -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-websocket</artifactId>
+		    <version>${org.springframework-version}</version>
+		</dependency>	
+			
+		<!-- 메세징 -->
+		<dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-messaging</artifactId>
+	        <version>${org.springframework-version}</version>
+	    </dependency>
+		
 	</dependencies>
     <build>
         <plugins>

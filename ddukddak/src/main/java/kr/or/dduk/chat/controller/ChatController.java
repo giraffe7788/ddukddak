@@ -1,6 +1,7 @@
 package kr.or.dduk.chat.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,11 +30,19 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/ddukddak")
 public class ChatController {
-	
+		
 	@Autowired
 	private IChatService chatService;
 	
-	//직원 목록 출력
+	@GetMapping(value="/chat")
+	public String chat() {
+		return "emp/chat";
+	}
+	
+	/**
+	 * 직원목록 출력
+	 * @return 직원목록
+	 */
 	@ResponseBody
 	@RequestMapping(value="/chatting/employee/list", method=RequestMethod.POST)
 	public List<EmployeeVO> employeeList(){
@@ -43,7 +52,10 @@ public class ChatController {
 		return employeeList;
 	}
 	
-	//채팅방 목록 출력
+	/**
+	 * 채팅방 목록 출력
+	 * @return 채팅방 목록
+	 */
 	@ResponseBody
 	@RequestMapping(value="/chatting/room/list", method=RequestMethod.POST)
 	public List<ChatRoomVO> chatRoomList(){
@@ -54,7 +66,11 @@ public class ChatController {
 		return chatRoomList;
 	}
 	
-	//채팅방 생성 - 생성할때 직원추가
+	/**
+	 * 채팅방 생성
+	 * @param map 
+	 * @return 채팅방명, 선택된 직원
+	 */
 	@ResponseBody
 	@RequestMapping(value="/chatting/room/create", method=RequestMethod.POST)
 	public int chatRoomCreate(
@@ -76,24 +92,47 @@ public class ChatController {
 	    return chatRoomCreate;
 	    
 	}
-	//채팅내용목록
+//	//채팅방에 속한 직원정보
+//	@ResponseBody
+//	@RequestMapping(value="/chatting/room/employee", method=RequestMethod.POST)
+//	public List<ChatRoomVO> chatRoomEmployee() {
+//		Map<String, String> map = new HashMap<String, String>();
+//		log.info("chatRoomEmployee->map : ", map);
+//		List<ChatRoomVO> chatRoomEmployee = chatService.chatRoomEmployee(map);
+//		log.info("chatRoomEmployee : ", chatRoomEmployee);
+//		return chatRoomEmployee;
+//	}
+	
+	
+	/**
+	 * 채팅내역 출력
+	 * @return 채팅내역
+	 */
 	@ResponseBody
 	@RequestMapping(value="/chatting/chat/list", method=RequestMethod.POST)
-	public List<ChatVO> chatList(@RequestBody Map<String, Object> map){
+	public List<ChatVO> chatList(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		log.info("chatList->map : ", map);
 		List<ChatVO> chatList = chatService.chatList(map);
+		log.info("chatList : ", chatList);
 		return chatList;
 	}
-	//채팅내용입력
+	
+	/**
+	 * 채팅내용 입력
+	 * @param map
+	 * @return 채팅내용
+	 */
 	@ResponseBody
 	@RequestMapping(value="/chatting/chat/Insert", method=RequestMethod.POST)
-	public String chatInsert(@RequestBody Map<String, String> map) {
+	public int chatInsert(@RequestBody ChatVO chatVO) {
 		log.info("chatInsert() 실행~");
-		String chatInsert = this.chatService.chatInsert(map);
+		log.info("chatInsert->chatVO : " , chatVO);
+		System.out.println("charVO => " + chatVO);
+//		chatVO.setChatFileCd("1234");
+		int chatInsert = this.chatService.chatInsert(chatVO);
+		log.info("chatInsert : ", chatInsert);
 		return chatInsert;
 	}
 	
-	@RequestMapping(value = "/chatting", method = { RequestMethod.GET })
-	public String chat (HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
-		return "chat";
-	}
 }

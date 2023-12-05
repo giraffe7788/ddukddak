@@ -17,6 +17,8 @@ public interface IChatService {
 
 	List<ChatVO> chatList(Map<String, Object> map);
 
-	String chatInsert(Map<String, String> map);
+	int chatInsert(ChatVO chatVO);
+
+//	List<ChatRoomVO> chatRoomEmployee(Map<String, String> map);
 
 }

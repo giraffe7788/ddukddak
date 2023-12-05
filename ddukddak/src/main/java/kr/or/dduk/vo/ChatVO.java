@@ -1,5 +1,7 @@
 package kr.or.dduk.vo;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -11,4 +13,6 @@ public class ChatVO {
 	private String chatDate;	//채팅날짜
 	private String empNo;
 	private String chatFileCd;		//첨부파일
+	
+	private List<EmployeeVO> employeeVOList;
 }

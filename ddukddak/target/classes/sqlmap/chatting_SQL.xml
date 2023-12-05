@@ -26,6 +26,25 @@
 		<result property="chatFileCd" column="CHAT_FILE_CD" />
 		<result property="chatDate" column="CHAT_DATE" />
 		<result property="empNo" column="EMP_NO" />
+		<collection property="employeeVOList" resultMap="employeeMap"></collection>
+	</resultMap>
+	
+	<resultMap type="employeeVO" id="employeeMap">
+		<result property="empNo" column="EMP_NO" />
+		<result property="empPh" column="EMP_PH" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="empPw" column="EMP_PW" />
+		<result property="empAcntState" column="EMP_ACNT_STATE" />
+		<result property="empIn" column="EMP_IN" />
+		<result property="empOut" column="EMP_OUT" />
+		<result property="empMail" column="EMP_MAIL" />
+		<result property="empReg" column="EMP_REG" />
+		<result property="empZip" column="EMP_ZIP" />
+		<result property="empAdd1" column="EMP_ADD1" />
+		<result property="empAdd2" column="EMP_ADD2" />
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="empDeptcd" column="EMP_DEPT_CD" />
+		<result property="empJbpscd" column="EMP_JBPS_CD" />
 	</resultMap>
 	
 	<!-- 직원목록 불러오기 -->
@@ -98,7 +117,7 @@
 	</insert>
 	
 	<!-- 채팅내역 출력 -->
-	<select id="chatList" parameterType="Map" resultType="chatVO">
+	<select id="chatList" resultMap="chatMap">
 		SELECT
 		CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD,
 		CHAT_DATE,
@@ -106,17 +125,36 @@
 		FROM CHAT A, EMPLOYEE B
 		WHERE A.EMP_NO = B.EMP_NO
 		ORDER BY CHAT_DATE
-
+	</select>
+	
+ 	<!-- 채팅방에 속한 직원조회 -->
+	<select id="chatRoomEmployee" resultMap="chatRoomMap">
+		SELECT CM.EMP_NO, CM.EMP_NAME
+		FROM CHAT_ROOM CR
+		JOIN CHAT_MEMBER CM ON CR.CHAT_RM_NO = CM.CHAT_RM_NO
+		WHERE CR.CHAT_RM_NO = #{chatRmNo}
 	</select>
 	
 	<!-- 채팅입력 -->
-	<insert id="chatInsert" parameterType="Map">
-		INSERT INTO CHAT(
-		CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE,
-		EMP_NO
-		)VALUES(
-		CHAT_NO_SEQ.NEXTVAL, #{chatRmListNo}, #{chatRmNo}, #{chatCont},
-		#{chatFileCd}, SYSDATE, #{empNo}
+<!-- 	<insert id="chatInsert" parameterType="Map"> -->
+<!-- 		INSERT INTO CHAT( -->
+<!-- 		CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE, -->
+<!-- 		EMP_NO -->
+<!-- 		)VALUES( -->
+<!-- 		CHAT_NO_SEQ.NEXTVAL, #{chatRmListNo}, #{chatRmNo}, #{chatCont}, -->
+<!-- 		#{chatFileCd}, SYSDATE, #{empNo} -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	<!-- 파일코드 null 허용인데 왜 안들어갔을까.... -->
+	<insert id="chatInsert" parameterType="chatVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="chatNo">
+			SELECT CHAT_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	
+	    INSERT INTO CHAT (
+		    CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_DATE, EMP_NO
+		) VALUES (
+		    #{chatNo}, #{chatRmListNo}, #{chatRmNo}, #{chatCont}, SYSDATE, #{empNo}
 		)
 	</insert>
 
