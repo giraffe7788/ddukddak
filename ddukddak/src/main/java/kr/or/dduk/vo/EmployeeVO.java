@@ -26,8 +26,8 @@ public class EmployeeVO {
     private String empAdd1;
     private String empAdd2;
     private String atchFileCd;
-    private String empDeptcd;
-    private String empJbpscd;
+    private String empDeptCd;
+    private String empJbpsCd;
     
     private MultipartFile[] uploadFile;
     
