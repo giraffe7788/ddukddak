@@ -73,26 +73,6 @@ $(function() {
 .btn-outline{
 	border: 1px soild var(--black-01, #333);
 }
-
-input[type=file]::file-selector-button {
-  display: flex;
-	padding: 5px 10px;
-	align-items: center;
-	gap: 10px;
-	border-radius: 8px;
-	border: 1px solid var(--ci-01, #0ABAB5);
-	background: var(--ci-01, #0ABAB5);
-	color: var(--white, #FFF);
-	font-family: 'Pretendard5';
-	font-style: normal;
-	line-height: 160%; /* 22.4px */
-	border: 0px;
-	justify-content: center !important;
-}
-
- input[type=file]::file-selector-button:hover {
-    background: #0ABAB5;
- }
  
  #uploadFile {
   display: none;
@@ -111,6 +91,7 @@ input[type=file]::file-selector-button {
 	height: 100px;
 	border-radius: 64px;
 	margin: 16px;
+	overflow: hidden;
 }
 
 .form-check-input:checked {

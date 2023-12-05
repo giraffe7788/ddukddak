@@ -1,4 +1,4 @@
-package kr.or.dduk.service;
+package kr.or.dduk.employee.service;
 
 import kr.or.dduk.vo.EmployeeVO;
 

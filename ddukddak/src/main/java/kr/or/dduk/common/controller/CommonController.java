@@ -1,8 +1,11 @@
 package kr.or.dduk.common.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -12,13 +15,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kr.or.dduk.clinic.controller.ClinicController;
+import kr.or.dduk.common.service.CommonService;
+import kr.or.dduk.vo.PatientVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("/common")
 @Controller
 public class CommonController {
+	
+	@Autowired
+	private CommonService commonService;
 
 	/**
 	 * 메인페이지 이동
@@ -82,5 +89,19 @@ public class CommonController {
 	public void accessDenied(Authentication auth, Model model) {
 		log.info("access Denied : " + auth);
 		model.addAttribute("msg", "Access Denied");
+	}
+	
+	/**
+	 * 환자정보 가져와서 페이지로 가져감
+	 * @return
+	 */
+	@GetMapping("/patient")
+	public String list(Model model) {
+		List<PatientVO> patientVOList = this.commonService.list();
+		log.info("patientVOList: ",patientVOList);
+		
+		model.addAttribute("patientVOList",patientVOList);
+		
+		return "common/patient";
 	}
 }

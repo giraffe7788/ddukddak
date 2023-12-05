@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import kr.or.dduk.service.EmployeeService;
+import kr.or.dduk.employee.service.EmployeeService;
 import kr.or.dduk.util.FileController;
 import kr.or.dduk.vo.AtchFileVO;
 import kr.or.dduk.vo.EmployeeVO;

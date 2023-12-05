@@ -199,6 +199,14 @@ h3 {
 	color: var(--black-03, #8D9EA2);
 }
 
+.mar-b-16{
+	margin-bottom: 16px;
+}
+
+.mar-b-8{
+	margin-bottom: 8px;
+}
+
 .dduck-input {
 	border-radius: 12px;
 	border: 1px solid var(--border, #EBEFF0);
@@ -649,13 +657,19 @@ button {
 	border: 0px;
 }
 
-.mar-b-16{
-	margin-bottom: 16px;
+.dduk-title-area{
+	display: flex;
+	width: 276px;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 24px;
 }
 
-.mar-b-8{
-	margin-bottom: 8px;
+.patient-list-th {
+	padding-right: 8px;
 }
 
-
+.patient-list-table {
+	width: 100%;
+}
 /*# sourceMappingURL=bootstrap.css.map */
