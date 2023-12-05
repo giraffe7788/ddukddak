@@ -3,7 +3,7 @@
 <mapper namespace="kr.or.dduk.mapper.EmployeeMapper">
 
 	<select id="getMemberAuth" resultMap="employeeMap">
-		SELECT A.EMP_NO, A.EMP_PW, B.AUTH_NAME
+		SELECT A.EMP_NO, A.EMP_PW, A.EMP_NAME, A.EMP_DEPT_CD, A.EMP_JBPS_CD, A.ATCH_FILE_CD, B.AUTH_NAME
 		FROM EMPLOYEE A LEFT OUTER JOIN AUTHORITY B ON A.EMP_NO = B.EMP_NO
 		WHERE A.EMP_NO = #{empNo}
 	</select>
@@ -16,7 +16,7 @@
 	
 	<insert id="create" parameterType="employeeVO">
 		INSERT INTO EMPLOYEE(EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD)
-		VALUES(#{empNo},#{empPh},#{empName},#{empPw},#{empAcntState},#{empIn},#{empOut},#{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{atchFileCd},#{empDeptcd},#{empJbpscd})
+		VALUES(#{empNo},#{empPh},#{empName},#{empPw},#{empAcntState},#{empIn},#{empOut},#{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{atchFileCd},#{empDeptCd},#{empJbpsCd})
 	</insert>
 	
 	<resultMap type="employeeVO" id="employeeMap">
@@ -33,8 +33,8 @@
 		<result property="empAdd1" column="EMP_ADD1" />
 		<result property="empAdd2" column="EMP_ADD2" />
 		<result property="atchFileCd" column="ATCH_FILE_CD" />
-		<result property="empDeptcd" column="EMP_DEPTCD" />
-		<result property="empJbpscd" column="EMP_JBPSCD" />
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="empJbpsCd" column="EMP_JBPS_CD" />
 		<association property="atchFileVO" resultMap="atchFileMap"/>
 		<collection property="authorityVOList" resultMap="authorityMap" />
 	</resultMap>

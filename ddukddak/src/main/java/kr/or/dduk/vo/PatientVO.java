@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-
 public class PatientVO {
 	private String paNo;		//환자번호
 	private String paReg;       //주민번호
