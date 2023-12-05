@@ -74,4 +74,9 @@ public class MmsServiceImpl implements MmsService{
 	public int addHstr(MmsHstrVO mmsHstrVO) {
 		return mmsMapper.addHstr(mmsHstrVO);
 	}
+
+	@Override
+	public List<MmsHstrVO> getAllHstr() {
+		return mmsMapper.getAllHstr();
+	}
 }

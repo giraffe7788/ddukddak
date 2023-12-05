@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="/resources/js/jquery-3.6.0.js"></script>
 <title>문자인증</title>
 </head>
@@ -9,24 +10,11 @@
 	width: 810px;
 	box-sizing: border-box;
 	height: 370px;
-	display: flex;
-}
-
-.smallLeftUp, .smallRightUp{
-	width: 405px;
-	box-sizing: border-box;
-	height: 320px;
+/* 	display: flex; */
 }
 
 .container {
 	display: flex;
-	flex-wrap: wrap;
-}
-
-.bottom {
-	margin-top: 9px;
-	width: 100%;
-	height: 357px;
 }
 
 .crm-wrap {
@@ -34,91 +22,158 @@
 	height: 357px;
 	gap: 9px;
 }
+
+#formDiv{
+	margin-left : 30px;
+}
+.fmrBtn{
+	float: left;
+	margin: 2px;
+}
+
+#send{
+	width: 50px;
+	height: 50px;
+	cursor:pointer;
+	float: right;
+	margin-top: 13px;
+}
 </style>
 
 <body>
 <div>
-<div class="crm-wrap">
-	<div class="dduk-body-border left">
-		<div class="dduk-body-border smallLeftUp">
-			<h2>문자 작성</h2>
-			<hr/>
-			받는사람 : <input class="dduck-input" type="text" id="to" name="to"/>   <!-- 인증번호 받을사람 휴대폰 번호 -->
-			<br/>
-			<br/>
-	<!-- 		인증번호 : <input type="text" id="userNum">   인증번호 입력창 -->
-	<!-- 		<button type="button" id="enterBtn">확인</button>  인증번호와 내가 입력창에 입력한 인증번호 비교하는 창 -->
-	
-			<div>
-			<button type="button" id="addForm" class="btn-dduk-active">양식 추가</button>
-			<button type="button" id="updateForm">양식 수정</button>
-			<button type="button" id="deleteForm">양식 삭제</button>
+	<div class="crm-wrap">
+		<div class="dduk-body-border left">
+			<div class="container">
+				<h2>
+					<select id="formSlct">
+						<option>양식 선택</option>
+							<c:forEach var="mmsFormVO" items="${mmsFormVOList}">
+								<option 
+									data-json='{"cont": "${mmsFormVO.getMmsFormCont()}", "cd": "${mmsFormVO.getMmsFormCd()}" }'
+									>${mmsFormVO.getMmsFormNm()}
+									</option><br/>
+							</c:forEach>
+				    </select>
+				문자 작성
+		    	</h2>
+			    
 			</div>
-			<br/>
+				<div class="container">
+					<h3>양식제목 : <input class="dduck-input" type="text" id="formNm" name="formNm"/></h3>
+						<div id="formDiv">
+							<button type="button" id="addForm" class="dduk-btn-active fmrBtn">양식  추가</button>
+							<button type="button" id="updateForm" class="dduk-btn-nomal fmrBtn">양식  수정</button>
+							<button type="button" id="deleteForm" class="dduk-btn-danger fmrBtn">양식  삭제</button>
+						</div>
+				</div>
+			<hr/>
+				
+			<div class="container">
+				<textarea class="dduck-input" rows="10" cols="100" id="textArea" name="textArea"></textarea>
+			</div>
 		</div>
 		
-		<div class="dduk-body-border smallRightUp">
-			<p>양식제목 : <input class="dduck-input" type="text" id="formNm" name="formNm"/>
-			<select id="formSlct">
-				<option>양식 선택</option>
-					<c:forEach var="mmsFormVO" items="${mmsFormVOList}">
-						<option 
-							data-json='{"cont": "${mmsFormVO.getMmsFormCont()}", "cd": "${mmsFormVO.getMmsFormCd()}" }'
-							>${mmsFormVO.getMmsFormNm()}
-							</option><br/>
-					</c:forEach>
-		    </select>
-			</p>
-		<textarea class="dduck-input" rows="12" cols="40" id="textArea" name="textArea"></textarea>
-		</div>
-	</div>
-	
-	<div class="dduk-body-border right">
-		<div class="contents"> 
-			<h2>문자 발송 내역</h2>
-			<hr/>
-			
+		<div class="dduk-body-border right">
+			<div class="contents"> 
+				<h2>문자 발송 내역</h2>
+				
+					<hr/>
+					
 				<table border="1">
 					<thead>
 						<tr>
-							<th>전송자</th>
-							<th>전송자</th>
-							<th>전송자</th>
-							<th>전송자</th>
+							<th>번호</th>
+							<th>발신자</th>
+							<th>수신자</th>
+							<th>날짜</th>
+							<th>내용</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>ㅎㅇ1</td>
-							<td>ㅎㅇ2</td>
-							<td>ㅎㅇ3</td>
-							<td>ㅎㅇ4</td>
-						</tr>
+						<c:forEach var="mmsHstrVO" items="${mmsHstrVOList}" varStatus="stat">
+							<tr>
+								<td>${mmsHstrVO.mmsNo}</td>
+								<td>${mmsHstrVO.mmsSent}</td>
+								<td>${mmsHstrVO.mmsRecv}</td>
+								<td><fmt:formatDate value="${mmsHstrVO.mmsDate}" pattern="yyyy-MM-dd" /></td>
+								<td>${mmsHstrVO.mmsCont}</td>
+							</tr>
+						</c:forEach>
 					</tbody>
 				</table>
-				
-		</div>
-	</div>
-</div>
-
-<br/>
-
-<div class="crm-wrap">
-	<div class="dduk-body-border right">
-		<div class="contents"> 
-			<h2>환자 검색 : <input class="dduck-input" type="text"/><button>검색</button> </h2>
-			<hr/>
+			</div>
 		</div>
 	</div>
 	
-	<div class="dduk-body-border left">
-		<div class="contents"> 
-			<h2>발송 대상</h2>
-			<button type="button" id="send">전송</button><br> <!-- 문자보내는 전송버튼 -->
+<br/>
+
+	<div class="crm-wrap">
+		<div class="dduk-body-border left">
+			<div class="contents"> 
+				<h2>
+				<select>
+					<option>분류</option>
+				</select>
+				환자 검색 : <input class="dduck-input" type="text"/>
+					<button type="submit" class="btn btn-default">
+						<i class="fas fa-search"></i>
+					</button>
+				</h2>
+				
+				<hr/>
+				
+				<div class="card-body table-responsive p-0" style="height: 250px;">
+					<table class="table table-head-fixed text-nowrap">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>User</th>
+								<th>Date</th>
+								<th>Status</th>
+								<th>Reason</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>183</td>
+								<td>김환자</td>
+								<td>11-7-2014</td>
+								<td><span class="tag tag-success">완치</span></td>
+								<td>빨리빨리 다니세요.</td>
+							</tr>
+							<tr>
+								<td>219</td>
+								<td>Alexander Pierce</td>
+								<td>11-7-2014</td>
+								<td><span class="tag tag-warning">Pending</span></td>
+								<td>Bacon ipsum dolor sit</td>
+							</tr>
+							<tr>
+								<td>657</td>
+								<td>Bob Doe</td>
+								<td>11-7-2014</td>
+								<td><span class="tag tag-primary">Approved</span></td>
+								<td>Bacon ipsum dolor sit</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		<div class="dduk-body-border right">
+			<div class="contents"> 
+					<span>
+					<!-- 문자보내는 전송버튼 -->
+					발송 대상<img src="/resources/images/send.png" id="send"/>
+					</span>
+				<!-- 인증번호 받을사람 휴대폰 번호 -->
+			</div>
 			<hr/>
+			받는사람 : <input class="dduck-input" type="text" id="to" name="to"/>
 		</div>
 	</div>
-</div>
 </div>
 </body>
 
@@ -234,6 +289,7 @@ function addForm(){
 						    +data.mmsFormNm+
 						    '</option>'
 					);
+					formSlctChange();
 				}
 			},
 		    error: function(jqXHR, textStatus, errorThrown) {
@@ -253,6 +309,7 @@ function updateForm(){
 				"mmsFormCd":cd,
 				"mmsFormCont":cont,
 				"mmsFormNm":nm}
+		
 		
 		$.ajax ({
 			url: '/mms/updateForm',
@@ -293,6 +350,7 @@ function deleteForm(){
 				if(data>0){
 					alert("삭제 성공");
 					$('#formSlct option:selected').remove(); // 선택된 옵션 삭제
+					$('#formNm').val("");
 					$('#textArea').val("");
 				}
 			}

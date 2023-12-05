@@ -26,4 +26,7 @@ public interface MmsService {
 	//내역 추가
 	public int addHstr(MmsHstrVO mmsHstrVO);
 
+	//모든 문자 내역 가져오기
+	public List<MmsHstrVO> getAllHstr();
+
 }
