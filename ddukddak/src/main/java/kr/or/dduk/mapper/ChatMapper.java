@@ -24,6 +24,6 @@ public interface ChatMapper {
 
 	int chatInsert(ChatVO chatVO);
 
-//	List<ChatRoomVO> chatRoomEmployee(Map<String, String> map);
+	List<ChatRoomVO> chatRoomEmployee(Map<String, String> map);
 
 }

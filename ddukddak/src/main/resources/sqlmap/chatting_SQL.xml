@@ -43,8 +43,8 @@
 		<result property="empAdd1" column="EMP_ADD1" />
 		<result property="empAdd2" column="EMP_ADD2" />
 		<result property="atchFileCd" column="ATCH_FILE_CD" />
-		<result property="empDeptcd" column="EMP_DEPT_CD" />
-		<result property="empJbpscd" column="EMP_JBPS_CD" />
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="empJbpsCd" column="EMP_JBPS_CD" />
 	</resultMap>
 	
 	<!-- 직원목록 불러오기 -->

@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <style>
-.employee.selectedEmployee {
-	background-color: #dff0d8; /* 배경색 변경 */
+.selectedEmployee {
+	background-color: #dff0d8;
 }
 .dayoung{
 	text-align:right;
@@ -56,7 +57,6 @@ $(document).ready(function() {
 	});
 	
 	$('#chatRmPrint').click(function(){
-		console.log("클릭되니?");
 		$('.card-notification').attr('style','display:none');
 		$('#chatRoomWindow').attr('style', 'display:block');
 	});
@@ -68,6 +68,12 @@ $(document).ready(function() {
 
 });
 </script>
+
+<sec:authentication property="principal.employeeVO" var="empVO" />
+<input type="hidden" id="sessionEmpNo" value="${empVO.empNo}" />
+<input type="hidden" id="sessionEmpName" value="${empVO.empName}" />
+<input type="hidden" id="sessionAtchFileCd" value="${empVO.atchFileCd}" /> 
+
 <body>
 	<div>
 		<!-- 실시간 채팅 아이콘 -->
@@ -152,8 +158,25 @@ $(document).ready(function() {
 					</div>
 					<!-- 채팅창 -->
 				</div>
-				<div id="chatRoomWindow" class="row pt-0" style=" display:none; height: 100%;">
+				<div id="chatRoomWindow" class="row pt-0" style=" display:none; height: 100%; " >
+					<input type="hidden" id="hiddenChatRmNo" />
 					<button class="back-btn" style="width: 100px;">뒤로가기</button>
+					<div class="container">
+			            <div class="col-6">
+			                <label class="col-8" id="chatRoomHeader">채팅방</label>
+			            </div>
+			            <div>
+			                <div id="chatArea" class="col"></div>
+			                <div class="col-6">
+			                    <div class="input-group mb-3">
+			                        <input type="text" id="chatMessage" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+			                        <div class="input-group-append">
+			                            <button class="btn btn-outline-secondary" type="button" id="sendButton">전송</button>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+        			</div>
 				</div>					
 			</div>
 		</li>
@@ -164,7 +187,15 @@ $(document).ready(function() {
 <!-- 웹소켓 객체를 가져올 수 있게해준다 -->
 <script	src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script type="text/javascript">
+
+
+
 $(document).ready(function() {
+	
+	
+	
+	console.log("현재 세션에 로그인한 아이디 : " + sessionEmpNo);
+	console.log("현재 세션에 로그인한 이름 : " + sessionEmpName);
 	
 	var header = $("meta[name='_csrf_header']").attr("content");
 	var token = $("meta[name='_csrf']").attr("content");
@@ -186,6 +217,8 @@ $(document).ready(function() {
 		 $("#chatArea").html("");
 		 console.log("Token : ", token);
 		 console.log("Header : ", header);
+		 
+		 //var sessionEmpNo = $("#sessionEmpNo").val();
 		 // 채팅 직원 목록 출력
 		 $.ajax({
 			url : "/ddukddak/chatting/employee/list",
@@ -209,19 +242,20 @@ $(document).ready(function() {
 		        	$(result).each(function(i){
 		        		var dept = "";
 		        		
-		        		if(result[i].empDeptCd == 'DTCD01'){
+		        		if(result[i].empDeptCd == "DTCD01"){
 		        			dept = "의사";
-		        		}else if(result[i].empDeptCd =='DTCD02'){
+		        		}else if(result[i].empDeptCd == "DTCD02"){
 		        			dept = "간호사";
-		        		}else if(result[i].empDeptCd =='DTCD03'){
+		        		}else if(result[i].empDeptCd == "DTCD03"){
 		        			dept = "치료사";
-		        		}else if(result[i].empDeptCd =='DTCD04'){
+		        		}else if(result[i].empDeptCd == "DTCD04"){
 		        			dept = "원무과"
-		        		}else if(result[i].empDeptCd =='DTCD05'){
+		        		}else if(result[i].empDeptCd == "DTCD05"){
 		        			dept = "인사과"
 		        		}
 		        		// 로그인/회원가입되면 나중에 추가해야함
-// 		        		if(this.empNo != sessionUserId){
+// 		        		var sessionEmpNo = $("#sessionEmpNo").val();
+// 		        		if(this.empNo != sessionEmpNo){
 		        			
 			        		employeeListHtml += "<tr class='employee' data-employee-id='" + result[i].empNo + "' style='height: 40px;'>";
 							if (result[i].fileCd !== null && result[i].fileCd !== '') {
@@ -245,12 +279,17 @@ $(document).ready(function() {
 		 });
 	});
 	
+// 	var sessionEmpNo = $("#sessionEmpNo").val();
+// 	var userChat = {
+// 			sessionEmpNo : sessionEmpNo
+// 	}
 	//채팅탭 클릭 시
 	$('#tab-button2').click(function(){
 		console.log("채팅탭 클릭했다리");
         $.ajax({
 			url : "/ddukddak/chatting/room/list",
 			type : "POST",
+// 			data : JSON.stringify(userChat),
 			contentType : "application/json; charset=utf-8",
 			async: false,
 			beforeSend : function(xhr){            
@@ -315,7 +354,7 @@ $(document).ready(function() {
 
 
 	        			
-	        			chatRmListHtml += "<tr class='room' id='' style='height: 80px;'>";
+	        			chatRmListHtml += "<tr class='room' data-roomno='"+ result[i].chatRmNo +"' style='height: 80px;'>";
 	        			chatRmListHtml += "<td class='col-2'>";
 	        			chatRmListHtml += "<img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-IIcYCTxyov5UIuoWBLrC2QmdBfT526Jk9g&usqp=CAU' class='rounded-circle' alt='프로필 사진 없음' style='width: 40px; height: 40px;' />";
 	        			chatRmListHtml += "</td>";
@@ -360,7 +399,7 @@ $(document).ready(function() {
 	});
 	
 	$(document).ready(function() {
-		
+// 		var sessionEmpNo = $("#sessionEmpNo").val();
 		var chatRmNm = $("#chatRmNm");
 		console.log("chatRmNm2 : ", chatRmNm)
 		
@@ -413,35 +452,194 @@ $(document).ready(function() {
 	$("#chatRmPrint").on("click",".room",function(){
 		$("#container").html("");
 			console.log("채팅방 클릭되었다.");
-			var chatRoomHidden = $("#chatRoomHidden")
 			
+			var sendButton = $("#sendButton");
+			var chatMessage = $("#chatMessage");
+			
+			//눌러진 해당 방의 정보를 가져오고 담아서 data에 넣어주자
+			
+			//var roomInfo = $(this).attr("id"); 이건 왜 안돼...?
+			var roomInfo = $(this);
+			var roomInfoId = roomInfo.attr("id");
+			
+			var hiddenChatRmNo = $("#hiddenChatRmNo");
+			hiddenChatRmNo.val(roomInfo);
+			
+			var roomInfoId = {
+					chatRmNo : roomInfo
+			}
+			console.log("roomInfoId : ", roomInfoId);
+			
+			// 지금 조회중인 방 번호
+			var currentRoomNo = "";
+			
+			currentRoomNo = $(this).data("roomno")
+			console.log("선택된 방번호 : ", currentRoomNo);
+			
+			
+			//채팅방멤버불러오기
+// 			$.ajax({
+// 				url : "/ddukddak/chatting/room/employee",
+// 				type : "POST",
+// 				data : JSON.stringify(),
+// 				contentType : "application/json; charset=utf-8",
+// 				async : false,
+// 				beforeSend : function(xhr){            
+// 		            xhr.setRequestHeader(header,token);
+// 		        },
+// 		        success : function(result){
+// 		        	console.log("채팅방에 속해있는 직원정보 : ", result);
+// 		        }
+// 			});
+			chatStart(currentRoomNo);
+			
+			var sendButton = $("#sendButton");
+			
+		//채팅방 열고나서...
+		function chatStart(selectedRoomNo){
 			//채팅목록불러오기
+			$("#container").html("");
+			//채팅내용 불러오기
 			$.ajax({
 				url : "/ddukddak/chatting/chat/list",
 				type : "POST",
-				data : JSON.stringify(),
+				data : JSON.stringify(roomInfoId),
 				contentType : "application/json; charset=utf-8",
 				async : false,
 				beforeSend : function(xhr){            
 		            xhr.setRequestHeader(header,token);
 		        },
 		        success : function(result){
-		        	console.log("채팅내용 불러온다리");
-		        }				
-			});
-			//채팅방멤버불러오기
-			$.ajax({
-				url : "/ddukddak/chatting/chat/employeeList",
-				data : JSON.stringify(),
-				contentType : "application/json; charset=utf-8",
-				async : false,
-				beforeSend : function(xhr){            
-		            xhr.setRequestHeader(header,token);
-		        },
-		        success : function(result){
-		        	console.log("채팅방 멤버 불러온다리");
+		        	console.log("채팅방열때 정보불러오기 : ", result);
+		        	var chatMemberVOList = result.chatMemberVOList; //직원정보들 -> 프로필사진같은거 쓸때
+		        	$("#chatRoomHeader").html(result.chatRmNm);
+					
+		        	$(result).each(function(){
+		        		var session = $("#sessionEmpNo").val();
+		        		
+		        		var date = new Date();
+		        		var hours = date.getHours();
+	        			var minutes = date.getMinutes();	
+        				var second = date.getSeconds();
+        				
+        				var str_ampm, dsp_ampm;
+        				
+        				if(hours == 0){
+        					str_ampm = "오후";
+        				}else if(hours < 13){
+        					str_ampm = "오전";
+        				}else{
+        					hours -=12;
+        					str_ampm = "오후";
+        				}
+        				
+        				hours = (hours == 0) ? 12:hours;
+        				
+        				if(hours<10)
+        					hours="0"+hours;
+        				if(minutes<10)
+        					minutes="0"+minutes;
+        				if(second<10)
+        					second="0"+second;
+        				console.log("hours : ", hours);
+        				
+        				dsp_ampm = str_ampm + (hours.toString()).slice(1,2) + "시 " + (minutes.toString()) + "분";
+		        		
+// 		        		if(session == this.empNo){
+		        			var str = "";
+		        			
+		        			str += "<div class='chat-message'>";
+		        			str += "<p>"+ this.chatCont + "</p>";
+		        			str += "<div>" + dsp_ampm + "</div>";
+		        			str += "</div>";
+		        			
+		        			$("#chatArea").append(str);
+// 		        		}
+		        	  
+		        	});
 		        }
+		        
+		        		        
 			});
+			
+		    //채팅을 치게되면 오래된 메세지는 위로올라가는데...그걸 어케함...?
+		    		
+			//전송버튼 클릭시
+	        sendButton.on("click", function(){
+	        	sendMessage();
+	        	//메세지 전송하면스크롤위치 제일 아래로 내리기
+	        	document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
+	        	chatMessage.val("");
+	        });
+		 
+		 	//웹소켓 시작!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 		 	var chatRmNo = $("#hiddenChatRmNo").val(); // 방번호를 가져온다
+// 		 	var chatRmNo = "String입니다"; // 방번호를 가져온다
+// 		 	console.log("ㅅㅂ왜안돼" + chatRmNo)
+			
+	     	//"ws://localhost/chatting/" + chatRmNo
+	 		//var socket = new WebSocket("ws://localhost/ddukddak/chat/");
+	 		var socket = new SockJS("http://localhost:80/ddukddak/chat");
+	 		socket.onopen = onOpen; //websocket서버와 연결시킨다
+	 		socket.onmessage= onMessage; //메세지를 보내면 자동으로 실행
+	 		socket.onclose = onClose;   //접속 해제       
+// 			socket.onerror = onError;	//에러
+		    
+		    //채팅창에 들어왔을 때
+			function onOpen(evt) {
+				console.log("웹소켓 오픈!!!!!!!");
+			}
+		    
+		    //웹소켓 메세지 전송
+		    function sendMessage(){
+		    	
+		    	var header = $("meta[name='_csrf_header']").attr("content");
+		    	var token = $("meta[name='_csrf']").attr("content");
+		    	
+		    	//var currentRoomNo = $(this).data("roomno") //방번호
+		    	var chatRmNo =  selectedRoomNo;//방번호
+		    	var empNo = $('#sessionEmpNo').val(); //직원사번
+		    	var chatCont = $("#chatMessage").val(); //대화
+		    	
+		    	console.log("방번호" + currentRoomNo);
+		    	console.log("사번" + empNo);
+		    	console.log("내용" + chatCont);
+		    	
+		    	var data = {
+		    		"chatRmNo" : chatRmNo,
+		    		"empNo" : empNo,
+		    		"chatCont" : chatCont
+		    	}
+		    	
+		    	socket.send(JSON.stringify(data));   	
+				$.ajax({
+					url : "/ddukddak/chatting/chat/Insert",
+					type : "POST",
+					data : JSON.stringify(data),
+					contentType : "application/json; charset=utf-8",
+					async : false,
+					beforeSend : function(xhr){            
+			            xhr.setRequestHeader(header,token);
+			        },
+			        success : function(result){
+			        	console.log("채팅전송 : ",  result);
+			        	$("#chatMessage").val();
+			        },
+			        error: function(){
+			        	console.log(data);
+			        }
+				});	    	
+			}
+		    
+		    function onMessage(){
+		    	
+		    }
+		    
+		  //접속 해제...하면 대화방 목록에 표시되는 채팅내용 최신화....
+	 		function onClose(evt) { //evt
+				console.log("웹소켓 접속해제!!!!!!!")
+	 		}
+		}	
 	});
 	
 // 	//채팅방 안에서 채팅 보내기/채팅 수신/채팅방 닫기 => 여기서 웹소켓
@@ -529,7 +727,7 @@ $(document).ready(function() {
 			
 // 			$("#msgArea").append(str);	
 // 		}
-// // 	});
+// //	 });
 });
 </script>
 </body>

@@ -12,5 +12,4 @@ public interface EmployeeService {
 
 	// 회원 수정
 	public int update(EmployeeVO employeeVO);
-
 }
