@@ -517,7 +517,11 @@ h3 {
 	font-style: normal;
 	line-height: 160%; /* 22.4px */
 	padding-left: 16px;
-	margin: 8px 0px;
+	margin: 8px 0px 0px 0px;
+}
+
+.dduk-login-input:focus-visible {
+	    outline:  #0ABAB5 auto 1px;
 }
 
 .dduk-login-btn {
@@ -566,6 +570,26 @@ h3 {
 	text-decoration-line: underline !important;
 }
 
+.dduk-btn-normal:hover {
+	background: #0ABAB5;
+}
+
+button {
+	display: flex;
+	padding: 5px 10px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 0px solid var(--ci-01, #0ABAB5);
+	background: var(--ci-01, #0ABAB5);
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	border: 0px;
+	justify-content: center !important;
+}
+
 .dduk-btn-nomal {
 	display: inline-flex;
 	padding: 5px 12px;
@@ -581,28 +605,13 @@ h3 {
 	border: 0px;
 }
 
-button {
-	display: flex;
-	padding: 5px 10px;
-	align-items: center;
-	gap: 10px;
-	border-radius: 8px;
-	border: 1px solid var(--ci-01, #0ABAB5);
-	background: var(--ci-01, #0ABAB5);
-	color: var(--white, #FFF);
-	font-family: 'Pretendard5';
-	font-style: normal;
-	line-height: 160%; /* 22.4px */
-	border: 0px;
-}
-
 .dduk-btn-active {
 	display: flex;
-	padding: 5px 10px;
+	padding: 5px 12px;
 	align-items: center;
 	gap: 10px;
 	border-radius: 8px;
-	border: 1px solid var(--ci-01, #0ABAB5);
+	border: 0px solid var(--ci-01, #0ABAB5);
 	background: var(--ci-01, #0ABAB5);
 	color: var(--white, #FFF);
 	font-family: 'Pretendard5';
@@ -617,7 +626,7 @@ button {
 	align-items: center;
 	gap: 10px;
 	border-radius: 8px;
-	border: 1px solid var(--black-05, #E0E6E9);
+	border: 0px solid var(--black-05, #E0E6E9);
 	background: var(--black-05, #E0E6E9);
 	font-family: 'Pretendard5';
 	color: var(--black-03, #8D9EA5);
