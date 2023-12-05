@@ -27,11 +27,6 @@ public class EmployeeVO {
     private String atchFileCd;
     private String empDeptCd;
     private String empJbpsCd;
-<<<<<<< HEAD
-=======
-    
-    private MultipartFile[] uploadFile;
->>>>>>> branch 'kayoung' of https://github.com/giraffe7788/ddukddak.git
     
     private AtchFileVO atchFileVO;
     private List<AuthorityVO> authorityVOList;

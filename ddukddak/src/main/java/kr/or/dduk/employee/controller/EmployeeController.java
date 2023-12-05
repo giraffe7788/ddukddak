@@ -87,6 +87,7 @@ public class EmployeeController {
 
 		EmployeeVO employeeVO = this.employeeService.detail(empNo);
 		model.addAttribute("employeeVO", employeeVO);
+		log.info("detail -> employeeVO : " + employeeVO);
 		return "emp/detail";
 	}
 	
@@ -102,6 +103,13 @@ public class EmployeeController {
 		int result = (Integer)map.get("result"); // db에 insert 성공한 개수
 		String atchFileCd = (String)map.get("atchFileCd"); // 파일코드
 		employeeVO.setAtchFileCd(atchFileCd);
+		
+		// 비밀번호 보안화 인코딩
+		String rawPw = employeeVO.getEmpPw();
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String encodedPassword = encoder.encode(rawPw);
+		employeeVO.setEmpPw(encodedPassword);
+		log.info("update -> employeeVO : " + employeeVO);
 		
 		// EmployeeVO DB 수정
 		int res = this.employeeService.update(employeeVO);

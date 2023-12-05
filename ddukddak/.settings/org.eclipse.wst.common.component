@@ -6,7 +6,10 @@
 =======
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+<<<<<<< HEAD
 >>>>>>> branch 'newGyun' of https://github.com/giraffe7788/ddukddak.git
+=======
+>>>>>>> branch 'yunhahaha' of https://github.com/giraffe7788/ddukddak.git
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
 		<property name="java-output-path" value="target/classes"/>
