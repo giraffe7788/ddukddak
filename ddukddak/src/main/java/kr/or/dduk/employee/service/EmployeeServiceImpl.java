@@ -22,4 +22,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return this.employeeMapper.detail(empNo);
 	}
 
+	@Override
+	public int update(EmployeeVO employeeVO) {
+		return this.employeeMapper.update(employeeVO);
+	}
 }

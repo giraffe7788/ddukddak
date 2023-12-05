@@ -10,5 +10,4 @@ public class AtchFileDetailVO{
 	private String atchFileDetailSavenm;	// 저장파일명(웹경로)
 	private String atchFileDetailExt; 		// 파일확장자명
 	private String atchFileDetailPath; 		// 파일저장경로(물리경로)
-
 }

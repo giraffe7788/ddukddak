@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.dduk.employee.service.EmployeeService;
 import kr.or.dduk.util.FileController;
@@ -55,19 +56,19 @@ public class EmployeeController {
 	public String create(EmployeeVO employeeVO) {
 		log.info("create -> employeeVO : " + employeeVO);
 		
+		// 파일 로컬+DB 저장, 파일코드 얻어오고 설정
 		Map<String, Object> map = this.fileController.uploadFile(employeeVO.getUploadFile(), "사원프로필사진");
-		
 		int reuslt = (Integer)map.get("result"); // db에 insert 성공한 개수
 		String atchFileCd = (String)map.get("atchFileCd"); // 파일코드
-		
 		employeeVO.setAtchFileCd(atchFileCd);
 		
+		// 비밀번호 보안화 인코딩
 		String rawPw = employeeVO.getEmpPw();
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodedPassword = encoder.encode(rawPw);
 		employeeVO.setEmpPw(encodedPassword);
 		
-		// 이제 남은작업 -> employeeVO를 db에 넣어주면 끝
+		//employeeVO를 db에 넣기
 		int res = this.employeeService.create(employeeVO);
 		log.info("createEmp -> res : " + res);
 		
@@ -82,15 +83,30 @@ public class EmployeeController {
 	 * @return
 	 */
 	@GetMapping("/detail")
-	public String detail(String empNo, Model model, String atchFileCd) {
-		log.info("detail -> empNo : " + empNo);
+	public String detail(@RequestParam String empNo, Model model) {
+
 		EmployeeVO employeeVO = this.employeeService.detail(empNo);
-		log.info("detail -> employeeVO : " + employeeVO);
-		
-//		List<AtchFileVO> atchFileVOList = this.employeeService.getAtchFile(atchFileCd);
-		
 		model.addAttribute("employeeVO", employeeVO);
-		
 		return "emp/detail";
+	}
+	
+	/**
+	 * 회원수정
+	 * 
+	 */
+	@PostMapping("/update")
+	public String update(EmployeeVO employeeVO) {
+		
+		// 파일 로컬+DB 저장, 파일코드 얻어오고 설정
+		Map<String, Object> map = this.fileController.uploadFile(employeeVO.getUploadFile(), "사원프로필사진");
+		int result = (Integer)map.get("result"); // db에 insert 성공한 개수
+		String atchFileCd = (String)map.get("atchFileCd"); // 파일코드
+		employeeVO.setAtchFileCd(atchFileCd);
+		
+		// EmployeeVO DB 수정
+		int res = this.employeeService.update(employeeVO);
+		log.info("update -> res : " + res);
+		
+		return "redirect:/emp/detail?empNo="+employeeVO.getEmpNo();
 	}
 }
