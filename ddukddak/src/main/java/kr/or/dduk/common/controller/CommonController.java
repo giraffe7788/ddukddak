@@ -98,7 +98,7 @@ public class CommonController {
 	@GetMapping("/patient")
 	public String list(Model model) {
 		List<PatientVO> patientVOList = this.commonService.list();
-		log.info("patientVOList: ",patientVOList);
+		log.info("patientVOList: " + patientVOList);
 		
 		model.addAttribute("patientVOList",patientVOList);
 		
