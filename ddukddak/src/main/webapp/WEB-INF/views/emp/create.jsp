@@ -62,7 +62,7 @@ $(function() {
 							<input id="empName" name="empName" class="dduk-login-input" type="text"/>
 						</li>
 						<li class="list-group-item"><b>비밀번호</b>
-							<input id="empPw" name="empPw" class="dduk-login-input" type="text"/>
+							<input id="empPw" name="empPw" class="dduk-login-input" type="password"/>
 						</li>
 						<li class="list-group-item"><b>계정상태</b> 
 							<input id="empAcntState" name="empAcntState" class="dduk-login-input" type="text"/>
@@ -80,7 +80,7 @@ $(function() {
 							<input id="empReg" name="empReg" class="dduk-login-input" type="text" style="width: 100px;" />
 						</li>
 						<li class="list-group-item"><b>우편번호</b>
-							<input type="text" id="empZip" name="empZip" class="dduk-login-input" style="text-align:right"  />
+							<input type="number" id="empZip" name="empZip" class="dduk-login-input" style="text-align:right"  />
 								<button type="button" id="btnPost" style="width: 80px;" >검색</button>
 						</li>
 						<li class="list-group-item"><b>주소</b>

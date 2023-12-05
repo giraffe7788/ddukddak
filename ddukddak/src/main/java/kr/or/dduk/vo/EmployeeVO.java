@@ -28,9 +28,7 @@ public class EmployeeVO {
     private String empDeptcd;
     private String empJbpscd;
     
-    private List<AuthorityVO> authorityVOList;
-    
-    private MultipartFile[] uploadFile;
-    
     private AtchFileVO atchFileVO;
+    private List<AuthorityVO> authorityVOList;
+    private MultipartFile[] uploadFile;
 }
