@@ -80,14 +80,10 @@ public class ChatServiceImpl implements IChatService{
 	}
 
 	@Override
-	public String chatInsert(Map<String, String> map) {
+	public int chatInsert(Map<String, String> map) {
 		int result = chatMapper.chatInsert(map);
 		
-		if(result > 0) {
-			return "Success";
-		}else {
-			return "Failed";
-		}
+		return result;
 	}
 
 

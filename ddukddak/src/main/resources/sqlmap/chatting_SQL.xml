@@ -136,14 +136,25 @@
 <!-- 	</select> -->
 	
 	<!-- 채팅입력 -->
-	<insert id="chatInsert" parameterType="Map">
-		INSERT INTO CHAT(
-		CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE,
-		EMP_NO
-		)VALUES(
-		CHAT_NO_SEQ.NEXTVAL, #{chatRmListNo}, #{chatRmNo}, #{chatCont},
-		#{chatFileCd}, SYSDATE, #{empNo}
-		)
+<!-- 	<insert id="chatInsert" parameterType="Map"> -->
+<!-- 		INSERT INTO CHAT( -->
+<!-- 		CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE, -->
+<!-- 		EMP_NO -->
+<!-- 		)VALUES( -->
+<!-- 		CHAT_NO_SEQ.NEXTVAL, #{chatRmListNo}, #{chatRmNo}, #{chatCont}, -->
+<!-- 		#{chatFileCd}, SYSDATE, #{empNo} -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	<insert id="chatInsert" parameterType="map">
+		<selectKey resultType="int" order="BEFORE" keyProperty="chatNo">
+			SELECT CHAT_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	
+	    INSERT INTO CHAT(
+	    	CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE, EMP_NO
+	    ) VALUES (
+	    	#{chatNo}, #{chatRmListNo}, #{chatRmNo}, #{chatCont}, #{chatFileCd}, SYSDATE, #{empNo}
+	    )
 	</insert>
 
 </mapper>

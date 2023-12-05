@@ -70,6 +70,7 @@ $(document).ready(function() {
 
 <input type="hidden" id="sessionUserId" value="${employee.empNo}" />
 <input type="hidden" id="sessionUserNm" value="${employee.empName}" />
+<input type="hidden" id="sessionUserProfile" value="${employee.atchFilecd}" /> 
 
 <body>
 	<div>
@@ -233,15 +234,15 @@ $(document).ready(function() {
 		        	$(result).each(function(i){
 		        		var dept = "";
 		        		
-		        		if(result[i].empDeptCd == 'DTCD01'){
+		        		if(result[i].empDeptCd == "DTCD01"){
 		        			dept = "의사";
-		        		}else if(result[i].empDeptCd =='DTCD02'){
+		        		}else if(result[i].empDeptCd == "DTCD02"){
 		        			dept = "간호사";
-		        		}else if(result[i].empDeptCd =='DTCD03'){
+		        		}else if(result[i].empDeptCd == "DTCD03"){
 		        			dept = "치료사";
-		        		}else if(result[i].empDeptCd =='DTCD04'){
+		        		}else if(result[i].empDeptCd == "DTCD04"){
 		        			dept = "원무과"
-		        		}else if(result[i].empDeptCd =='DTCD05'){
+		        		}else if(result[i].empDeptCd == "DTCD05"){
 		        			dept = "인사과"
 		        		}
 		        		// 로그인/회원가입되면 나중에 추가해야함
@@ -475,7 +476,11 @@ $(document).ready(function() {
 // 		        	console.log("채팅방에 속해있는 직원정보 : ", result);
 // 		        }
 // 			});
+			chatStart();
 			
+			var sendButton = $("#sendButton");
+			
+		function chatStart(){
 			//채팅목록불러오기
 			$("#container").html("");
 			$.ajax({
@@ -528,8 +533,8 @@ $(document).ready(function() {
 		        			
 		        			str += "<div class='chat-message'>";
 		        			str += "<p>"+ this.chatCont + "</p>";
+		        			str += "<div>" + dsp_ampm + "</div>";
 		        			str += "</div>";
-		        			str += "<div" + dsp_ampm + "</div>";
 		        			
 		        			$("#chatArea").append(str);
 // 		        		}
@@ -537,19 +542,86 @@ $(document).ready(function() {
 		        	});
 		        }
 		        
-		        //채팅을 치게되면 오래된 메세지는 위로올라가는데...그걸 어케함...?
 		        		        
-		        //전송버튼 클릭시
-// 		        sendButton.on("click", function(){
-// 		        	sendMessage();
-// 		        	//메세지 전송하면스크롤위치 제일 아래로 내리기
-// 		        	document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
-// 		        	chatMessage.val("");
-// 		        });
-		        
-		        
 			});
-
+			
+		    //채팅을 치게되면 오래된 메세지는 위로올라가는데...그걸 어케함...?
+		    		
+			//전송버튼 클릭시
+	        sendButton.on("click", function(){
+	        	sendMessage();
+	        	//메세지 전송하면스크롤위치 제일 아래로 내리기
+	        	document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
+	        	chatMessage.val("");
+	        });
+		 
+		 	//웹소켓 시작!!!!!!!!!!!!!!!!!!!!!!!!!!
+		 	var chatRmNo = $("#hiddenChatRmNo").val(); // 방번호를 가져온다
+			
+	     	//"ws://localhost/chatting/" + chatRmNo
+	 		//var socket = new WebSocket("ws://localhost/ddukddak/chat/");
+	 		var socket = new SockJS("http://localhost:80/ddukddak/chat");
+	 		socket.onopen = onOpen; //websocket서버와 연결시킨다
+	 		socket.onmessage= onMessage; //메세지를 보내면 자동으로 실행
+	 		socket.onclose = onClose;   //접속 해제       
+// 			socket.onerror = onError;	//에러
+		    
+		    //채팅창에 들어왔을 때
+			function onOpen(evt) {
+				console.log("웹소켓 오픈!!!!!!!");
+			}
+		    
+		    //웹소켓 메세지 전송
+		    function sendMessage(){
+		    	var header = $("meta[name='_csrf_header']").attr("content");
+		    	var token = $("meta[name='_csrf']").attr("content");
+		    	
+		    	var chatRmNo = $("#hiddenChatRmNo").val(); //방번호
+		    	var empNo = $("#sessionUserId").val(); //직원사번
+		    	var empName = $("#sessionUserNm").val(); // 직원이름
+		    	var empProfile = $("sessionUserProfile").val() // 직원프로필사진
+		    	var chatCont = $("#chatCont").val(); //대화
+		    	var chatDate = new Date();	//보낸날짜
+		    	
+		    	console.log("방번호" + chatRmNo);
+		    	console.log("사번" + empNo);
+		    	console.log("이름" + empName);
+		    	console.log("프사" + empProfile);
+		    	console.log("내용" + chatCont);
+		    	console.log("시간" + chatDate);
+		    	
+		    	var data = {
+		    		empNo : empNo,
+		    		chatCont : chatCont,
+		    		chatRmNo : chatRmNo
+		    	}
+		    	
+		    	socket.send($("#chatMessage").val());   	
+				$.ajax({
+					url : "/ddukddak/chatting/chat/Insert",
+					type : "POST",
+					data : JSON.stringify(data),
+					contentType : "application/json; charset=utf-8",
+					async : false,
+					beforeSend : function(xhr){            
+			            xhr.setRequestHeader(header,token);
+			        },
+			        success : function(result){
+			        	console.log("채팅전송 : ",  result)
+			        	$("#chatMessage").val();
+			        }
+				});	    	
+			}
+		    
+		    function onMessage(){
+		    	
+		    }
+		    
+		  //접속 해제...하면 대화방 목록에 표시되는 채팅내용 최신화....
+	 		function onClose(evt) { //evt
+				console.log("웹소켓 접속해제!!!!!!!")
+	 		}
+		}	
 	});
 	
 // 	//채팅방 안에서 채팅 보내기/채팅 수신/채팅방 닫기 => 여기서 웹소켓
