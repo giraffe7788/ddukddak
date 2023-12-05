@@ -79,8 +79,9 @@ public class CommonController {
 	 *	권한이 없는 사이트 접속 시 접근거부 사이트로 보냄 
 	 */
 	@RequestMapping("/accessError")
-	public void accessDenied(Authentication auth, Model model) {
+	public String accessDenied(Authentication auth, Model model) {
 		log.info("access Denied : " + auth);
 		model.addAttribute("msg", "Access Denied");
+		return "security/accessError";
 	}
 }

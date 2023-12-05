@@ -19,6 +19,7 @@
 		<typeAlias type="kr.or.dduk.vo.ChatVO" alias="chatVO" />
 		<typeAlias type="kr.or.dduk.vo.ChatRoomVO" alias="chatRoomVO" />
 		<typeAlias type="kr.or.dduk.vo.ChatMemberVO" alias="chatMemberVO" />
+		<typeAlias type="kr.or.dduk.vo.HospitalReceptionVO" alias="hospitalReceptionVO" />
 	</typeAliases>
 	
 </configuration> 

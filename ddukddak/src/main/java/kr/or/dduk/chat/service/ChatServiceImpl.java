@@ -1,4 +1,4 @@
-package kr.or.dduk.chat.service.impl;
+package kr.or.dduk.chat.service;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.or.dduk.chat.service.IChatService;
 import kr.or.dduk.mapper.ChatMapper;
 import kr.or.dduk.vo.ChatMemberVO;
 import kr.or.dduk.vo.ChatRoomVO;
