@@ -16,6 +16,9 @@
 		<typeAlias type="kr.or.dduk.vo.NoticeVO" alias="noticeVO" />
 		<typeAlias type="kr.or.dduk.vo.AtchFileVO" alias="atchFileVO" />
 		<typeAlias type="kr.or.dduk.vo.AtchFileDetailVO" alias="atchFileDetailVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatVO" alias="chatVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatRoomVO" alias="chatRoomVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatMemberVO" alias="chatMemberVO" />
 	</typeAliases>
 	
 </configuration> 

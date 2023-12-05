@@ -1,7 +1,5 @@
 package kr.or.dduk.mms.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ import kr.or.dduk.vo.MmsHstrVO;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
-@RequestMapping("/mms")
+@RequestMapping("/crm")
 public class MmsController {
 
 	@Autowired
@@ -40,7 +38,7 @@ public class MmsController {
 		model.addAttribute("mmsFormVOList", mmsFormVOList);
 		model.addAttribute("mmsHstrVOList", mmsHstrVOList);
 		
-		return "mms/MMS";
+		return "crm/MMS";
 	}
 	    
 	/**

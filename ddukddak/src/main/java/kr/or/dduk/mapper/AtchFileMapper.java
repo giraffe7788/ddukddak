@@ -16,5 +16,6 @@ public interface AtchFileMapper {
 	// ATCH_FILE_DETAIL 테이블에 insert
 	public int insertFileDetail(AtchFileDetailVO atchFileDetailVO);
 
-
+	// 파일코드로 파일정보를 찾아옴
+	public AtchFileVO selectFileDetail(String atchFileCd);
 }
