@@ -30,99 +30,150 @@
 	float: left;
 	margin: 2px;
 }
+
+#send{
+	width: 50px;
+	height: 50px;
+	cursor:pointer;
+	float: right;
+	margin-top: 13px;
+}
 </style>
 
 <body>
 <div>
-<div class="crm-wrap">
-	<div class="dduk-body-border left">
-		<div class="container">
-		<h2>
-			<select id="formSlct">
-				<option>양식 선택</option>
-					<c:forEach var="mmsFormVO" items="${mmsFormVOList}">
-						<option 
-							data-json='{"cont": "${mmsFormVO.getMmsFormCont()}", "cd": "${mmsFormVO.getMmsFormCd()}" }'
-							>${mmsFormVO.getMmsFormNm()}
-							</option><br/>
-					</c:forEach>
-		    </select>
-		문자 작성
-	    </h2>
-		    
-		</div>
+	<div class="crm-wrap">
+		<div class="dduk-body-border left">
 			<div class="container">
-				<h3>양식제목 : <input class="dduck-input" type="text" id="formNm" name="formNm"/></h3>
-				<div id="formDiv">
-				<button type="button" id="addForm" class="dduk-btn-active fmrBtn">양식  추가</button>
-				<button type="button" id="updateForm" class="dduk-btn-nomal fmrBtn">양식  수정</button>
-				<button type="button" id="deleteForm" class="dduk-btn-danger fmrBtn">양식  삭제</button>
-				</div>
+				<h2>
+					<select id="formSlct">
+						<option>양식 선택</option>
+							<c:forEach var="mmsFormVO" items="${mmsFormVOList}">
+								<option 
+									data-json='{"cont": "${mmsFormVO.getMmsFormCont()}", "cd": "${mmsFormVO.getMmsFormCd()}" }'
+									>${mmsFormVO.getMmsFormNm()}
+									</option><br/>
+							</c:forEach>
+				    </select>
+				문자 작성
+		    	</h2>
+			    
 			</div>
+				<div class="container">
+					<h3>양식제목 : <input class="dduck-input" type="text" id="formNm" name="formNm"/></h3>
+						<div id="formDiv">
+							<button type="button" id="addForm" class="dduk-btn-active fmrBtn">양식  추가</button>
+							<button type="button" id="updateForm" class="dduk-btn-nomal fmrBtn">양식  수정</button>
+							<button type="button" id="deleteForm" class="dduk-btn-danger fmrBtn">양식  삭제</button>
+						</div>
+				</div>
 			<hr/>
-			
+				
 			<div class="container">
 				<textarea class="dduck-input" rows="10" cols="100" id="textArea" name="textArea"></textarea>
 			</div>
-	</div>
-	
-	<div class="dduk-body-border right">
-		<div class="contents"> 
-			<h2>문자 발송 내역</h2>
-			<hr/>
-			<table border="1">
-				<thead>
-					<tr>
-						<th>번호</th>
-						<th>발신자</th>
-						<th>수신자</th>
-						<th>날짜</th>
-						<th>내용</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="mmsHstrVO" items="${mmsHstrVOList}" varStatus="stat">
+		</div>
+		
+		<div class="dduk-body-border right">
+			<div class="contents"> 
+				<h2>문자 발송 내역</h2>
+				
+					<hr/>
+					
+				<table border="1">
+					<thead>
 						<tr>
-							<td>${mmsHstrVO.mmsNo}</td>
-							<td>${mmsHstrVO.mmsSent}</td>
-							<td>${mmsHstrVO.mmsRecv}</td>
-							<td><fmt:formatDate value="${mmsHstrVO.mmsDate}" pattern="yyyy-MM-dd" /></td>
-							<td>${mmsHstrVO.mmsCont}</td>
+							<th>번호</th>
+							<th>발신자</th>
+							<th>수신자</th>
+							<th>날짜</th>
+							<th>내용</th>
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<c:forEach var="mmsHstrVO" items="${mmsHstrVOList}" varStatus="stat">
+							<tr>
+								<td>${mmsHstrVO.mmsNo}</td>
+								<td>${mmsHstrVO.mmsSent}</td>
+								<td>${mmsHstrVO.mmsRecv}</td>
+								<td><fmt:formatDate value="${mmsHstrVO.mmsDate}" pattern="yyyy-MM-dd" /></td>
+								<td>${mmsHstrVO.mmsCont}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
-</div>
-
+	
 <br/>
 
-<div class="crm-wrap">
-	<div class="dduk-body-border left">
-		<div class="contents"> 
-			<h2>
-			<select>
-				<option>분류</option>
-			</select>
-			환자 검색 : <input class="dduck-input" type="text"/><button class="dduk-btn-nomal">검색</button>
-			</h2>
-			<hr/>
-		</div>
-	</div>
-	
-	<div class="dduk-body-border right">
-		<div class="contents"> 
+	<div class="crm-wrap">
+		<div class="dduk-body-border left">
+			<div class="contents"> 
 				<h2>
-				<!-- 문자보내는 전송버튼 -->
-				발송 대상<button type="button" id="send" class="dduk-btn-nomal">전송</button>
+				<select>
+					<option>분류</option>
+				</select>
+				환자 검색 : <input class="dduck-input" type="text"/>
+					<button type="submit" class="btn btn-default">
+						<i class="fas fa-search"></i>
+					</button>
 				</h2>
+				
+				<hr/>
+				
+				<div class="card-body table-responsive p-0" style="height: 250px;">
+					<table class="table table-head-fixed text-nowrap">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>User</th>
+								<th>Date</th>
+								<th>Status</th>
+								<th>Reason</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>183</td>
+								<td>김환자</td>
+								<td>11-7-2014</td>
+								<td><span class="tag tag-success">완치</span></td>
+								<td>빨리빨리 다니세요.</td>
+							</tr>
+							<tr>
+								<td>219</td>
+								<td>Alexander Pierce</td>
+								<td>11-7-2014</td>
+								<td><span class="tag tag-warning">Pending</span></td>
+								<td>Bacon ipsum dolor sit</td>
+							</tr>
+							<tr>
+								<td>657</td>
+								<td>Bob Doe</td>
+								<td>11-7-2014</td>
+								<td><span class="tag tag-primary">Approved</span></td>
+								<td>Bacon ipsum dolor sit</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		<div class="dduk-body-border right">
+			<div class="contents"> 
+					<span>
+					<!-- 문자보내는 전송버튼 -->
+					발송 대상<img src="/resources/images/send.png" id="send"/>
+					</span>
+				<!-- 인증번호 받을사람 휴대폰 번호 -->
+			</div>
 			<hr/>
-			<!-- 인증번호 받을사람 휴대폰 번호 -->
 			받는사람 : <input class="dduck-input" type="text" id="to" name="to"/>
 		</div>
 	</div>
-</div>
 </div>
 </body>
 
