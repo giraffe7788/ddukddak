@@ -10,7 +10,6 @@ import lombok.Data;
 
 @Data
 public class EmployeeVO {
-	
 	private String empNo;
     private String empPh;
     private String empName;
@@ -29,9 +28,7 @@ public class EmployeeVO {
     private String empDeptcd;
     private String empJbpscd;
     
-    private MultipartFile[] uploadFile;
-    
     private AtchFileVO atchFileVO;
-    
     private List<AuthorityVO> authorityVOList;
+    private MultipartFile[] uploadFile;
 }

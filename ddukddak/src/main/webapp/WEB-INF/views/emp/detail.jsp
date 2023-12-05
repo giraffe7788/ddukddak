@@ -30,23 +30,22 @@ $(function() {
 	});
 </script>
 <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+<div class="dduk-body-border">
+
 <form name="frm"
-	action="/emp/updateEmp?${_csrf.parameterName}=${_csrf.token}"
+	action="/emp/update?${_csrf.parameterName}=${_csrf.token}"
 	method="post" enctype="multipart/form-data">
-	<div class="row">
-		<div class="col-md-3">
-			<div class="card card-primary card-outline">
-				<div class="card-body box-profile">
-<!-- 					<div class="text-center"> -->
-<!-- 						<img class="profile-user-img img-fluid img-circle" -->
-<%-- 							src="/resources/upload/${employeeVO.}" --%>
-<!-- 							alt="User profile picture" id="atchFileCd"> -->
-<!-- 						<div class="custom-file"> -->
-<!-- 							<input type="file" class="custom-file-input" name="uploadFile" -->
-<!-- 								id="uploadFile" /> <label class="custom-file-label" -->
-<!-- 								for="uploadFile">프로필</label> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
+				<div class="card-body box-profile" >
+					<div class="text-center">
+						<img class="profile-user-img img-fluid img-circle"
+							src="/resources/upload/${employeeVO.atchFileVO.atchFileDetailVOList[0].atchFileDetailSavenm}"
+							alt="User profile picture" id="atchFileCd">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" name="uploadFile"
+								id="uploadFile" /> <label class="custom-file-label"
+								for="uploadFile">프로필</label>
+						</div>
+					</div>
 					<h3 class="profile-username text-center">
 					</h3>
 					<p class="text-muted text-center">
@@ -70,7 +69,7 @@ $(function() {
 						</a></li>
 						<li class="list-group-item"><b>비밀번호</b> <a
 							class="float-right"> <input id="empPw" name="empPw"
-								class="form-control form-control-sm" type="text"
+								class="form-control form-control-sm" type="password"
 								value="${employeeVO.empPw}" style="width: 100px;" />
 						</a></li>
 						<li class="list-group-item"><b>계정상태</b> <a
@@ -140,12 +139,10 @@ $(function() {
 						<b>저장</b>
 					</button>
 				</div>
-			</div>
-		</div>
 
-	</div>
 	<sec:csrfInput />
 </form>
+</div>
 <script type="text/javascript">
 $(function(){
 	console.log("ㅎㅇ");

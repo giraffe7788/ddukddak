@@ -26,7 +26,7 @@ public class FileController {
 	String uploadFolder;
 	
 	@Autowired
-	AtchFileMapper atchFilelMapper;
+	AtchFileMapper atchFileMapper;
 	
 	/**
 	 * 파일 타입이 이미지인지 체크하는 메서드
@@ -75,7 +75,7 @@ public class FileController {
 		
 		// DB에 AtchFile 넣기
 		AtchFileVO atchFileVO = new AtchFileVO();
-		result += this.atchFilelMapper.insertFile(atchFileVO);
+		result += this.atchFileMapper.insertFile(atchFileVO);
 		log.info("atchFileVO : " + atchFileVO);
 		// ATCH_FILE_CD 얻기
 		atchFileCd = atchFileVO.getAtchFileCd();
@@ -102,7 +102,7 @@ public class FileController {
 				
 				log.info("atchFileDetailVO : " + atchFileDetailVO);
 				
-				result += this.atchFilelMapper.insertFileDetail(atchFileDetailVO);
+				result += this.atchFileMapper.insertFileDetail(atchFileDetailVO);
 				
 				
 			} catch (IllegalStateException | IOException e) {

@@ -9,4 +9,6 @@ public interface EmployeeMapper {
 	public int create(EmployeeVO employeeVO);
 
 	public EmployeeVO detail(String empNo);
+
+	public int update(EmployeeVO employeeVO);
 }
