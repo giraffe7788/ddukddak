@@ -33,17 +33,93 @@ $(function() {
 <style>
 .dduk-login-input {
 	width: 320px;
-	height: 48px;
+	height: 40px;
 	flex-shrink: 0;
 }
 
 .dduk-login-d{
-	gap: 24px;
+	gap: 16px;
 }
 
 .dduk-row {
 	display: flex;
     gap: 24px;
+}
+
+.join-btn {
+	width: 320px;
+	height: 56px;
+	border-radius: 12px;
+	background: var(--black-01, #333);
+	margin-top: 16px;
+}
+
+.search-btn {
+	margin-left:8px; 
+	padding: 4px 14px; 
+	border-radius: 12px; 
+	height: 38px;
+}
+
+.btn-group {
+	width: 100%;
+	gap: 8px;
+}
+
+.btn-outline{
+	border: 1px soild var(--black-01, #333);
+}
+
+input[type=file]::file-selector-button {
+  display: flex;
+	padding: 5px 10px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 1px solid var(--ci-01, #0ABAB5);
+	background: var(--ci-01, #0ABAB5);
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	border: 0px;
+	justify-content: center !important;
+}
+
+ input[type=file]::file-selector-button:hover {
+    background: #0ABAB5;
+ }
+ 
+ #uploadFile {
+  display: none;
+}
+
+.form-check {
+	display: flex;
+    gap: 40px;
+    padding: 8px 16px;
+    margin-top: 8px;
+    margin-left: 16px;
+}
+
+.img-circle{
+	width: 100px;
+	height: 100px;
+	border-radius: 64px;
+	margin: 16px;
+}
+
+.form-check-input:checked {
+	background-color: var(--ci-01, #0ABAB5);
+	border-color: var(--ci-01, #0ABAB5);
+}
+
+h1{
+	margin-top: 20px;
+}
+
+.button-margin {
+	margin-left: 8px;
 }
 </style>
 <div class="d-flex">
@@ -55,17 +131,34 @@ $(function() {
 			action="/emp/create?${_csrf.parameterName}=${_csrf.token}"
 			method="post" enctype="multipart/form-data">
 			<div class="login-form-content">
-				<div class="card-body box-profile">
-					<div class="text-center">
-						<img class="profile-user-img img-fluid img-circle"
-							src="/resources/images/bpfl.jpg"
-							alt="User profile picture" id="atchFileCd">
-						<div class="custom-file">
-							<input type="file" class="custom-file-input" name="uploadFile"
-								id="uploadFile" /> <label class="custom-file-label"
-								for="uploadFile">프로필</label>
-						</div>
+				<div class="d-flex mar-b-16" style=" justify-content:space-between; gap: 24px;">
+					<div>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g clip-path="url(#clip0_82_1936)">
+							<path d="M19 11H7.82998L12.71 6.11997C13.1 5.72997 13.1 5.08997 12.71 4.69997C12.32 4.30997 11.69 4.30997 11.3 4.69997L4.70998 11.29C4.31998 11.68 4.31998 12.31 4.70998 12.7L11.3 19.29C11.69 19.68 12.32 19.68 12.71 19.29C13.1 18.9 13.1 18.27 12.71 17.88L7.82998 13H19C19.55 13 20 12.55 20 12C20 11.45 19.55 11 19 11Z" fill="#333333"/>
+							</g>
+							<defs>
+							<clipPath id="clip0_82_1936">
+							<rect width="24" height="24" fill="white"/>
+							</clipPath>
+							</defs>
+						</svg>
+						<h1>회원가입</h1>
 					</div>
+						<div style="width: 48%;">
+							<div class="login-input-label">프로필</div> 
+							<div class="d-flex" style="align-items: center;">
+								<img class="img-circle"
+									src="/resources/images/bpfl.jpg"
+									alt="User profile picture" id="atchFileCd">
+								<div class="custom-file">
+									<label for="uploadFile">
+										 <div type="button" class="dduk-btn-normal button-margin">파일</div>
+									</label>
+									<input type="file" class="dduk-login-input" name="uploadFile" id="uploadFile" /> 
+								</div>
+							</div>
+						</div>
 				</div>
 						<div class="dduk-row">
 							<div class="dduk-login-d">
@@ -75,7 +168,6 @@ $(function() {
 							<div class="dduk-login-d">
 								<div class="login-input-label">성명</div>
 								<input id="empName" name="empName" class="dduk-login-input" type="text"/>
-								
 							</div>
 						</div>
 						<div class="dduk-row">
@@ -93,17 +185,19 @@ $(function() {
 							<div class="dduk-row">
 							<div class="dduk-login-d"  style="margin-bottom: 0px;">
 								<div class="login-input-label">주소</div>
-								<input type="text" id="empZip" name="empZip" class="dduk-login-input" />
-								<button type="button" class="dduk-btn-nomal" id="btnPost" style="margin-left: 8px; padding: 9px 16px; border-radius: 12px;" >우편번호 찾기</button>
+								<div class="d-flex" style="align-items: baseline">
+									<input type="text" id="empZip" name="empZip" class="dduk-login-input" style="width: 203px;"/>
+									<button type="button" class="dduk-btn-nomal search-btn" id="btnPost" >우편번호 찾기</button>
+								</div>
 								
 							</div>
 						</div>
-						<div class="dduk-row" style="gap: 8px;">
+						<div class="dduk-row">
 							<div class="dduk-login-d">
-								<input id="empAdd1" name="empAdd1" class="dduk-login-input" type="text" style="width:328px;"/>
+								<input id="empAdd1" name="empAdd1" class="dduk-login-input" type="text" />
 							</div>
 							<div class="dduk-login-d">
-								<input id="empAdd2" name="empAdd2" class="dduk-login-input" type="text" style="width:328px;" placeholder="상세주소"/>
+								<input id="empAdd2" name="empAdd2" class="dduk-login-input" type="text" placeholder="상세주소"/>
 							</div>
 						</div>
 						</div>
@@ -111,7 +205,7 @@ $(function() {
 						
 						<div class="dduk-row">
 							<div class="dduk-login-d">
-								<div class="login-input-label">전화번호</div> 
+								<div class="login-input-label">연락처</div> 
 								<input id="empPh" name="empPh" class="dduk-login-input" type="text"/>
 							</div>
 							<div class="dduk-login-d">
@@ -121,15 +215,14 @@ $(function() {
 						</div>
 						<div class="dduk-login-d">
 							<div class="login-input-label">주민번호</div> 
-							<input id="empReg" name="empReg" class="form-control form-control-sm" type="text" style="width: 100px;" />
-							
+							<input id="empReg" name="empReg" class="dduk-login-input" type="text" style="width: 664px;" />
 						</div>
 						
 						
 						<div class="dduk-row">
 							<div class="dduk-login-d">
 								<div class="login-input-label">직무</div>
-								<select name="empDeptcd" id="empDeptcd" class="form-control form-control-sm">
+								<select name="empDeptcd" id="empDeptcd" class="dduk-login-input" style="padding-right: 8px;">
 										<option value="">직무 선택</option>
 										<option value="JBCD1">의사</option>
 										<option value="JBCD2">간호사</option>
@@ -137,17 +230,21 @@ $(function() {
 							</div>
 							<div class="dduk-login-d">
 								<div class="login-input-label">직책</div>
-								<div class="form-group">
-									<label for="empJbpscd1">부장</label>
-									<input type="radio" id="empJbpscd1" name="empJbpscd" value="부장" />
-									<label for="empJbpscd2">사원</label>
-									<input type="radio" id="empJbpscd2" name="empJbpscd" value="사원" />
+								<div class="form-check" role="group">
+									<span>
+										<input type="radio" id="empJbpscd1" name="empJbpscd" class="form-check-input" value="부장" />
+										<label for="empJbpscd1">부장</label>
+									</span>
+									<span>
+										<input type="radio" id="empJbpscd2" name="empJbpscd" class="form-check-input" value="사원" />
+										<label for="empJbpscd2">사원</label>
+									</span>
 								</div>
 							</div>
 						</div>
-					<button type="submit" class="btn btn-primary btn-block">
-						<div class="login-input-label">사원 등록</div>
-					</button>
+							<button type="submit" class="join-btn">
+								회원가입
+							</button>
 			</div>
 			<sec:csrfInput />
 		</form>

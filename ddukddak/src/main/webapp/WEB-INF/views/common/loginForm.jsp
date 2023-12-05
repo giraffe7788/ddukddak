@@ -2,12 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"  %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+
 <title>로그인</title>
-</head>
 <style>
 body {
 	background: var(--bg-01, #F8F9FC);
@@ -15,6 +11,9 @@ body {
 
 a {
 	cursor: pointer;
+}
+.dduk-login-btn {
+	justify-content: center;
 }
 </style>
 <body>
@@ -48,7 +47,7 @@ a {
 						<p><a class="search-passwd">비밀번호 찾기</a>
 					</div>
 					<div>
-						<button class="dduk-login-btn" type="submit"><span>로그인</span></button>
+						<button class="dduk-login-btn" type="submit"><span style="font-size: 16px !important;">로그인</span></button>
 					</div>
 					<sec:csrfInput/>
 				</form>
@@ -59,4 +58,3 @@ a {
 		</div>
 	</div>
 </body>
-</html>

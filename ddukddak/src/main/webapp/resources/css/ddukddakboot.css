@@ -570,10 +570,6 @@ h3 {
 	text-decoration-line: underline !important;
 }
 
-.dduk-btn-normal:hover {
-	background: #0ABAB5;
-}
-
 button {
 	display: flex;
 	padding: 5px 10px;
@@ -581,7 +577,7 @@ button {
 	gap: 10px;
 	border-radius: 8px;
 	border: 0px solid var(--ci-01, #0ABAB5);
-	background: var(--ci-01, #0ABAB5);
+	background: var(--black-02, #64767C);
 	color: var(--white, #FFF);
 	font-family: 'Pretendard5';
 	font-style: normal;
@@ -590,7 +586,7 @@ button {
 	justify-content: center !important;
 }
 
-.dduk-btn-nomal {
+.dduk-btn-normal {
 	display: inline-flex;
 	padding: 5px 12px;
 	justify-content: center;
@@ -605,6 +601,10 @@ button {
 	border: 0px;
 }
 
+.dduk-btn-normal:hover {
+	background: #0ABAB5;
+}
+
 .dduk-btn-active {
 	display: flex;
 	padding: 5px 12px;
@@ -612,7 +612,7 @@ button {
 	gap: 10px;
 	border-radius: 8px;
 	border: 0px solid var(--ci-01, #0ABAB5);
-	background: var(--ci-01, #0ABAB5);
+	background: var(--ci-01, #0ABAB5) !important;
 	color: var(--white, #FFF);
 	font-family: 'Pretendard5';
 	font-style: normal;
@@ -627,7 +627,7 @@ button {
 	gap: 10px;
 	border-radius: 8px;
 	border: 0px solid var(--black-05, #E0E6E9);
-	background: var(--black-05, #E0E6E9);
+	background: var(--black-05, #E0E6E9) !important;
 	font-family: 'Pretendard5';
 	color: var(--black-03, #8D9EA5);
 	border: 0px;
@@ -640,7 +640,7 @@ button {
 	align-items: center;
 	gap: 10px;
 	border-radius: 8px;
-	background: #FFECEC;
+	background: #FFECEC !important;
 	color: var(--red, #FF4040);
 	/* Body/Small */
 	font-family: 'Pretendard5';
@@ -649,7 +649,9 @@ button {
 	border: 0px;
 }
 
-
+.mar-b-16{
+	margin-bottom: 16px;
+}
 
 
 /*# sourceMappingURL=bootstrap.css.map */
