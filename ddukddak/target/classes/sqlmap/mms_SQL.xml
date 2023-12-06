@@ -37,4 +37,9 @@
 			INSERT INTO MMS_HSTR(MMS_NO, MMS_FORM_CD, MMS_SENT, MMS_RECV, MMS_DATE, MMS_CONT)
 			VALUES(#{mmsNo},#{mmsFormCd},#{mmsSent},#{mmsRecv},sysdate,#{mmsCont})
 	</insert>
+	
+	<select id="getAllHstr" resultType="mmsHstrVO">
+		SELECT MMS_NO, MMS_FORM_CD, MMS_SENT, MMS_RECV, MMS_DATE, MMS_CONT
+		FROM MMS_HSTR
+	</select>
 </mapper>

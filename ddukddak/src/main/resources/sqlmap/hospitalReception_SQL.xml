@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.HospitalReceptionMapper">
+
+	<select id="getReceptionList" resultType="hospitalReceptionVO">
+		SELECT
+			HR.HSRP_NO,
+			HR.HSRP_DT,
+			HR.HSRP_REASON,
+			HR.PA_NO,
+			HR.EMP_NO,
+			HR.HSRP_TYPE,
+			HR.HSRP_STATE,
+			P.PA_NAME,
+			P.PA_REG
+		FROM
+			HOSPITAL_RECEPTION HR
+		JOIN
+			PATIENT P ON HR.PA_NO = P.PA_NO
+		WHERE
+			HR.HSRP_STATE = 'RCST01'
+			AND HR.EMP_NO = #{empNo}
+		ORDER BY
+			CASE WHEN HR.HSRP_TYPE = 'RCTY02' THEN 0 ELSE 1 END,
+			HR.HSRP_NO ASC
+	</select>
+
+</mapper>

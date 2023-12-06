@@ -3,7 +3,7 @@
 <mapper namespace="kr.or.dduk.mapper.EmployeeMapper">
 
 	<select id="getMemberAuth" resultMap="employeeMap">
-		SELECT A.EMP_NO, A.EMP_PW, B.AUTH_NAME
+		SELECT A.EMP_NO, A.EMP_PW, A.EMP_NAME, A.EMP_DEPT_CD, A.EMP_JBPS_CD, A.ATCH_FILE_CD, B.AUTH_NAME
 		FROM EMPLOYEE A LEFT OUTER JOIN AUTHORITY B ON A.EMP_NO = B.EMP_NO
 		WHERE A.EMP_NO = #{empNo}
 	</select>
@@ -41,9 +41,9 @@
 		<result property="empAdd1" column="EMP_ADD1" />
 		<result property="empAdd2" column="EMP_ADD2" />
 		<result property="atchFileCd" column="ATCH_FILE_CD" />
-		<result property="empDeptcd" column="EMP_DEPTCD" />
-		<result property="empJbpscd" column="EMP_JBPSCD" />
-		<association property="atchFileVO" resultMap="atchFileMap"></association>
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="empJbpsCd" column="EMP_JBPS_CD" />
+		<association property="atchFileVO" resultMap="atchFileMap"/>
 		<collection property="authorityVOList" resultMap="authorityMap" />
 	</resultMap>
 	
@@ -66,5 +66,4 @@
 		<result property="atchFileDetailExt" column="ATCH_FILE_DETAIL_EXT"/>
 		<result property="atchFileDetailPath" column="ATCH_FILE_DETAIL_PATH"/>
 	</resultMap>
-	
 </mapper>
