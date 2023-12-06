@@ -34,7 +34,7 @@ public class FileController {
 	 * @return 이미지 여부
 	 */
 	public boolean checkImageType(File file) {
-		//MIME 타입 알아냄
+		// MIME 타입 알아냄
 		String contentType;
 		try {
 			contentType = Files.probeContentType(file.toPath());
@@ -103,7 +103,6 @@ public class FileController {
 				log.info("atchFileDetailVO : " + atchFileDetailVO);
 				
 				result += this.atchFileMapper.insertFileDetail(atchFileDetailVO);
-				
 				
 			} catch (IllegalStateException | IOException e) {
 	            log.error(e.getMessage());

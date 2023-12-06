@@ -1,6 +1,10 @@
 Manifest-Version: 1.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 Built-By: PC-18
+=======
+Built-By: PC-22
+>>>>>>> branch 'yunhahaha' of https://github.com/giraffe7788/ddukddak.git
 Build-Jdk: 1.8.0_361
 =======
 Built-By: dpfvl

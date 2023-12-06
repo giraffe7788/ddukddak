@@ -164,11 +164,11 @@ h1{
 						<div class="dduk-row">
 							<div class="dduk-login-d">
 								<div class="login-input-label">비밀번호</div>
-								<input id="empPw" name="empPw" class="dduk-login-input" type="text"/>
+								<input id="empPw" name="empPw" class="dduk-login-input" type="password"/>
 							</div>
 							<div class="dduk-login-d">
 								<div class="login-input-label">비밀번호 확인</div>
-								<input id="empPw" name="empPw" class="dduk-login-input" type="text"/>
+								<input id="empPw" name="empPw" class="dduk-login-input" type="password"/>
 							</div>
 						</div>
 						
@@ -213,7 +213,7 @@ h1{
 						<div class="dduk-row">
 							<div class="dduk-login-d">
 								<div class="login-input-label">직무</div>
-								<select name="empDeptcd" id="empDeptcd" class="dduk-login-input" style="padding-right: 8px;">
+								<select name="empDeptCd" id="empDeptCd" class="dduk-login-input" style="padding-right: 8px;">
 										<option value="">직무 선택</option>
 										<option value="JBCD1">의사</option>
 										<option value="JBCD2">간호사</option>
@@ -223,12 +223,12 @@ h1{
 								<div class="login-input-label">직책</div>
 								<div class="form-check" role="group">
 									<span>
-										<input type="radio" id="empJbpscd1" name="empJbpscd" class="form-check-input" value="부장" />
-										<label for="empJbpscd1">부장</label>
+										<input type="radio" id="empJbpsCd1" name="empJbpsCd" class="form-check-input" value="부장" />
+										<label for="empJbpsCd1">부장</label>
 									</span>
 									<span>
-										<input type="radio" id="empJbpscd2" name="empJbpscd" class="form-check-input" value="사원" />
-										<label for="empJbpscd2">사원</label>
+										<input type="radio" id="empJbpsCd2" name="empJbpsCd" class="form-check-input" value="사원" />
+										<label for="empJbpsCd2">사원</label>
 									</span>
 								</div>
 							</div>
@@ -274,36 +274,36 @@ $(function(){
 
 // 직무 따라서 직책 선택지 바꾸기 -> 테스트용임 수정필
 $(function(){
-    $('#empDeptcd').change(function(){
+    $('#empDeptCd').change(function(){
         var selectedValue = $(this).val();
         console.log(selectedValue);
-        var labelElement = $('label[for="empJbpscd1"]');
-        var radioElement = $('#empJbpscd1');
-        var labelElement2 = $('label[for="empJbpscd2"]');
-        var radioElement2 = $('#empJbpscd2');
+        var labelElement = $('label[for="empJbpsCd1"]');
+        var radioElement = $('#empJbpsCd1');
+        var labelElement2 = $('label[for="empJbpsCd2"]');
+        var radioElement2 = $('#empJbpsCd2');
 
         // 예시: JBCD1이면 의사, JBCD2이면 간호사로 변경
         if (selectedValue === 'JBCD1') {
             labelElement.text('일반의');
-            radioElement.val('일반의');
+            radioElement.val('JBCD10');
             labelElement2.text('전문의');
-            labelElement2.val('전문의');
+            labelElement2.val('JBCD13');
         } else if (selectedValue === 'JBCD2') {
         	labelElement.text('일반간호사');
-            radioElement.val('일반간호사');
+            radioElement.val('JBCD20');
             labelElement2.text('수간호사');
-            labelElement2.val('수간호사');
+            labelElement2.val('JBCD21');
         }
     });
     
-// 	$('#empDeptcd').on("change", function(){
-// 		let empDeptcd = $(this).val();
-// 		console.log(empDeptcd);
+// 	$('#empDeptCd').on("change", function(){
+// 		let empDeptCd = $(this).val();
+// 		console.log(empDeptCd);
 		
 // 		$.ajax({
 // 			url : "",
 // 			contentType : "text/html; charset=UTF-8",
-// 			data : empDeptcd,
+// 			data : empDeptCd,
 // 			type : "post",
 // 			dataType:"json",
 // 			success : function(result){
