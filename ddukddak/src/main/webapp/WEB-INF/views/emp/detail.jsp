@@ -115,8 +115,8 @@ input[type=file]::file-selector-button {
 #camIcon {
 	position: absolute;
 	margin-left:-175px;
-	width : 300px;
-	height : 300px;
+	width : 30px;
+	height : 30px;
 }
 
 .form-check-input:checked {
@@ -181,10 +181,12 @@ h1{
 							</div>
 							<div class="dduk-row" style="margin-left: 30%;">
 								<div class="dduk-login-d">
-									<p id="empDeptCd" name="empDeptCd" class="" type="text"  >
-									${employeeVO.empDeptCd}</p>
+									<p id="empDeptCd" name="empDeptCd" class="" type="text">
+										<c:if test="${employeeVO.empDeptCd == 'JBCD1'}">의사</c:if>
+										<c:if test="${employeeVO.empDeptCd == 'JBCD2'}">간호사</c:if>
+									</p>
 								</div>
-								/
+								•
 								<div class="dduk-login-d">
 									<p id="empJbpsCd" name="empJbpsCd" class="" type="text">
 									${employeeVO.empJbpsCd}</p>
@@ -205,7 +207,7 @@ h1{
 						</div>
 						<div class="dduk-login-d">
 							<div class="login-input-label">비밀번호 확인</div>
-							<input id="empPwCheck" name="empPwCheck" class="dduk-login-input" type="password" placeholder="비밀번호 확인"/>
+							<input id="pwConfirm" name="pwConfirm" class="dduk-login-input" type="password" placeholder="비밀번호 확인" required />
 						</div>
 								
 						<div class="dduk-login" style="margin: 12px 0px;">
@@ -252,7 +254,7 @@ h1{
 </div>
 <script type="text/javascript">
 $(function(){
-	console.log();
+	
 	
 	// 다음 우편 번호 검색
 	$("#btnPost").on("click", function(){
@@ -265,29 +267,42 @@ $(function(){
 			}
 		}).open();
 	});
+	
+	// 직무 따라서 직책 선택지 바꾸기 -> 테스트용임 수정필
+    var selectedValue = $(this).val();
+    console.log(selectedValue);
+    var labelElement = $('label[for="empJbpsCd1"]');
+    var radioElement = $('#empJbpsCd1');
+    var labelElement2 = $('label[for="empJbpsCd2"]');
+    var radioElement2 = $('#empJbpsCd2');
+    
+    let pw = $("#empPw").val();
+	let pwCf = $("#pwConfirm").val();
+    
+    // 예시: JBCD1이면 의사, JBCD2이면 간호사로 변경
+    if ($('#empDeptCd').val() == 'JBCD1') {
+    	labelElement.text('일반의');
+        radioElement.val('JBCD10');
+        labelElement2.text('전문의');
+        labelElement2.val('JBCD13');
+    } else if ($('#empDeptCd').val() == 'JBCD2') {
+    	labelElement.text('일반간호사');
+        radioElement.val('JBCD20');
+        labelElement2.text('수간호사');
+        labelElement2.val('JBCD21');
+    }
+    
+    // 비밀번호 확인
+    $("#pwConfirm").on("change", function(){
+    	
+    	if(pw != pwCf){
+    		alert("비밀번호 불일치");
+    		
+    	}
+    })
+
+    
 })
 
-// 직무 따라서 직책 선택지 바꾸기 -> 테스트용임 수정필
-$(function(){
-        var selectedValue = $(this).val();
-        console.log(selectedValue);
-        var labelElement = $('label[for="empJbpsCd1"]');
-        var radioElement = $('#empJbpsCd1');
-        var labelElement2 = $('label[for="empJbpsCd2"]');
-        var radioElement2 = $('#empJbpsCd2');
-
-        // 예시: JBCD1이면 의사, JBCD2이면 간호사로 변경
-        if ($('#empDeptCd').val() == 'JBCD1') {
-        	labelElement.text('일반의');
-            radioElement.val('JBCD10');
-            labelElement2.text('전문의');
-            labelElement2.val('JBCD13');
-        } else if ($('#empDeptCd').val() == 'JBCD2') {
-        	labelElement.text('일반간호사');
-            radioElement.val('JBCD20');
-            labelElement2.text('수간호사');
-            labelElement2.val('JBCD21');
-        }
-});
-
+		
 </script>
