@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.ClinicChartMapper">
+
+	<select id="simpleClinicChartList" resultMap="patientMap">
+		SELECT 
+    		P.PA_NO,
+    		P.PA_REG,
+    		P.PA_NAME,
+    		P.PA_SEX,
+    		P.PA_BLD_TYPE,
+    		P.PA_HEIGHT,
+    		P.PA_WEIGHT,
+    		P.PA_NOKNM,
+    		P.PA_NOKPH,
+    		PA_PH,
+    		PA_ADD1, 
+    		PA_ADD2, 
+    		PZ_ZIP,
+    		PA_INSR_YN,
+    		C.CLINIC_NO,
+   			C.CLINIC_DT,
+    		C.EMP_NO,
+    		C.ADMI_CD,
+    		E.EMP_NAME,
+    		ID.IJ_CD,
+    		MO.MEDI_CD,
+    		TOC.TEST_CD,
+    		TROC.TM_CD
+		FROM PATIENT P
+		LEFT JOIN CLINIC_CHART C ON P.PA_NO = C.PA_NO
+		LEFT JOIN INJURY_DIAGNOSIS ID ON C.CLINIC_NO = ID.CLINIC_NO
+		LEFT JOIN MEDICINE_ORDER MO ON C.CLINIC_NO = MO.CLINIC_NO
+		LEFT JOIN TEST_ORDER TOC ON C.CLINIC_NO = TOC.CLINIC_NO
+		LEFT JOIN TREATMENT_ORDER TROC ON C.CLINIC_NO = TROC.CLINIC_NO
+		LEFT JOIN EMPLOYEE E ON C.EMP_NO = E.EMP_NO 
+		WHERE P.PA_NO = #{paNo}
+		ORDER BY C.CLINIC_NO ASC
+	</select>
+	
+	<select id="clinicChartDetail" resultMap="clinicChartMap">
+		SELECT
+			C.CLINIC_NO,
+			C.CLINIC_DT,
+			C.CLINIC_OPINION,
+			C.HSRP_NO,
+			C.EMP_NO AS CLINIC_EMP_NO,
+			C.PA_NO,
+			C.CLINIC_INJNM,
+			C.ADMI_CD,
+			C.CLINIC_STATE,
+			ID.IJ_CD,
+			ID.INDI_TYPE,
+			ID.INDI_DT,
+			ID.BODY_CD AS INJURY_BODY_CD,
+            CDC1.COM_DET_CODE_NM AS INJURY_BODY_CD_NM,
+            IJ.IJ_NM,
+            IJ.IJ_ENM,
+            TM.TM_CD,
+            TM.TM_NM,
+            TM.INSU_YN,
+            MO.MDOD_QT,
+			MO.MDOD_DAY,
+			MO.MDOD_PER,
+			MO.MDOD_DOSE,
+			M.MEDI_CD,
+			M.MEDI_TYPE,
+			M.MEDI_NM,
+			M.MEDI_STOCK,
+			M.MEDI_MAKER,
+			M.MEDI_DETAIL,
+			M.MEDI_CONT,
+			M.MEDI_PRICE,
+			M.INSU_YN AS MEDICINE_INSU_YN,
+			TOC.TEOD_RST,
+			TOC.ATCH_FILE_CD,
+			T.TEST_CD,
+			T.TEST_NM,
+			T.TEST_PRICE,
+			TOC.BODY_CD AS TEST_ORDER_BODY_CD,
+            CDC2.COM_DET_CODE_NM AS TEST_ORDER_BODY_CD_NM,
+			TOC.EMP_NO AS TEST_ORDER_EMP_NO,
+			TROC.TROD_CONT,
+			TROC.EMP_NO AS TREATMENT_ORDER_EMP_NO,
+            CDC3.COM_DET_CODE_NM AS TREATMENT_ORDER_BODY_CD_NM,
+            PRA.PRAP_NO,
+            PRA.PRDC_CD,
+            PRA.PRAP_STATE,
+            PRA.ATCH_FILE_CD AS PROOF_FILE_CD,
+            AFD.ATCH_FILE_DETAIL_ORLNG,
+			AFD.ATCH_FILE_DETAIL_SAVENM
+		FROM CLINIC_CHART C
+		LEFT JOIN INJURY_DIAGNOSIS ID ON C.CLINIC_NO = ID.CLINIC_NO
+        LEFT JOIN INJURY IJ ON ID.IJ_CD = IJ.IJ_CD
+        LEFT JOIN TREATMENT_ORDER TRO ON C.CLINIC_NO = TRO.CLINIC_NO
+		LEFT JOIN MEDICINE_ORDER MO ON C.CLINIC_NO = MO.CLINIC_NO
+		LEFT JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD
+		LEFT JOIN TEST_ORDER TOC ON C.CLINIC_NO = TOC.CLINIC_NO
+		LEFT JOIN TEST T ON TOC.TEST_CD = T.TEST_CD
+		LEFT JOIN TREATMENT_ORDER TROC ON C.CLINIC_NO = TROC.CLINIC_NO
+        LEFT JOIN TREATMENT TM ON TROC.TM_CD = TM.TM_CD
+        LEFT JOIN PROOF_APPLICATION PRA ON C.CLINIC_NO = PRA.CLINIC_NO
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC1 ON ID.BODY_CD = CDC1.COM_DET_CODE
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC2 ON TOC.BODY_CD = CDC2.COM_DET_CODE
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC3 ON TROC.BODY_CD = CDC3.COM_DET_CODE
+        LEFT JOIN ATCH_FILE AF ON AF.ATCH_FILE_CD = TOC.ATCH_FILE_CD
+        LEFT JOIN ATCH_FILE_DETAIL AFD ON AF.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		WHERE C.CLINIC_NO = #{clinicNo}
+	</select>
+	
+	<insert id="insertClinicChart" parameterType="clinicChartVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="clinicNo">
+			SELECT 'CC' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(CLINIC_NO), 3) + 1, '0000')), '0001') AS CLINIC_NO FROM CLINIC_CHART
+		</selectKey>
+		INSERT INTO CLINIC_CHART(CLINIC_NO, EMP_NO, PA_NO, HSRP_NO, CLINIC_STATE, CLINIC_DT)
+		VALUES(#{clinicNo}, #{empNo}, #{paNo}, #{hsrpNo}, #{clinicState}, sysdate)
+	</insert>
+	
+	<select id="continueClinicChart" resultMap="clinicChartMap">
+		SELECT
+			C.CLINIC_NO,
+			C.CLINIC_DT,
+			C.CLINIC_OPINION,
+			C.HSRP_NO,
+			C.EMP_NO AS CLINIC_EMP_NO,
+			C.PA_NO,
+			C.CLINIC_INJNM,
+			C.ADMI_CD,
+			C.CLINIC_STATE,
+			ID.IJ_CD,
+			ID.INDI_TYPE,
+			ID.INDI_DT,
+			ID.BODY_CD AS INJURY_BODY_CD,
+            CDC1.COM_DET_CODE_NM AS INJURY_BODY_CD_NM, 
+            IJ.IJ_NM,
+            IJ.IJ_ENM,
+            TM.TM_CD,
+            TM.TM_NM,
+            TM.INSU_YN,
+            MO.MDOD_QT,
+			MO.MDOD_DAY,
+			MO.MDOD_PER,
+			MO.MDOD_DOSE,
+			M.MEDI_CD,
+			M.MEDI_TYPE,
+			M.MEDI_NM,
+			M.MEDI_STOCK,
+			M.MEDI_MAKER,
+			M.MEDI_DETAIL,
+			M.MEDI_CONT,
+			M.MEDI_PRICE,
+			M.INSU_YN AS MEDICINE_INSU_YN,
+			TOC.TEOD_RST,
+			TOC.ATCH_FILE_CD,
+            TOC.BODY_CD AS TEST_ORDER_BODY_CD,
+            CDC2.COM_DET_CODE_NM AS TEST_ORDER_BODY_CD_NM,
+			TOC.EMP_NO AS TEST_ORDER_EMP_NO,
+			E2.EMP_NAME AS TEST_ORDER_EMP_NAME,
+			T.TEST_CD,
+			T.TEST_NM,
+			T.TEST_PRICE,
+			TRO.TROD_CONT,
+            CDC3.COM_DET_CODE_NM AS TREATMENT_ORDER_BODY_CD_NM,
+			TRO.EMP_NO AS TREATMENT_ORDER_EMP_NO,
+			E1.EMP_NAME AS TREATMENT_ORDER_EMP_NAME,
+			AFD.ATCH_FILE_DETAIL_ORLNG,
+			AFD.ATCH_FILE_DETAIL_SAVENM
+		FROM CLINIC_CHART C
+		LEFT JOIN INJURY_DIAGNOSIS ID ON C.CLINIC_NO = ID.CLINIC_NO
+        LEFT JOIN INJURY IJ ON ID.IJ_CD = IJ.IJ_CD
+		LEFT JOIN MEDICINE_ORDER MO ON C.CLINIC_NO = MO.CLINIC_NO
+		LEFT JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD
+		LEFT JOIN TEST_ORDER TOC ON C.CLINIC_NO = TOC.CLINIC_NO
+		LEFT JOIN TEST T ON TOC.TEST_CD = T.TEST_CD
+		LEFT JOIN TREATMENT_ORDER TRO ON C.CLINIC_NO = TRO.CLINIC_NO
+        LEFT JOIN TREATMENT TM ON TRO.TM_CD = TM.TM_CD
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC1 ON ID.BODY_CD = CDC1.COM_DET_CODE
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC2 ON TOC.BODY_CD = CDC2.COM_DET_CODE
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC3 ON TRO.BODY_CD = CDC3.COM_DET_CODE
+        LEFT JOIN EMPLOYEE E1 ON TRO.EMP_NO = E1.EMP_NO
+        LEFT JOIN EMPLOYEE E2 ON TOC.EMP_NO = E2.EMP_NO
+        LEFT JOIN ATCH_FILE AF ON AF.ATCH_FILE_CD = TOC.ATCH_FILE_CD
+        LEFT JOIN ATCH_FILE_DETAIL AFD ON AF.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		WHERE C.HSRP_NO = #{hsrpNo}
+	</select>
+	
+	<update id="updateClinicChart" parameterType="clinicChartVO">
+		UPDATE CLINIC_CHART
+		SET CLINIC_INJNM = #{clinicInjnm},
+    		CLINIC_OPINION = #{clinicOpinion},
+    		CLINIC_STATE = #{clinicState}
+		WHERE HSRP_NO = #{hsrpNo}
+	</update>
+	
+	<select id="getClinicNoByHsrpNo" resultType="String">
+		SELECT CLINIC_NO
+		FROM CLINIC_CHART
+		WHERE HSRP_NO = #{hsrpNo}
+	</select>
+	
+	<insert id="insertInjuryDiagnosis" parameterType="injuryDiagnosisVO">
+		INSERT INTO INJURY_DIAGNOSIS(IJ_CD, CLINIC_NO, INDI_TYPE, INDI_DT, BODY_CD)
+		VALUES(#{ijCd}, #{clinicNo}, #{indiType}, #{indiDt}, #{injuryBodyCd})
+	</insert>
+	
+	<insert id="insertTestOrder" parameterType="testOrderVO">
+		INSERT INTO TEST_ORDER(TEST_CD, CLINIC_NO, BODY_CD)
+		VALUES(#{testCd}, #{clinicNo}, #{testOrderBodyCd})
+	</insert>
+	
+	<insert id="insertMedicineOrder" parameterType="medicineOrderVO">
+		INSERT INTO MEDICINE_ORDER(MEDI_CD, CLINIC_NO, MDOD_DAY, MDOD_PER, MDOD_DOSE, MDOD_QT, MDOD_PFYN)
+		VALUES(#{mediCd}, #{clinicNo}, #{mdodDay}, #{mdodPer}, #{mdodDose}, #{mdodQt}, 'MPYN01')
+	</insert>
+	
+	<insert id="insertTreatmentOrder" parameterType="treatmentOrderVO">
+		INSERT INTO TREATMENT_ORDER(TM_CD, CLINIC_NO, BODY_CD)
+		VALUES(#{tmCd}, #{clinicNo}, #{bodyCd})
+	</insert>
+	
+	<!-- 진료차트 진료상태 업데이트 -->
+	<update id="updateClinicState" parameterType="clinicChartVO">
+		UPDATE CLINIC_CHART
+		SET CLINIC_STATE = #{clinicState}
+		WHERE CLINIC_NO = #{clinicNo}
+	</update>
+
+	<!-- 회진에서 데이터를 더 빨리 뽑아오기 위해 경량화한 진료차트 디테일 -->
+	<select id="lightWeightClinicChartDetail" resultMap="clinicChartMap">
+		SELECT
+			C.CLINIC_DT,
+			C.CLINIC_OPINION,
+			C.CLINIC_INJNM,
+			ID.INDI_TYPE,
+			ID.INDI_DT,
+            CDC1.COM_DET_CODE_NM AS INJURY_BODY_CD_NM,
+            IJ.IJ_NM,
+            TM.TM_NM,
+            MO.MDOD_QT,
+			M.MEDI_NM,
+			M.MEDI_DETAIL,
+			TOC.TEOD_RST,
+			TOC.ATCH_FILE_CD,
+			T.TEST_NM,
+            CDC2.COM_DET_CODE_NM AS TEST_ORDER_BODY_CD_NM,
+			TROC.TROD_CONT,
+            CDC3.COM_DET_CODE_NM AS TREATMENT_ORDER_BODY_CD_NM,
+            AFD.ATCH_FILE_DETAIL_ORLNG,
+			AFD.ATCH_FILE_DETAIL_SAVENM
+		FROM CLINIC_CHART C
+		LEFT JOIN INJURY_DIAGNOSIS ID ON C.CLINIC_NO = ID.CLINIC_NO
+        LEFT JOIN INJURY IJ ON ID.IJ_CD = IJ.IJ_CD
+		LEFT JOIN MEDICINE_ORDER MO ON C.CLINIC_NO = MO.CLINIC_NO
+		LEFT JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD
+		LEFT JOIN TEST_ORDER TOC ON C.CLINIC_NO = TOC.CLINIC_NO
+		LEFT JOIN TEST T ON TOC.TEST_CD = T.TEST_CD
+		LEFT JOIN TREATMENT_ORDER TROC ON C.CLINIC_NO = TROC.CLINIC_NO
+        LEFT JOIN TREATMENT TM ON TROC.TM_CD = TM.TM_CD 
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC1 ON ID.BODY_CD = CDC1.COM_DET_CODE
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC2 ON TOC.BODY_CD = CDC2.COM_DET_CODE
+        LEFT JOIN COM_DETAIL_CODE_INFO CDC3 ON TROC.BODY_CD = CDC3.COM_DET_CODE
+        LEFT JOIN ATCH_FILE AF ON AF.ATCH_FILE_CD = TOC.ATCH_FILE_CD
+        LEFT JOIN ATCH_FILE_DETAIL AFD ON AF.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		WHERE C.CLINIC_NO = #{clinicNo}
+		AND C.CLINIC_STATE = 'CRST04'
+	</select>
+	
+	<!-- 환자정보 resultMap -->
+	<resultMap type="patientVO" id="patientMap">
+		<result property="paNo" column="PA_NO"/>
+		<result property="paReg" column="PA_REG"/>
+		<result property="paName" column="PA_NAME"/>
+		<result property="paSex" column="PA_SEX"/>
+		<result property="paPh" column="PA_PH"/>
+		<result property="paAdd1" column="PA_ADD1"/>
+		<result property="paAdd2" column="PA_ADD2"/>
+		<result property="pzZip" column="PZ_ZIP"/>
+		<result property="paNoknm" column="PA_NOKNM"/>
+		<result property="paNokph" column="PA_NOKPH"/>
+		<result property="paBldType" column="PA_BLD_TYPE"/>
+		<result property="paInsrYn" column="PA_INSR_YN"/>
+		<result property="paAdmDt" column="PA_ADM_DT"/>
+		<result property="paHeight" column="PA_HEIGHT"/>
+		<result property="paWeight" column="PA_WEIGHT"/>
+		
+		<collection property="clinicChartVOList" resultMap="clinicChartMap"></collection>
+	</resultMap>
+	
+	<!-- 진료,회진차트 resultMap -->
+	<resultMap type="clinicChartVO" id="clinicChartMap">
+		<id property="clinicNo" column="CLINIC_NO" />
+		<result property="clinicDt" column="CLINIC_DT" />
+		<result property="clinicOpinion" column="CLINIC_OPINION" />
+		<result property="hsrpNo" column="HSRP_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="paNo" column="PA_NO" />
+		<result property="clinicInjnm" column="CLINIC_INJNM" />
+		<result property="admiCd" column="ADMI_CD" />
+		<result property="clinicState" column="CLINIC_STATE" />
+		<result property="empName" column="EMP_NAME" />
+
+		<collection notNullColumn="IJ_CD" property="injuryDiagnosisVOList"
+			resultMap="injuryDiagnosisMap" />
+		<collection notNullColumn="TEST_CD" property="testOrderVOList"
+			resultMap="testOrderMap" />
+		<collection notNullColumn="MEDI_CD" property="medicineOrderVOList"
+			resultMap="medicineOrderMap" />
+		<collection notNullColumn="TM_CD" property="treatmentOrderVOList"
+			resultMap="treatmentOrderMap" />
+		<collection property="proofApplicationVOList" 
+			resultMap="proofApplicationMap" />
+	</resultMap>
+
+	<!-- 상병진단 resultMap -->
+	<resultMap type="injuryDiagnosisVO" id="injuryDiagnosisMap">
+		<id property="ijCd" column="IJ_CD" />
+		<id property="clinicNo" column="CLINIC_NO" />
+		<result property="indiType" column="INDI_TYPE" />
+		<result property="indiDt" column="INDI_DT" />
+		<result property="injuryBodyCd" column="INJURY_BODY_CD" />
+		
+		<result property="injuryBodyCdNm" column="INJURY_BODY_CD_NM" />
+
+		<association property="injuryVO" resultMap="injuryMap" />
+	</resultMap>
+
+	<!-- 상병코드 resultMap -->
+	<resultMap type="injuryVO" id="injuryMap">
+		<id property="ijCd" column="IJ_CD" />
+		<result property="ijNm" column="IJ_NM" />
+		<result property="ijEnm" column="IJ_ENM" />
+	</resultMap>
+
+	<!-- 검사오더 resultMap -->
+	<resultMap type="testOrderVO" id="testOrderMap">
+		<result property="testCd" column="TEST_CD" />
+		<result property="clinicNo" column="CLINIC_NO" />
+		<result property="teodRst" column="TEOD_RST" />
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="testOrderBodyCd" column="TEST_ORDER_BODY_CD" />
+		<result property="testOrderEmpNo" column="TEST_ORDER_EMP_NO" />
+		
+		<result property="testOrderEmpName" column="TEST_ORDER_EMP_NAME" />
+		<result property="testOrderBodyCdNm" column="TEST_ORDER_BODY_CD_NM" />
+
+		<association property="testVO" resultMap="testMap" />
+		<association property="atchFileVO" resultMap="atchFileMap" />
+	</resultMap>
+	
+	<!-- 검사오더의 검사결과를 위한 AtchFile의 resultMap -->
+	<resultMap type="atchFileVO" id="atchFileMap">
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="atchFileEndt" column="ATCH_FILE_ENDT" />
+		<collection property="atchFileDetailVOList" resultMap="atchFileDetailMap"></collection>
+	</resultMap>
+	
+	<!-- 검사오더의 검사결과를 위한 AtchFileDetail의 resultMap -->
+	<resultMap type="atchFileDetailVO" id="atchFileDetailMap">
+		<result property="atchFileCd" column="ATCH_FILE_CD"/>
+		<result property="atchFileDetailSeq" column="ATCH_FILE_DETAIL_SEQ"/>
+		<result property="atchFileDetailOrlng" column="ATCH_FILE_DETAIL_ORLNG"/>
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM"/>
+		<result property="atchFileDetailExt" column="ATCH_FILE_DETAIL_EXT"/>
+		<result property="atchFileDetailPath" column="ATCH_FILE_DETAIL_PATH"/>
+	</resultMap>
+
+	<!-- 검사코드 resultMap -->
+	<resultMap type="testVO" id="testMap">
+		<result property="testCd" column="TEST_CD" />
+		<result property="testNm" column="TEST_NM" />
+		<result property="testPrice" column="TEST_PRICE" />
+	</resultMap>
+
+	<!-- 처방오더 resultMap -->
+	<resultMap type="medicineOrderVO" id="medicineOrderMap">
+		<result property="mediCd" column="MEDI_CD" />
+		<result property="clinicNo" column="CLINIC_NO" />
+		<result property="mdodQt" column="MDOD_QT" />
+		<result property="mdodDay" column="MDOD_DAY" />
+		<result property="mdodPer" column="MDOD_PER" />
+		<result property="mdodDose" column="MDOD_DOSE" />
+		<result property="mdodPfyn"	column="MDOD_PFYN" />
+
+		<association property="medicineVO" resultMap="medicineMap" />
+	</resultMap>
+
+	<!-- 약품코드 resultMap -->
+	<resultMap type="medicineVO" id="medicineMap">
+		<result property="mediCd" column="MEDI_CD" />
+		<result property="mediType" column="MEDI_TYPE" />
+		<result property="mediNm" column="MEDI_NM" />
+		<result property="mediStock" column="MEDI_STOCK" />
+		<result property="mediMaker" column="MEDI_MAKER" />
+		<result property="mediDetail" column="MEDI_DETAIL" />
+		<result property="mediCont" column="MEDI_CONT" />
+		<result property="mediPrice" column="MEDI_PRICE" />
+		<result property="insuYn" column="INSU_YN" />
+	</resultMap>
+
+	<!-- 치료오더 resultMap -->
+	<resultMap type="treatmentOrderVO" id="treatmentOrderMap">
+		<result property="tmCd" column="TM_CD" />
+		<result property="clinicNo" column="CLINIC_NO" />
+		<result property="bodyCd" column="BODY_CD" />
+		<result property="trodCont" column="TROD_CONT" />
+		<result property="treatmentOrderEmpNo" column="TREATMENT_ORDER_EMP_NO" />
+		
+		<result property="treatmentOrderEmpName" column="TREATMENT_ORDEREMP_NAME" />
+		<result property="treatmentOrderBodyCdNm" column="TREATMENT_ORDER_BODY_CD_NM" />
+
+		<association property="treatmentVO"
+			resultMap="treatmentMap" />
+	</resultMap>
+
+	<!-- 치료코드 resultMap -->
+	<resultMap type="treatmentVO" id="treatmentMap">
+		<result property="tmCd" column="TM_CD" />
+		<result property="tmNm" column="TM_NM" />
+		<result property="tmPrice" column="TM_PRICE" />
+		<result property="insuYn" column="INSU_YN" />
+	</resultMap>
+	
+	<!-- 제증명 신청 resultMap -->
+	<resultMap type="proofApplicationVO" id="proofApplicationMap">
+		<result property="prapNo" column="PRAP_NO"/>
+		<result property="clinicNo" column="CLINIC_NO"/>
+		<result property="prdcCd" column="PRDC_CD"/>
+		<result property="prapCont" column="PRAP_CONT"/>
+		<result property="proofFileCd" column="PROOF_FILE_CD"/>
+		<result property="prapState" column="PRAP_STATE"/>		
+	</resultMap>
+</mapper>

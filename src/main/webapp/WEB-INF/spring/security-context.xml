@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 로그인 성공 처리자 bean객체 생성 -->
+	<bean id="customLoginSuccess" class="kr.or.dduk.security.CustomLoginSuccessHandler" />
+	<!-- 비밀번호 암호화를 위한 bean객체 생성 -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	<!-- 내 입맛대로 테이블, 컬럼을 가져와서 비교해주기 위한 bean객체 생성 -->
+	<bean id="customUserDetailsService" class="kr.or.dduk.security.CustomUserDetailsService" />
+
+	
+	<security:http>
+	
+		<!-- PDF뷰어를 위한 security 설정 -->
+	    <security:headers>
+	        <security:frame-options policy="SAMEORIGIN"/>
+	    </security:headers>
+	    <!-- 여기까지 추가-->
+	    
+		<!-- URL패턴 접근제한, pattern url 기준은 controller의 urlMapping임, jsp가 아님 -->
+		<security:intercept-url pattern="/common/main" access="isAuthenticated()" />
+		
+		<!-- 로그인 페이지 처리 / 로그인 성공시 페이지 처리-->
+		<security:form-login login-page="/common/login" authentication-success-handler-ref="customLoginSuccess" />
+		
+		<!-- 로그아웃 처리, 해당 링크로 post방식으로 보내면 로그아웃 됨 / 로그아웃 후에 세션을 무효화 -->
+		<security:logout logout-url="/logout" invalidate-session="true" />
+		
+		<!-- 접근거부 페이지 처리 -->
+		<security:access-denied-handler error-page="/common/accessError" />
+		
+		
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+			<!-- 비밀번호 암호화 처리기 등록 -->
+			<security:password-encoder ref="bcryptPasswordEncoder"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>

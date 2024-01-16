@@ -1,0 +1,12 @@
+Win키 + R => cmd => 엔터 => 도스창
+
+
+c:\users\sqlplus sys/java@localhost:1521 as sysdba
+
+(localhost(로컬호스트)는 컴퓨터 네트워크에서 사용하는 루프백 호스트명으로, 자신의 컴퓨터를 의미하며
+ IPv4에서의 IP 주소는 127.0.0.1로 변환됨. 로컬 컴퓨터를 원격 컴퓨터인것처럼 통신할 수 있어 테스트 목적으로 주로 사용)
+
+
+SQL>create user pc10 identified by java;
+
+SQL>grant connect, resource to pc10;

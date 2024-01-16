@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.EmployeeMapper">
+
+	<select id="getMemberAuth" resultMap="employeeMap">
+		SELECT A.EMP_NO, A.EMP_PW, A.EMP_NAME, A.EMP_DEPT_CD, A.EMP_JBPS_CD, A.ATCH_FILE_CD, B.AUTH_NAME,
+        d.ATCH_FILE_DETAIL_SAVENM AS PROFILE_NM, 
+        CDCI1.COM_DET_CODE_NM AS EMP_DEPT_NM,
+        CDCI2.COM_DET_CODE_NM AS EMP_JBPS_NM
+		FROM EMPLOYEE A 
+		LEFT OUTER JOIN AUTHORITY B ON A.EMP_NO = B.EMP_NO
+		JOIN ATCH_FILE_DETAIL d ON A.ATCH_FILE_CD = d.ATCH_FILE_CD
+        JOIN COM_DETAIL_CODE_INFO CDCI1 ON A.EMP_DEPT_CD = CDCI1.COM_DET_CODE
+        JOIN COM_DETAIL_CODE_INFO CDCI2 ON A.EMP_JBPS_CD = CDCI2.COM_DET_CODE
+		WHERE A.EMP_NO =  #{empNo}
+	</select>
+	
+<!-- 	사원 한 명 상세 정보 조회 -->
+	<select id="detail" parameterType="String" resultMap="employeeMap">
+	    SELECT *
+      	FROM EMPLOYEE e
+      	JOIN ATCH_FILE a ON e.ATCH_FILE_CD = a.ATCH_FILE_CD
+      	JOIN ATCH_FILE_DETAIL d ON e.ATCH_FILE_CD = d.ATCH_FILE_CD
+      	WHERE e.EMP_NO = #{empNo}
+	</select>
+	
+<!-- 	회원가입 시 새 사원 번호 조회용 -->
+	<select id="getNewNo" resultType="String">
+		SELECT MAX(EMP_NO) FROM EMPLOYEE
+	</select>
+	
+<!-- 	모든 사원 상세 정보 출력 -->
+	<select id="getAllEmp" resultType="employeeVO">
+		SELECT E.EMP_NO, E.EMP_PH, E.EMP_NAME, E.EMP_PW, E.EMP_ACNT_STATE, E.EMP_IN, E.EMP_OUT, E.EMP_MAIL, E.EMP_REG, E.EMP_ZIP, E.EMP_ADD1, E.EMP_ADD2, E.ATCH_FILE_CD,
+        CDCI1.COM_DET_CODE_NM AS EMP_DEPT_NM, CDCI2.COM_DET_CODE_NM AS EMP_JBPS_NM
+		FROM EMPLOYEE E
+		JOIN COM_DETAIL_CODE_INFO CDCI1 ON E.EMP_DEPT_CD = CDCI1.COM_DET_CODE
+		JOIN COM_DETAIL_CODE_INFO CDCI2 ON E.EMP_JBPS_CD = CDCI2.COM_DET_CODE
+	</select>
+	
+<!-- 	통계 : 재직중인 전체 사원 수 목록  -->
+	<select id="workingEmpListA" resultType="HashMap">
+		SELECT C.COM_DET_CODE_NM, COUNT(*) AS EMPLOYEE_COUNT
+		FROM EMPLOYEE E
+		JOIN COM_DETAIL_CODE_INFO C ON E.EMP_DEPT_CD = C.COM_DET_CODE
+		WHERE E.EMP_ACNT_STATE &lt;&gt; 'ACST04'
+		GROUP BY C.COM_DET_CODE_NM
+	</select>
+	
+<!-- 	통계 : 입사년도별 사원 수  -->
+	<select id="inEmpListA" resultType="HashMap">
+		SELECT SUBSTR(TO_CHAR(EMP_IN),1, 2) joinYear, COUNT(*) joinEmpCount
+		FROM EMPLOYEE E
+		GROUP BY SUBSTR(TO_CHAR(EMP_IN),1, 2)
+		ORDER BY SUBSTR(TO_CHAR(EMP_IN),1, 2)
+	</select>
+	
+<!-- 	통계 : 퇴사년도별 사원 수  -->
+	<select id="outEmpListA" resultType="HashMap">
+		SELECT SUBSTR(TO_CHAR(EMP_OUT),1, 2) outYear, COUNT(*) outEmpCount
+		FROM EMPLOYEE E
+		GROUP BY SUBSTR(TO_CHAR(EMP_OUT),1, 2)
+		ORDER BY SUBSTR(TO_CHAR(EMP_OUT),1, 2)
+	</select>
+	
+<!-- 	통계 : 직무별 사원 수 성비  -->
+	<select id="genEmpListA" resultType="HashMap">
+		SELECT C.COM_DET_CODE_NM DEPT, SUBSTR(E.EMP_REG, 8, 1) GEN, COUNT(*) AS EMP_COUNT
+		FROM EMPLOYEE E
+		JOIN COM_DETAIL_CODE_INFO C ON E.EMP_DEPT_CD = C.COM_DET_CODE
+		WHERE E.EMP_ACNT_STATE != 'ACST04'
+		GROUP BY C.COM_DET_CODE_NM, SUBSTR(E.EMP_REG, 8, 1)
+		ORDER BY C.COM_DET_CODE_NM
+	</select>
+	
+<!-- 	승인관련 사원 목록 출력 -->
+	<select id="getPermEmpList" resultType="employeeVO">
+		SELECT E.EMP_NO, E.EMP_PH, E.EMP_NAME, E.EMP_PW, E.EMP_ACNT_STATE, E.EMP_IN, E.EMP_OUT, E.EMP_MAIL, E.EMP_REG, E.EMP_ZIP, E.EMP_ADD1, E.EMP_ADD2, E.EMP_DEPT_CD, E.EMP_JBPS_CD, A.ATCH_FILE_DETAIL_SAVENM,
+        CDCI1.COM_DET_CODE_NM AS EMP_DEPT_NM, CDCI2.COM_DET_CODE_NM AS EMP_JBPS_NM
+		FROM EMPLOYEE E
+		JOIN ATCH_FILE_DETAIL A ON E.ATCH_FILE_CD = A.ATCH_FILE_CD
+		JOIN COM_DETAIL_CODE_INFO CDCI1 ON E.EMP_DEPT_CD = CDCI1.COM_DET_CODE
+		JOIN COM_DETAIL_CODE_INFO CDCI2 ON E.EMP_JBPS_CD = CDCI2.COM_DET_CODE
+		AND (E.EMP_ACNT_STATE = 'ACST01' OR E.EMP_ACNT_STATE = 'ACST02')
+	</select>
+	
+	<select id="getDoctorList" resultType="employeeVO">
+		SELECT EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, 
+		EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, 
+		EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD
+		FROM EMPLOYEE
+		WHERE EMP_DEPT_CD = 'DTCD01'
+	</select>
+	
+	<select id="getNurseList" resultType="employeeVO">
+		SELECT EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, 
+		EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, 
+		EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD
+		FROM EMPLOYEE
+		WHERE EMP_DEPT_CD = 'DTCD02'
+	</select>
+	
+<!-- 	인사과에서 사원 검색 후 상세조회 -->
+	<select id="getHrdDetail" parameterType="String" resultType="employeeVO">
+		SELECT E.EMP_NO, E.EMP_PH, E.EMP_NAME, E.EMP_PW, E.EMP_ACNT_STATE, E.EMP_IN, E.EMP_OUT, E.EMP_MAIL, E.EMP_REG, E.EMP_ZIP, E.EMP_ADD1, E.EMP_ADD2, E.EMP_DEPT_CD, E.EMP_JBPS_CD, A.ATCH_FILE_DETAIL_SAVENM,
+        CDCI1.COM_DET_CODE_NM AS EMP_DEPT_NM, CDCI2.COM_DET_CODE_NM AS EMP_JBPS_NM
+		FROM EMPLOYEE E
+		JOIN ATCH_FILE_DETAIL A ON E.ATCH_FILE_CD = A.ATCH_FILE_CD
+		JOIN COM_DETAIL_CODE_INFO CDCI1 ON E.EMP_DEPT_CD = CDCI1.COM_DET_CODE
+		JOIN COM_DETAIL_CODE_INFO CDCI2 ON E.EMP_JBPS_CD = CDCI2.COM_DET_CODE
+		WHERE E.EMP_NO = #{empNo}
+	</select>
+	
+	<select id="getAllDoctorDetail" parameterType="String" resultType="employeeVO">
+		SELECT E.EMP_NO, E.EMP_PH, E.EMP_NAME, E.EMP_PW, E.EMP_ACNT_STATE, E.EMP_IN, E.EMP_OUT, E.EMP_MAIL, E.EMP_REG, E.EMP_ZIP, E.EMP_ADD1, E.EMP_ADD2, E.EMP_DEPT_CD, E.EMP_JBPS_CD, A.ATCH_FILE_DETAIL_SAVENM,
+        CDCI1.COM_DET_CODE_NM AS EMP_DEPT_NM, CDCI2.COM_DET_CODE_NM AS EMP_JBPS_NM
+		FROM EMPLOYEE E
+		JOIN ATCH_FILE_DETAIL A ON E.ATCH_FILE_CD = A.ATCH_FILE_CD
+		JOIN COM_DETAIL_CODE_INFO CDCI1 ON E.EMP_DEPT_CD = CDCI1.COM_DET_CODE
+		JOIN COM_DETAIL_CODE_INFO CDCI2 ON E.EMP_JBPS_CD = CDCI2.COM_DET_CODE
+		WHERE E.EMP_DEPT_CD = 'DTCD01'
+	</select>
+	
+<!-- 	상태 따라서 사원 조회 -->
+	<select id="getSttDetail" parameterType="String" resultType="employeeVO">
+		SELECT E.EMP_NO, E.EMP_NAME,E.EMP_ACNT_STATE, A.ATCH_FILE_DETAIL_SAVENM,
+		CDCI1.COM_DET_CODE_NM AS EMP_DEPT_NM, CDCI2.COM_DET_CODE_NM AS EMP_JBPS_NM
+		FROM EMPLOYEE E
+		LEFT JOIN ATCH_FILE_DETAIL A ON E.ATCH_FILE_CD = A.ATCH_FILE_CD
+		LEFT JOIN COM_DETAIL_CODE_INFO CDCI1 ON E.EMP_DEPT_CD = CDCI1.COM_DET_CODE
+		LEFT JOIN COM_DETAIL_CODE_INFO CDCI2 ON E.EMP_JBPS_CD = CDCI2.COM_DET_CODE
+		WHERE E.EMP_ACNT_STATE = #{empAcntState}
+	</select>
+	
+<!-- 	사원 등록 -->
+	<insert id="create" parameterType="employeeVO">
+		INSERT INTO EMPLOYEE(EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, EMP_IN,  EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD)
+		VALUES(#{empNo},#{empPh},#{empName},#{empPw},'ACST01', sysdate, #{empMail},#{empReg},#{empZip},#{empAdd1},#{empAdd2},#{atchFileCd},#{empDeptCd},#{empJbpsCd})
+	</insert>
+	
+<!-- 	사원 정보 수정 -->
+	<update id="update" parameterType="employeeVO">
+		UPDATE EMPLOYEE
+		SET 
+			EMP_NAME = #{empName},
+			EMP_PH = #{empPh},
+			<if test="empPw != null and empPw != ''">
+				EMP_PW = #{empPw}, 
+			</if> 
+			EMP_MAIL = #{empMail}, 
+			EMP_REG = #{empReg}, 
+			EMP_ZIP = #{empZip}, 
+			EMP_ADD1 = #{empAdd1},
+			<if test="atchFileCd != null">
+				ATCH_FILE_CD = #{atchFileCd},
+			</if> 
+			EMP_ADD2 = #{empAdd2}
+		WHERE EMP_NO = #{empNo}
+	</update>
+	
+<!-- 	사원 상태 변경 -->
+	<update id="updateStt" parameterType="employeeVO">
+		UPDATE EMPLOYEE
+		SET EMP_ACNT_STATE = #{empAcntState}
+		WHERE EMP_NO = #{empNo}
+	</update>
+	
+<!-- 	1차결재자 가져오기 -->
+	<select id="getFirstApprovalHolder" resultMap="employeeMap">
+		SELECT
+		    EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, 
+		    EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, 
+		    ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD
+		FROM EMPLOYEE
+		WHERE EMP_DEPT_CD = 'DTCD02'
+		AND EMP_JBPS_CD IN ('JBCD21', 'JBCD23')
+	</select>
+	
+<!-- 	2차결재자 가져오기 -->
+	<select id="getSecondApprovalHolder" resultMap="employeeMap">
+		SELECT
+		    EMP_NO, EMP_PH, EMP_NAME, EMP_PW, EMP_ACNT_STATE, 
+		    EMP_IN, EMP_OUT, EMP_MAIL, EMP_REG, EMP_ZIP, EMP_ADD1, EMP_ADD2, 
+		    ATCH_FILE_CD, EMP_DEPT_CD, EMP_JBPS_CD
+		FROM EMPLOYEE
+		WHERE EMP_DEPT_CD = 'DTCD04'
+		AND EMP_JBPS_CD IN ('JBCD05', 'JBCD06')
+	</select>
+	
+<!-- 	현재 시각 기준 스케쥴 가져오기 -->
+	<select id="getPresentSchedule" parameterType="employeeVO" resultType="docScheduleVO">
+		SELECT DS_NO, EMP_NO, DS_STR_DATE, DS_END_DATE, DS_CATE, DS_CONT, DS_AD
+			FROM DOC_SCHEDULE
+			WHERE EMP_NO = #{empNo}
+			AND SYSTIMESTAMP BETWEEN TO_TIMESTAMP(DS_STR_DATE, 'YYYY-MM-DD"T"HH24:MI')
+			                     AND TO_TIMESTAMP(DS_END_DATE, 'YYYY-MM-DD"T"HH24:MI')
+	</select>
+	
+<!-- 	의사 진료실에 배정하기 -->
+	<update id="assignDoctorToClinicRoom" parameterType="docOfficeVO">
+	 UPDATE DOC_OFFICE
+	 SET EMP_NO = #{empNo},
+	 	 DO_STDT = #{doStdt},
+	 	 DO_EDDT = #{doEddt}
+	 WHERE DO_NO = #{doNo}
+	</update>
+	
+<!-- 	의사 진료실 배정 취소하기 -->
+	<update id="removeDoctorFromClinicRoom" parameterType="docOfficeVO">
+	 UPDATE DOC_OFFICE
+	 SET EMP_NO = null,
+	 	 DO_STDT = null,
+	 	 DO_EDDT = null
+	 WHERE DO_NO = #{doNo}
+	</update>
+	
+	<resultMap type="employeeVO" id="employeeMap">
+		<result property="empNo" column="EMP_NO" />
+		<result property="empPh" column="EMP_PH" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="empPw" column="EMP_PW" />
+		<result property="empAcntState" column="EMP_ACNT_STATE" />
+		<result property="empIn" column="EMP_IN" />
+		<result property="empOut" column="EMP_OUT" />
+		<result property="empMail" column="EMP_MAIL" />
+		<result property="empReg" column="EMP_REG" />
+		<result property="empZip" column="EMP_ZIP" />
+		<result property="empAdd1" column="EMP_ADD1" />
+		<result property="empAdd2" column="EMP_ADD2" />
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="empJbpsCd" column="EMP_JBPS_CD" />
+		<result property="empDeptNm" column="EMP_DEPT_NM" />
+		<result property="empJbpsNm" column="EMP_JBPS_NM" />
+		<result property="profileNm" column="PROFILE_NM" />
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM" />
+		<association property="atchFileVO" resultMap="atchFileMap"></association>
+		<collection property="authorityVOList" resultMap="authorityMap" />
+	</resultMap>
+	
+	<resultMap type="authorityVO" id="authorityMap">
+		<result property="empNo" column="EMP_NO" />
+		<result property="authName" column="AUTH_NAME" />
+	</resultMap>
+	
+	<resultMap type="atchFileVO" id="atchFileMap">
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="atchFileEndt" column="ATCH_FILE_ENDT" />
+		<collection property="atchFileDetailVOList" resultMap="atchFileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="atchFileDetailVO" id="atchFileDetailMap">
+		<result property="atchFileCd" column="ATCH_FILE_CD"/>
+		<result property="atchFileDetailSeq" column="ATCH_FILE_DETAIL_SEQ"/>
+		<result property="atchFileDetailOrlng" column="ATCH_FILE_DETAIL_ORLNG"/>
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM"/>
+		<result property="atchFileDetailExt" column="ATCH_FILE_DETAIL_EXT"/>
+		<result property="atchFileDetailPath" column="ATCH_FILE_DETAIL_PATH"/>
+	</resultMap>
+	
+</mapper>

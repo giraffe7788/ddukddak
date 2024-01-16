@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.AdmissionMapper">
+
+	<!-- 직원 resultMap -->
+	<resultMap type="employeeVO" id="employeeMap">
+	<result property="empNo" column="EMP_NO"/>
+	<result property="empPh" column="EMP_PH"/>
+	<result property="empName" column="EMP_NAME"/>
+	<result property="empPw" column="EMP_PW"/>
+	<result property="empAcntState" column="EMP_ACNT_STATE"/>
+	<result property="empIn" column="EMP_IN"/>
+	<result property="empOut" column="EMP_OUT"/>
+	<result property="empMail" column="EMP_MAIL"/>
+	<result property="empReg" column="EMP_REG"/>
+	<result property="empZip" column="EMP_ZIP"/>
+	<result property="empAdd1" column="EMP_ADD1"/>
+	<result property="empAdd2" column="EMP_ADD2"/>
+	<result property="atchFileCd" column="ATCH_FILE_CD"/>
+	<result property="empDeptCd" column="EMP_DEPT_CD"/>
+	<result property="empJbpsCd" column="EMP_JBPS_CD"/>
+	
+	<collection property="admissionChartVOList" resultMap="admissionChartMap"></collection>
+	</resultMap>
+	
+	<!-- 환자 resultMap -->
+	<resultMap type="patientVO" id="patientMap">
+		<result property="paNo" column="PA_NO"/>
+		<result property="paReg" column="PA_REG"/>
+		<result property="paName" column="PA_NAME"/>
+		<result property="paSex" column="PA_SEX"/>
+		<result property="paPh" column="PA_PH"/>
+		<result property="paAdd1" column="PA_ADD1"/>
+		<result property="paAdd2" column="PA_ADD2"/>
+		<result property="pzZip" column="PZ_ZIP"/>
+		<result property="paNoknm" column="PA_NOKNM"/>
+		<result property="paNokph" column="PA_NOKPH"/>
+		<result property="paBldType" column="PA_BLD_TYPE"/>
+		<result property="paInsrYn" column="PA_INSR_YN"/>
+		<result property="paAdmDt" column="PA_ADM_DT"/>
+		<result property="paHeight" column="PA_HEIGHT"/>
+		<result property="paWeight" column="PA_WEIGHT"/>
+		
+		<collection property="clinicChartVOList" resultMap="clinicChartMap"></collection>
+		<collection property="admissionRoomVOList" resultMap="admissionRoomMap"></collection>
+		<collection property="admissionChartVOList" resultMap="admissionChartMap"></collection>
+	</resultMap>
+	
+	
+	<!-- 입원실 resultMap -->
+	<resultMap type="admissionRoomVO" id="admissionRoomMap">
+		<result property="adrmRoomno" column="ADRM_ROOMNO"/>
+		<result property="adrmBedno" column="ADRM_BEDNO"/>
+		<result property="adrmPrice" column="ADRM_PRICE"/>
+		<result property="paNo" column="PA_NO"/>
+		<result property="paName" column="PA_NAME"/>
+		
+		<collection property="admissionChartVOList" resultMap="admissionChartMap"></collection>
+	</resultMap>
+	
+	<!-- 입원차트 resultMap -->
+	<resultMap type="admissionChartVO" id="admissionChartMap">
+		<result property="admiNo" column="ADMI_NO"/>
+		<result property="adrmRoomno" column="ADRM_ROOMNO"/>
+		<result property="adrmBedno" column="ADRM_BEDNO"/>
+		<result property="admiIndt" column="ADMI_INDT"/>
+		<result property="admiExpOutdt" column="ADMI_EXP_OUTDT"/>
+		<result property="admiOutdt" column="ADMI_OUTDT"/>
+		<result property="admiFile" column="ADMI_FILE"/>
+		<result property="paNo" column="PA_NO"/>
+		<result property="empNo" column="EMP_NO"/>
+		<result property="admiReason" column="ADMI_REASON"/>
+		
+		<collection property="clinicChartVOList" resultMap="clinicChartMap"></collection>
+	</resultMap>
+	
+	<!-- 진료,회진차트 resultMap -->
+	<resultMap type="clinicChartVO" id="clinicChartMap">
+		<result property="clinicNo" column="CLINIC_NO" />
+		<result property="clinicDt" column="CLINIC_DT" />
+		<result property="clinicOpinion" column="CLINIC_OPINION" />
+		<result property="hsrpNo" column="HSRP_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="paNo" column="PA_NO" />
+		<result property="clinicInjnm" column="CLINIC_INJNM" />
+		<result property="admiCd" column="ADMI_CD" />
+		<result property="clinicState" column="CLINIC_STATE" />
+		<result property="empName" column="EMP_NAME" />
+	</resultMap>
+	
+	<!-- 입원대기환자 조회 -->
+	<select id="selectAdmissionList" resultMap="patientMap">
+		SELECT 
+	        P.PA_NO,
+	        P.PA_REG, 
+	        P.PA_NAME, 
+	        P.PA_SEX, 
+	        P.PA_PH, 
+	        P.PA_ADD1, 
+	        P.PA_ADD2, 
+	        P.PZ_ZIP, 
+	        P.PA_NOKNM, 
+	        P.PA_NOKPH, 
+	        P.PA_BLD_TYPE, 
+	        P.PA_INSR_YN, 
+	        P.PA_ADM_DT, 
+	        P.PA_HEIGHT, 
+	        P.PA_WEIGHT,
+	        C.CLINIC_NO,
+	        C.CLINIC_OPINION,
+	        AC.ADMI_NO,
+            AC.ADMI_REASON
+    	FROM 
+        	PATIENT P
+	    LEFT JOIN 
+	        CLINIC_CHART C ON P.PA_NO = C.PA_NO
+        LEFT JOIN   
+            ADMISSION_CHART AC ON P.PA_NO = AC.PA_NO AND ADMI_OUTDT IS NULL
+	    WHERE 
+	        P.PA_ADM_DT IS NOT NULL
+	    AND 
+	        P.PA_ADM_DT = 'AMYN03'
+	</select>
+	
+	<!-- 퇴원대기환자 조회 -->
+	<select id="selectDischargeList" resultMap="patientMap">
+		SELECT 
+	        P.PA_NO,
+	        P.PA_REG, 
+	        P.PA_NAME, 
+	        P.PA_SEX, 
+	        P.PA_PH, 
+	        P.PA_ADD1, 
+	        P.PA_ADD2, 
+	        P.PZ_ZIP, 
+	        P.PA_NOKNM, 
+	        P.PA_NOKPH, 
+	        P.PA_BLD_TYPE, 
+	        P.PA_INSR_YN, 
+	        P.PA_ADM_DT, 
+	        P.PA_HEIGHT, 
+	        P.PA_WEIGHT,
+	        C.CLINIC_NO,
+	        C.CLINIC_OPINION,
+            AC.ADMI_REASON
+    	FROM 
+        	PATIENT P
+	    LEFT JOIN 
+	        CLINIC_CHART C ON P.PA_NO = C.PA_NO
+        LEFT JOIN   
+            ADMISSION_CHART AC ON P.PA_NO = AC.PA_NO AND ADMI_OUTDT IS NULL
+	    WHERE 
+	        P.PA_ADM_DT IS NOT NULL
+	    AND 
+	        P.PA_ADM_DT = 'AMYN04'
+	</select>
+	
+	<!-- 클릭 시 환자 상세정보 조회 -->
+	<select id="getPatientDetail" parameterType="String" resultMap="patientMap">
+		SELECT 
+		    A.PA_NO, 
+		    A.PA_REG, 
+		    A.PA_NAME, 
+		    A.PA_SEX, 
+		    A.PA_PH, 
+		    A.PA_ADD1, 
+		    A.PA_ADD2, 
+		    A.PZ_ZIP, 
+		    A.PA_NOKNM, 
+		    A.PA_NOKPH, 
+		    A.PA_BLD_TYPE, 
+		    A.PA_INSR_YN, 
+		    A.PA_ADM_DT, 
+		    A.PA_HEIGHT, 
+		    A.PA_WEIGHT,
+		    B.ADMI_NO,
+		    B.ADMI_INDT,
+		    B.ADMI_EXP_OUTDT,
+		    B.ADMI_REASON
+		FROM 
+		    PATIENT A
+		LEFT JOIN 
+		    ADMISSION_CHART B ON A.PA_NO = B.PA_NO
+		WHERE 
+		    A.PA_NO = #{paNo}
+		ORDER BY B.ADMI_NO DESC
+	</select>
+	
+	<!-- 의사소견 가져오기 -->
+	<select id="getClinicOpinion" resultMap="clinicChartMap">
+<!-- 		SELECT  -->
+<!-- 			A.PA_NO,  -->
+<!-- 			B.CLINIC_NO, -->
+<!-- 			B.CLINIC_OPINION, -->
+<!-- 			B.EMP_NO, -->
+<!-- 			B.CLINIC_DT, -->
+<!-- 			C.EMP_NAME -->
+<!-- 		FROM  -->
+<!-- 			PATIENT A -->
+<!-- 		JOIN  -->
+<!-- 			CLINIC_CHART B ON A.PA_NO = B.PA_NO -->
+<!-- 		JOIN  -->
+<!-- 			EMPLOYEE C ON B.EMP_NO = C.EMP_NO -->
+<!-- 		WHERE  -->
+<!-- 		    B.CLINIC_NO = #{clinicNo} -->
+		SELECT 
+			A.PA_NO,
+            A.PA_ADM_DT,
+			B.CLINIC_NO,
+			B.CLINIC_OPINION,
+			B.EMP_NO,
+			B.CLINIC_DT,
+			C.EMP_NAME
+		FROM 
+			PATIENT A
+		JOIN 
+			CLINIC_CHART B ON A.PA_NO = B.PA_NO
+		JOIN 
+			EMPLOYEE C ON B.EMP_NO = C.EMP_NO
+		WHERE 
+		    A.PA_NO = #{paNo} AND A.PA_ADM_DT = #{paAdmDt}
+		ORDER BY B.CLINIC_DT DESC
+	</select>
+	
+	<!-- 입원실 정보 조회 -->
+	<select id="admissionRoomVOList" resultMap="admissionRoomMap">
+		SELECT 
+		    A.ADRM_ROOMNO, 
+		    A.ADRM_BEDNO, 
+		    A.PA_NO, 
+		    B.PA_NAME, 
+		    B.PA_NOKNM, 
+		    B.PA_NOKPH, 
+		    B.PA_INSR_YN, 
+		    C.ADMI_NO,
+		    C.ADMI_INDT,
+		    C.ADMI_EXP_OUTDT,
+		    C.ADMI_OUTDT,
+		    C.ADMI_FILE,
+		    C.EMP_NO,
+		    C.ADMI_REASON,
+		    D.EMP_NAME,
+		    D.EMP_DEPT_CD
+		FROM 
+		    ADMISSION_ROOM A
+		JOIN 
+		    PATIENT B ON A.PA_NO = B.PA_NO
+		JOIN 
+		    ADMISSION_CHART C ON A.PA_NO = C.PA_NO
+		JOIN 
+		    EMPLOYEE D ON C.EMP_NO = D.EMP_NO
+		ORDER BY C.ADMI_NO DESC
+	</select>
+	
+	<!-- 입원실 정보 조회2 -->
+	<select id="patientVOList" resultMap="patientMap">
+		SELECT 
+    		A.ADRM_ROOMNO, 
+    		A.ADRM_BEDNO, 
+    		A.PA_NO, 
+    		B.PA_NAME, 
+    		C.ADMI_NO,
+    		C.EMP_NO,
+   		    D.EMP_NAME
+		FROM 
+    		ADMISSION_ROOM A
+		JOIN 
+   			PATIENT B ON A.PA_NO = B.PA_NO
+		JOIN 
+    		(
+        		SELECT PA_NO, ADMI_NO, EMP_NO, ROW_NUMBER() OVER (PARTITION BY PA_NO ORDER BY ADMI_NO DESC) AS rn
+        		FROM ADMISSION_CHART
+    		) C ON A.PA_NO = C.PA_NO AND C.rn = 1
+		JOIN 
+    		EMPLOYEE D ON C.EMP_NO = D.EMP_NO
+	</select>
+	
+	<!-- 입원등록(입원차트 생성) -->
+	<insert id="admissionInsert" parameterType="admissionChartVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="admiNo">
+			SELECT 'AN' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(ADMI_NO), 3) + 1, '0000')), '0001') AS ADMI_NO FROM ADMISSION_CHART
+		</selectKey>
+		INSERT INTO ADMISSION_CHART (ADMI_NO, ADMI_INDT, ADMI_EXP_OUTDT, PA_NO, ADMI_REASON)
+		VALUES(#{admiNo}, #{admiIndt}, #{admiExpOutdt}, #{paNo}, #{admiReason})
+	</insert>
+	
+	<!-- 환자의 입원상태 변경 -->
+	<update id="updatePatientAdmDt" parameterType="patientVO">
+		UPDATE PATIENT
+		SET PA_ADM_DT = #{paAdmDt}
+		WHERE PA_NO = #{paNo}
+	</update>
+	
+	<!-- 입원시 입원차트 정보 수정 -->
+	<update id="updateAdmissionChart" parameterType="admissionChartVO">
+		UPDATE ADMISSION_CHART
+			SET ADRM_ROOMNO = #{adrmRoomno},
+				ADRM_BEDNO = #{adrmBedno},
+				EMP_NO = #{empNo},
+				ADMI_FILE = #{admiFile}
+		WHERE ADMI_NO = #{admiNo}
+	</update>
+	<!-- 입원시 병상 상태 변경(환자번호 업데이트) -->
+	<update id="updateAdmissionRoom" parameterType="admissionRoomVO">
+		UPDATE ADMISSION_ROOM
+			SET PA_NO = #{paNo}
+		WHERE ADRM_ROOMNO = #{adrmRoomno} AND ADRM_BEDNO = #{adrmBedno}
+	</update>
+	<!-- 입원시 환자 정보 수정(입원여부) -->
+	<update id="updatePatient" parameterType="patientVO">
+		UPDATE PATIENT
+			SET PA_ADM_DT = 'AMYN01',
+				PA_NOKNM = #{paNoknm},
+				PA_NOKPH = #{paNokph}
+		WHERE PA_NO = #{paNo}
+	</update>
+	<!-- 입원동의서 -->
+	<update id="admiFileUpdate" parameterType="admissionChartVO">
+		UPDATE ADMISSION_CHART
+			SET ADMI_FILE = #{admiFile}
+		WHERE ADMI_NO = #{admiNo}
+	</update>
+	
+	<!-- 퇴원시 입원차트 정보 수정 -->
+	<update id="updateDischargeChart" parameterType="admissionChartVO">
+		UPDATE ADMISSION_CHART
+			SET ADMI_OUTDT = SYSDATE
+		WHERE ADMI_NO = #{admiNo}
+	</update>
+	<!-- 퇴원시 병상 상태 변경(환자번호 업데이트) -->
+	<update id="updateDischargeRoom" parameterType="admissionRoomVO">
+		UPDATE ADMISSION_ROOM
+			SET PA_NO = NULL
+		WHERE ADRM_ROOMNO = #{adrmRoomno} AND ADRM_BEDNO = #{adrmBedno}
+	</update>
+	<!-- 퇴원시 환자 정보 수정(입원여부) -->
+	<update id="updateDischargePatient" parameterType="patientVO">
+		UPDATE PATIENT
+			SET PA_ADM_DT = 'AMYN02'
+		WHERE PA_NO = #{paNo}
+	</update>
+	
+	<!-- 진료/회진차트 수정(입원코드) -->
+	<update id="updateClinicChart" parameterType="Map">
+		UPDATE CLINIC_CHART
+			SET PA_ADM_DT = #{admiNo}
+		WHERE CLINIC_NO = #{clinicNo}
+	</update>
+	
+	<!-- 검색창 입/퇴원 환자 검색 -->
+	<select id="selectAllPatient" resultMap="patientMap">
+		SELECT 
+	        P.PA_NO,
+	        P.PA_REG, 
+	        P.PA_NAME, 
+	        P.PA_SEX, 
+	        P.PA_PH, 
+	        P.PA_ADD1, 
+	        P.PA_ADD2, 
+	        P.PZ_ZIP, 
+	        P.PA_NOKNM, 
+	        P.PA_NOKPH, 
+	        P.PA_BLD_TYPE, 
+	        P.PA_INSR_YN, 
+	        P.PA_ADM_DT, 
+	        P.PA_HEIGHT, 
+	        P.PA_WEIGHT,
+	        C.CLINIC_NO,
+	        C.CLINIC_OPINION,
+            AC.ADMI_REASON
+    	FROM 
+        	PATIENT P
+	    LEFT JOIN 
+	        CLINIC_CHART C ON P.PA_NO = C.PA_NO
+        LEFT JOIN   
+            ADMISSION_CHART AC ON P.PA_NO = AC.PA_NO AND ADMI_OUTDT IS NULL
+	    WHERE 
+	        P.PA_ADM_DT IS NOT NULL
+	    AND 
+	        P.PA_ADM_DT = 'AMYN03' OR PA_ADM_DT = 'AMYN04'
+	</select>
+	
+	<select id="getAdmiNo" resultType="String">
+		SELECT ADMI_NO
+		FROM ADMISSION_CHART
+		WHERE PA_NO = #{paNo}
+	</select>
+	
+<!-- 	입원한 환자의 정보를 모두 불러오기 -->
+	<select id="getAllAdmissionPatient" resultType="patientVO">
+		SELECT A.PA_NO
+		PA_REG, PA_NAME, PA_SEX, PA_PH, PA_ADD1, PA_ADD2, PZ_ZIP, PA_NOKNM, PA_NOKPH, PA_BLD_TYPE, PA_INSR_YN, PA_ADM_DT, PA_HEIGHT, PA_WEIGHT
+		FROM ADMISSION_ROOM A
+		JOIN PATIENT P ON A.PA_NO = P.PA_NO
+	</select>
+	
+	<!-- 특정 입원의 입원기간 및 입원호실을 가져옴 -->
+	<select id="getSimpleAdmissionInfo" resultType="admissionChartVO">
+		SELECT ADRM_ROOMNO, ADMI_OUTDT, ADMI_INDT
+		FROM ADMISSION_CHART
+		WHERE ADMI_NO = #{admiNo}
+	</select>
+	
+	<!-- 모든 입원 기록 가져오기 -->
+	<select id="getAllAdmission" resultType="admissionChartVO">
+		SELECT *
+		FROM ADMISSION_CHART
+	</select>
+	
+	<!-- 월별 입원기록 가져오기 -->
+	<select id="getAdmissionListByMonth" resultType="admissionChartVO" parameterType="map">
+		SELECT *
+		FROM ADMISSION_CHART
+		WHERE EXTRACT(YEAR FROM ADMI_INDT) = #{year}
+		AND EXTRACT(MONTH FROM ADMI_INDT) = #{month}
+	</select>
+	
+	<!-- 입원환자 리스트 가져오기 -->
+	<select id="getAllAdmissionPatientList" resultType="patientVO">
+		SELECT 
+			P.PA_NO,
+	        P.PA_REG, 
+	        P.PA_NAME, 
+	        P.PA_SEX, 
+	        P.PA_PH, 
+	        P.PA_ADM_DT
+		FROM PATIENT P
+		LEFT JOIN
+			ADMISSION_CHART AC ON AC.PA_NO = P.PA_NO
+	</select>
+	
+	<!-- 월별 입원환자 리스트 가져오기 -->
+	<select id="getAdmissionPatientListByMonth" resultType="patientVO" parameterType="map">
+		SELECT 
+			P.PA_NO,
+	        P.PA_REG, 
+	        P.PA_NAME, 
+	        P.PA_SEX, 
+	        P.PA_PH, 
+	        P.PA_ADM_DT
+		FROM PATIENT P
+		LEFT JOIN
+			ADMISSION_CHART AC ON AC.PA_NO = P.PA_NO
+		WHERE EXTRACT(YEAR FROM AC.ADMI_INDT) = #{year}
+		AND EXTRACT(MONTH FROM AC.ADMI_INDT) = #{month}
+	</select>
+</mapper>

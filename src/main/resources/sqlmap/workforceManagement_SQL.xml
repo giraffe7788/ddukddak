@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.WorkforceManagementMapper">
+
+<insert id="createNurSchedule" parameterType="nurScheduleVO">
+	<selectKey resultType="String" order="BEFORE" keyProperty="nurscNo">
+		SELECT 'NUSC' || TRIM(TO_CHAR(SUBSTR(MAX(NURSC_NO),5)+1,'0000')) 
+		AS NURSC_NO FROM NUR_SCHEDULE
+	</selectKey>
+	INSERT INTO NUR_SCHEDULE (NURSC_DT, EMP_NO, NURSC_TYPE, NURSC_ENDT, NURSC_WT, NURSC_NO)
+	VALUES (#{nurscDt}, #{empNo}, #{nurscType}, SYSDATE, #{nurscWt}, #{nurscNo})
+</insert>
+
+<select id="getNurScheduleList" resultMap="nurScheduleMap" parameterType="Map">
+	SELECT 
+		NS.NURSC_DT, 
+		NS.EMP_NO, 
+		NS.NURSC_TYPE, 
+		NS.NURSC_ENDT, 
+		NS.NURSC_UPDT, 
+		NS.NURSC_WT, 
+		NS.NURSC_NO,
+		E.EMP_NAME
+	FROM 
+		NUR_SCHEDULE NS
+	INNER JOIN
+		EMPLOYEE E ON NS.EMP_NO = E.EMP_NO
+	WHERE EXTRACT(YEAR FROM NS.NURSC_DT) = #{year}
+	AND EXTRACT(MONTH FROM NS.NURSC_DT) = #{month}
+	ORDER BY NS.NURSC_DT ASC
+</select>
+
+<select id="createWorkforceExcel" resultMap="nurScheduleMap" parameterType="Map">
+	SELECT 
+		NS.NURSC_DT, 
+		NS.EMP_NO, 
+		NS.NURSC_TYPE, 
+		NS.NURSC_ENDT, 
+		NS.NURSC_UPDT, 
+		NS.NURSC_WT, 
+		NS.NURSC_NO,
+		E.EMP_NAME
+	FROM 
+		NUR_SCHEDULE NS
+	INNER JOIN
+		EMPLOYEE E ON NS.EMP_NO = E.EMP_NO
+	WHERE EXTRACT(YEAR FROM NS.NURSC_DT) = #{year}
+	AND EXTRACT(MONTH FROM NS.NURSC_DT) = #{month}
+	ORDER BY NS.NURSC_DT ASC
+</select>
+
+<delete id="deleteNurSchedule" parameterType="Map">
+	DELETE FROM NUR_SCHEDULE
+	WHERE EXTRACT(YEAR FROM NURSC_DT) = #{year}
+	AND EXTRACT(MONTH FROM NURSC_DT) = #{month}
+</delete>
+
+<resultMap type="nurScheduleVO" id="nurScheduleMap">
+	<result property="nurscDt" column="NURSC_DT"/>
+	<result property="empNo" column="EMP_NO"/>
+	<result property="nurscType" column="NURSC_TYPE"/>
+	<result property="nurscEndt" column="NURSC_ENDT"/>
+	<result property="nurscUpdt" column="NURSC_UPDT"/>
+	<result property="nurscWt" column="NURSC_WT"/>
+	<result property="nurscNo" column="NURSC_NO"/>
+	<result property="empName" column="EMP_NAME"/>
+</resultMap>
+
+</mapper>

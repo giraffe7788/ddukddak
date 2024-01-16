@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.PayMapper">
+	
+	<!-- DB에서 수납리스트 전체를 가져옴 -->
+	<select id="getPayList" resultMap="payMap">
+		SELECT 
+		    P.PA_NAME,
+		    P.PA_PH,
+		    P.PA_INSR_YN,
+		    PY.PAY_NO,
+		    PY.PAY_STATE,
+		    PY.PAY_TOTALMN,
+		    PY.PAY_STDT,
+		    PR.PR_NO,
+		    PR.PR_PAYMN
+		FROM PATIENT P
+		JOIN PAY PY ON P.PA_NO = PY.PA_NO
+		LEFT JOIN PAY_RECORD PR ON PY.PAY_NO = PR.PAY_NO
+		ORDER BY PY.PAY_NO DESC
+	</select>
+	
+	<!-- DB에서 수납상세를 가져옴 -->
+	<select id="getPayDetail" resultMap="payMap">
+		SELECT 
+		    P.PA_NO,
+		    P.PA_REG,
+		    P.PA_NAME,
+		    P.PA_SEX,
+		    P.PA_INSR_YN,
+		    P.PA_ADD1,
+		    P.PA_ADD2,
+		    P.PZ_ZIP,
+		    PY.PAY_NO,
+		    PY.PAY_TOTALMN,
+		    PY.PAY_STATE,
+		    PR.PR_NO,
+		    PR.PR_PAYDT,
+		    PR.PR_PAYTYPE,
+		    PR.PR_PAYMN,
+		    R.RCT_CLINIC, 
+		    R.RCT_ADMI, 
+		    R.RCT_DIET, 
+		    R.RCT_MEDIACT, 
+		    R.RCT_MEDI,
+		    R.RCT_SURGERY, 
+		    R.RCT_TEST, 
+		    R.RCT_VIDEO, 
+		    R.RCT_MEDIDEV, 
+		    R.RCT_RADIO, 
+		    R.RCT_PHYSIC, 
+		    R.RCT_BLOOD, 
+		    R.RCT_CT, 
+		    R.RCT_MRI, 
+		    R.RCT_PET, 
+		    R.RCT_ULTRA, 
+		    R.RCT_TOTAL, 
+		    R.RCT_INJEACT, 
+		    R.RCT_INJE
+		FROM PATIENT P
+		LEFT JOIN PAY PY ON P.PA_NO = PY.PA_NO
+		LEFT JOIN PAY_RECORD PR ON PY.PAY_NO = PR.PAY_NO
+		LEFT JOIN RECEIPT R ON PY.PAY_NO = R.PAY_NO
+		WHERE PY.PAY_NO = #{payNo}
+		ORDER BY PR.PR_PAYDT ASC
+	</select>
+	
+	<!-- DB에 PAY테이블 넣음 -->
+	<insert id="insertPay" parameterType="payVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="payNo">
+			SELECT 'PY' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(PAY_NO), 3) + 1, '0000')), '0001') AS PAY_NO FROM PAY
+		</selectKey>
+		INSERT INTO PAY (PAY_NO, PA_NO, CLINIC_NO, ADMI_NO, PAY_STATE, PAY_TOTALMN, PAY_STDT)
+		VALUES (#{payNo}, #{paNo}, #{clinicNo}, #{admiNo}, 'PMYN01', #{payTotalmn}, sysdate)
+	</insert>
+	
+	<!-- DB에 수납 기록을 넣음 -->
+	<insert id="insertPayRecord" parameterType="payRecordVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="prNo">
+			SELECT 'PR' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(PR_NO), 3) + 1, '0000')), '0001') AS PR_NO FROM PAY_RECORD
+		</selectKey>
+		INSERT INTO PAY_RECORD(PR_NO, PAY_NO, PR_PAYDT, PR_PAYTYPE, PR_PAYMN)
+		VALUES(#{prNo}, #{payNo}, sysdate, #{prPaytype}, #{prPaymn})
+	</insert>
+	
+	<!-- DB에 RECEIPT테이블 넣음 -->
+	<insert id="insertReceipt" parameterType="receiptVO">
+		INSERT INTO RECEIPT (PAY_NO, RCT_CLINIC, RCT_ADMI, RCT_DIET, RCT_MEDIACT, RCT_MEDI, RCT_SURGERY, RCT_TEST, RCT_VIDEO, RCT_MEDIDEV, RCT_PHYSIC, RCT_BLOOD, RCT_CT, RCT_MRI, RCT_ULTRA, RCT_TOTAL, RCT_INJEACT, RCT_INJE)
+		VALUES (#{payNo}, #{rctClinic}, #{rctAdmi}, #{rctDiet}, #{rctMediact}, #{rctMedi}, #{rctSurgery}, #{rctTest}, #{rctVideo}, #{rctMedidev}, #{rctPhysic}, #{rctBlood}, #{rctCt}, #{rctMri}, #{rctUltra}, #{rctTotal}, #{rctInjeact}, #{rctInje})
+	</insert>
+	
+	<!-- 특정 환자의 보험 여부를 가져옴 -->
+	<select id="getPaInsuYN" resultType="string">
+		SELECT PA_INSR_YN
+		FROM PATIENT
+		WHERE PA_NO = #{paNo}
+	</select>
+	
+	<!-- 수납테이블의 수납 상태를 변경 -->
+	<update id="updatePayState" parameterType="payVO">
+		UPDATE PAY
+		SET PAY_STATE = #{payState}
+		WHERE PAY_NO = #{payNo}
+	</update>
+	
+	<!-- 특정 입원의 모든 청구금액을 가져옴 -->
+	<select id="getAdmissionReceipt" resultType="receiptVO">
+		SELECT A.RCT_ADMI ,B.RCT_DIET, C.RCT_MEDIACT, D.RCT_MEDI, E.RCT_INJEACT, F.RCT_INJE, G.RCT_SURGERY, H.RCT_TEST, I.RCT_VIDEO, J.RCT_MEDIDEV, K.RCT_PHYSIC, L.RCT_BLOOD, M.RCT_CT, N.RCT_MRI, O.RCT_ULTRA,
+        	   NVL((A.RCT_ADMI + B.RCT_DIET + C.RCT_MEDIACT + D.RCT_MEDI + E.RCT_INJEACT + F.RCT_INJE + G.RCT_SURGERY + H.RCT_TEST + I.RCT_VIDEO + J.RCT_MEDIDEV + K.RCT_PHYSIC + L.RCT_BLOOD + M.RCT_CT + N.RCT_MRI + O.RCT_ULTRA), 0) AS RCT_TOTAL
+		FROM 
+		<!-- 입원비 계산 -->
+	    (
+	        SELECT 
+	            CASE 
+	                WHEN SUBSTR(ADRM_ROOMNO, 1, 1) = '3' THEN (DATEDIFF * 221400)
+	                WHEN SUBSTR(ADRM_ROOMNO, 1, 1) = '4' THEN (DATEDIFF * 171500)
+	                WHEN SUBSTR(ADRM_ROOMNO, 1, 1) = '5' THEN (DATEDIFF * 124000)
+	                ELSE 0
+	            END AS RCT_ADMI
+	        FROM 
+	            (
+	                SELECT 
+	                    TO_DATE(ADMI_OUTDT, 'YYYY-MM-DD') - TO_DATE(ADMI_INDT, 'YYYY-MM-DD') + 1 AS DATEDIFF,
+	                    ADRM_ROOMNO
+	                FROM ADMISSION_CHART
+	                WHERE ADMI_NO = #{admiNo}
+	            )
+	    ) A,
+		<!-- 식대 계산 -->
+	    (
+	        SELECT NVL(SUM(MEAL_PRICE), 0) AS RCT_DIET
+	        FROM DIET D
+	        LEFT JOIN MEAL M ON D.MEAL_CD = M.MEAL_CD
+	        WHERE ADMI_NO = #{admiNo}
+	    ) B,
+		<!-- 약품행위료 계산 -->
+	    (
+	        SELECT NVL((COUNT(MO.MEDI_CD) * 1500), 0) AS RCT_MEDIACT
+	        FROM CLINIC_CHART CC
+	        JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+	        JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND M.MEDI_DETAIL != '기타 처방' AND M.MEDI_DETAIL != '주사'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) C,
+	    <!-- 약품료 계산 -->
+	    (
+			SELECT NVL(SUM(CASE WHEN MO.MDOD_QT != 0 THEN M.MEDI_PRICE * MO.MDOD_DAY * MO.MDOD_PER * MO.MDOD_DOSE / MO.MDOD_QT ELSE 0 END), 0) AS RCT_MEDI
+			FROM CLINIC_CHART CC
+			JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+			JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND M.MEDI_DETAIL != '기타 처방' AND M.MEDI_DETAIL != '주사'
+			WHERE CC.ADMI_CD = #{admiNo}
+	    ) D,
+	    <!-- 주사행위료 계산 -->
+	    (
+	        SELECT NVL((COUNT(MO.MEDI_CD) * 2000), 0) AS RCT_INJEACT
+	        FROM CLINIC_CHART CC
+	        JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+	        JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND M.MEDI_DETAIL = '주사'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) E,
+	    <!-- 주사료 계산 -->
+	    (
+	        SELECT NVL(SUM(M.MEDI_PRICE), 0) AS RCT_INJE
+	        FROM CLINIC_CHART CC
+	        JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+	        JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND M.MEDI_DETAIL = '주사'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) F,
+	    <!-- 수술 및 처치료 계산 -->
+	    (
+	        SELECT NVL(SUM(MEDI_PRICE), 0) AS RCT_SURGERY
+	        FROM CLINIC_CHART C
+	        JOIN MEDICINE_ORDER MO ON C.CLINIC_NO = MO.CLINIC_NO
+	        JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND MEDI_DETAIL = '기타 처방'
+	        WHERE C.ADMI_CD = #{admiNo}
+	    ) G,
+	    <!-- 검사비 계산 -->
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_TEST
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = '소변검사'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) H,
+	    <!-- 영상진단료 계산 -->
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_VIDEO
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND (TEST_NM = 'X-RAY' OR TEST_NM = '골밀도 검사')
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) I,
+	    <!-- 치료재료대 계산 -->
+	    (
+	        SELECT 
+	    NVL(
+		    SUM(
+		        CASE 
+		            WHEN T.TM_CD = 'TRMT001' THEN 33000
+		            WHEN T.TM_CD = 'TRMT006' THEN 18000
+		            ELSE 0
+		        END
+		    ),0
+	    ) AS RCT_MEDIDEV
+	    FROM 
+	        CLINIC_CHART CC
+	        JOIN TREATMENT_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TREATMENT T ON TOD.TM_CD = T.TM_CD
+	    WHERE 
+	        CC.ADMI_CD = #{admiNo}
+	    ) J,
+	    <!-- 재활 및 물리치료료 계산 -->
+	    (
+	        SELECT NVL(SUM(T.TM_PRICE), 0) AS RCT_PHYSIC
+	        FROM CLINIC_CHART CC
+	        JOIN TREATMENT_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TREATMENT T ON TOD.TM_CD = T.TM_CD
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) K,
+	    <!-- 전혈 및 혈액성분 체체료 계산 -->
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_BLOOD
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = '피검사'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) L,
+	    <!-- CT진단료 -->
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_CT
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = 'CT'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) M,
+	    <!-- MRI진단료 -->
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_MRI
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = 'MRI'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) N,
+	    <!-- 초음파진단료 -->
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_ULTRA
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = '초음파'
+	        WHERE CC.ADMI_CD = #{admiNo}
+	    ) O
+	</select>
+	
+	<!-- 특정진료의 모든 청구금액을 가져옴 -->
+	<select id="getClinicReceipt" resultType="receiptVO">
+		SELECT 19000 AS RCT_CLINIC , A.RCT_INJEACT, B.RCT_INJE, C.RCT_SURGERY, D.RCT_TEST, E.RCT_VIDEO, F.RCT_MEDIDEV, G.RCT_PHYSIC, H.RCT_BLOOD, I.RCT_CT, J.RCT_MRI, K.RCT_ULTRA,
+        	   NVL((19000 + A.RCT_INJEACT + B.RCT_INJE + C.RCT_SURGERY + D.RCT_TEST + E.RCT_VIDEO + F.RCT_MEDIDEV + G.RCT_PHYSIC + H.RCT_BLOOD + I.RCT_CT + J.RCT_MRI + K.RCT_ULTRA), 0) AS RCT_TOTAL
+		FROM 
+	    (
+	        SELECT (COUNT(MO.MEDI_CD) * 2000) AS RCT_INJEACT
+	        FROM CLINIC_CHART CC
+	        JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+	        JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND M.MEDI_DETAIL = '주사'
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) A,
+
+	    (
+	        SELECT NVL(SUM(M.MEDI_PRICE), 0) AS RCT_INJE
+	        FROM CLINIC_CHART CC
+	        JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+	        JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND M.MEDI_DETAIL = '주사'
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) B,
+
+	    (
+	        SELECT NVL(SUM(MEDI_PRICE), 0) AS RCT_SURGERY
+	        FROM CLINIC_CHART C
+	        JOIN MEDICINE_ORDER MO ON C.CLINIC_NO = MO.CLINIC_NO
+	        JOIN MEDICINE M ON MO.MEDI_CD = M.MEDI_CD AND MEDI_DETAIL = '기타 처방'
+	        WHERE C.CLINIC_NO = #{clinicNo}
+	    ) C,
+
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_TEST
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = '소변검사'
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) D,
+
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_VIDEO
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND (TEST_NM = 'X-RAY' OR TEST_NM = '골밀도 검사')
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) E,
+
+	    (
+	        SELECT 
+	    NVL(
+		    SUM(
+		        CASE 
+		            WHEN T.TM_CD = 'TRMT001' THEN 33000
+		            WHEN T.TM_CD = 'TRMT006' THEN 18000
+		            ELSE 0
+		        END
+		    ),0
+	    ) AS RCT_MEDIDEV
+	    FROM 
+	        CLINIC_CHART CC
+	        JOIN TREATMENT_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TREATMENT T ON TOD.TM_CD = T.TM_CD
+	    WHERE 
+	        CC.CLINIC_NO = #{clinicNo}
+	    ) F,
+
+	    (
+	        SELECT NVL(SUM(T.TM_PRICE), 0) AS RCT_PHYSIC
+	        FROM CLINIC_CHART CC
+	        JOIN TREATMENT_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TREATMENT T ON TOD.TM_CD = T.TM_CD
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) G,
+
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_BLOOD
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = '피검사'
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) H,
+
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_CT
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = 'CT'
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) I,
+
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_MRI
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = 'MRI'
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) J,
+
+	    (
+	        SELECT NVL(SUM(T.TEST_PRICE), 0) AS RCT_ULTRA
+	        FROM CLINIC_CHART CC
+	        JOIN TEST_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+	        JOIN TEST T ON TOD.TEST_CD = T.TEST_CD AND TEST_NM = '초음파'
+	        WHERE CC.CLINIC_NO = #{clinicNo}
+	    ) K
+	</select>
+	
+	<!-- 수납 resultMap -->
+	<resultMap type="payVO" id="payMap">
+		<result property="payNo" column="PAY_NO"/>
+		<result property="paNo" column="PA_NO"/>
+		<result property="clinicNo" column="CLINIC_NO"/>
+		<result property="admiNo" column="ADMI_NO"/>
+		<result property="payState" column="PAY_STATE"/>
+		<result property="payTotalmn" column="PAY_TOTALMN"/>
+		<result property="payStdt" column="PAY_STDT"/>
+		
+		<association property="patientVO" resultMap="patientMap" />
+		<association property="receiptVO" resultMap="receiptMap" />
+		<collection notNullColumn="PR_NO" property="payRecordVOList" resultMap="payRecordMap" />
+	</resultMap>
+	
+	<!-- 수납기록 resultMap -->
+	<resultMap type="payRecordVO" id="payRecordMap">
+		<result property="prNo" column="PR_NO"/>
+		<result property="payNo" column="PAY_NO"/>
+		<result property="prPaydt" column="PR_PAYDT"/>
+		<result property="prPaytype" column="PR_PAYTYPE"/>
+		<result property="prPaymn" column="PR_PAYMN"/>
+	</resultMap>
+	
+	<!-- 영수증 resultMap -->
+	<resultMap type="receiptVO" id="receiptMap">
+		<result property="payNo" column="PAY_NO"/>
+		<result property="rctClinic" column="RCT_CLINIC"/>
+		<result property="rctAdmi" column="RCT_ADMI"/>
+		<result property="rctDiet" column="RCT_DIET"/>
+		<result property="rctMediact" column="RCT_MEDIACT"/>
+		<result property="rctMedi" column="RCT_MEDI"/>
+		<result property="rctInjeact" column="RCT_INJEACT"/>
+		<result property="rctInje" column="RCT_INJE"/>
+		<result property="rctAnes" column="RCT_ANES"/>
+		<result property="rctSurgery" column="RCT_SURGERY"/>
+		<result property="rctTest" column="RCT_TEST"/>
+		<result property="rctVideo" column="RCT_VIDEO"/>
+		<result property="rctMedidev" column="RCT_MEDIDEV"/>
+		<result property="rctRadio" column="RCT_RADIO"/>
+		<result property="rctPhysic" column="RCT_PHYSIC"/>
+		<result property="rctBlood" column="RCT_BLOOD"/>
+		<result property="rctCt" column="RCT_CT"/>
+		<result property="rctMri" column="RCT_MRI"/>
+		<result property="rctPet" column="RCT_PET"/>
+		<result property="rctUltra" column="RCT_ULTRA"/>
+		<result property="rctPros" column="RCT_PROS"/>
+		<result property="rctEtc" column="RCT_ETC"/>
+		<result property="rctTotal" column="RCT_TOTAL"/>
+	</resultMap>
+	
+	<!-- 환자정보 resultMap -->
+	<resultMap type="patientVO" id="patientMap">
+		<result property="paNo" column="PA_NO"/>
+		<result property="paReg" column="PA_REG"/>
+		<result property="paName" column="PA_NAME"/>
+		<result property="paSex" column="PA_SEX"/>
+		<result property="paPh" column="PA_PH"/>
+		<result property="paAdd1" column="PA_ADD1"/>
+		<result property="paAdd2" column="PA_ADD2"/>
+		<result property="pzZip" column="PZ_ZIP"/>
+		<result property="paNoknm" column="PA_NOKNM"/>
+		<result property="paNokph" column="PA_NOKPH"/>
+		<result property="paBldType" column="PA_BLD_TYPE"/>
+		<result property="paInsrYn" column="PA_INSR_YN"/>
+		<result property="paAdmDt" column="PA_ADM_DT"/>
+		<result property="paHeight" column="PA_HEIGHT"/>
+		<result property="paWeight" column="PA_WEIGHT"/>
+	</resultMap>
+</mapper>

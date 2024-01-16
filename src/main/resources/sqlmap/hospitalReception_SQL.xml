@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.HospitalReceptionMapper">
+
+	<select id="getReceptionList" resultType="hospitalReceptionVO">
+		SELECT
+			HR.HSRP_NO,
+			HR.HSRP_DT,
+			HR.HSRP_REASON,
+			HR.PA_NO,
+			HR.EMP_NO,
+			HR.HSRP_TYPE,
+			HR.HSRP_STATE,
+			P.PA_NAME,
+			P.PA_REG,
+            C.CLINIC_STATE
+		FROM
+			HOSPITAL_RECEPTION HR
+		JOIN
+			PATIENT P ON HR.PA_NO = P.PA_NO
+        LEFT JOIN
+            CLINIC_CHART C ON HR.HSRP_NO = C.HSRP_NO
+		WHERE
+			HR.EMP_NO = #{empNo}
+            AND (C.CLINIC_STATE IS NULL OR (C.CLINIC_STATE != 'CRST04' AND C.CLINIC_STATE != 'CRST06' AND C.CLINIC_STATE != 'CRST07' AND C.CLINIC_STATE != 'CRST08'))
+		ORDER BY
+			CASE WHEN HR.HSRP_TYPE = 'RCTY02' THEN 0 ELSE 1 END,
+			HR.HSRP_NO ASC
+	</select>
+	
+	<select id="getTodayReceptionList" resultType="hospitalReceptionVO">
+		SELECT
+			HR.HSRP_NO,
+			HR.HSRP_DT,
+			HR.HSRP_REASON,
+			HR.PA_NO,
+			HR.EMP_NO,
+			HR.HSRP_TYPE,
+			HR.HSRP_STATE,
+			P.PA_NAME,
+			P.PA_REG,
+            C.CLINIC_STATE
+		FROM
+			HOSPITAL_RECEPTION HR
+		JOIN
+			PATIENT P ON HR.PA_NO = P.PA_NO
+        LEFT JOIN
+            CLINIC_CHART C ON HR.HSRP_NO = C.HSRP_NO
+        WHERE 
+	    	TRUNC(HR.HSRP_DT) = TRUNC(SYSDATE)
+		ORDER BY
+			CASE WHEN HR.HSRP_TYPE = 'RCTY02' THEN 0 ELSE 1 END,
+			HR.HSRP_NO ASC
+	</select>
+	
+	<select id="getAllReceptionList" resultType="hospitalReceptionVO">
+		SELECT
+			HR.HSRP_NO,
+			HR.HSRP_DT,
+			HR.HSRP_REASON,
+			HR.PA_NO,
+			HR.EMP_NO,
+			HR.HSRP_TYPE,
+			HR.HSRP_STATE,
+			P.PA_NAME,
+			P.PA_REG,
+            C.CLINIC_STATE
+		FROM
+			HOSPITAL_RECEPTION HR
+		JOIN
+			PATIENT P ON HR.PA_NO = P.PA_NO
+        LEFT JOIN
+            CLINIC_CHART C ON HR.HSRP_NO = C.HSRP_NO
+		ORDER BY
+			CASE WHEN HR.HSRP_TYPE = 'RCTY02' THEN 0 ELSE 1 END,
+			HR.HSRP_NO ASC
+	</select>
+	
+	<insert id="createProofApplication" parameterType="proofApplicationVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="prapNo">
+			SELECT 'PRAP' || TRIM(TO_CHAR(SUBSTR(MAX(PRAP_NO),5)+1,'0000')) 
+			AS PA_NO FROM PROOF_APPLICATION
+		</selectKey>
+		INSERT INTO PROOF_APPLICATION
+			   (PRAP_NO, CLINIC_NO, PRDC_CD, PRAP_STATE)
+		VALUES (#{prapNo}, #{clinicNo}, #{prdcCd}, 'PAST001')
+	</insert>
+	
+	<update id="updateProofApplication" parameterType="proofApplicationVO">
+		UPDATE PROOF_APPLICATION
+		SET ATCH_FILE_CD = #{proofFileCd},
+		    PRAP_STATE = 'PAST002'
+		WHERE PRAP_NO = #{prapNo}
+	</update>
+
+	<insert id="addReception" parameterType="hospitalReceptionVO">
+		<selectKey resultType="String" keyProperty="hsrpNo" order="BEFORE">
+			SELECT 'RP'||TRIM(TO_CHAR(SUBSTR(MAX(HSRP_NO),3)+1,'00000'))
+			FROM HOSPITAL_RECEPTION
+		</selectKey>
+		INSERT INTO HOSPITAL_RECEPTION(HSRP_NO, HSRP_DT, HSRP_REASON, PA_NO, EMP_NO, HSRP_TYPE, HSRP_STATE)
+		VALUES(#{hsrpNo}, SYSDATE, #{hsrpReason}, #{paNo}, #{empNo}, #{hsrpType}, 'RCST01')
+	</insert>
+	
+	<update id="updateReceptionState" parameterType="String">
+		UPDATE HOSPITAL_RECEPTION
+		SET HSRP_STATE = 'RCST02'
+		WHERE HSRP_NO = #{hsrpNo}
+	</update>
+	
+	<select id="getRevisitPatient" resultType="Map">
+		SELECT 
+		    SUM(CASE WHEN visit_count > 1 THEN 1 ELSE 0 END) AS multi_visit_patients,
+		    SUM(CASE WHEN visit_count = 1 THEN 1 ELSE 0 END) AS single_visit_patients
+		FROM (
+		    SELECT PA_NO, COUNT(*) AS visit_count
+		    FROM HOSPITAL_RECEPTION
+		    GROUP BY PA_NO
+		) subquery
+	</select>
+</mapper>

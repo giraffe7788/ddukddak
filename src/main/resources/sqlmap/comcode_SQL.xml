@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.ComCodeMapper">
+
+	<select id="getComDetailCodeInfo" parameterType="String" resultType="comDetailCodeInfoVO">
+		SELECT COM_DET_CODE, COM_DET_CODE_NM, COM_CODE
+		FROM COM_DETAIL_CODE_INFO
+		WHERE SUBSTR(COM_DET_CODE, 1, 6) = #{empJbpsCd}
+	</select>
+	
+	<select id="getComDetailCodeList" parameterType="String" resultType="comDetailCodeInfoVO">
+		SELECT COM_DET_CODE, COM_DET_CODE_NM, COM_CODE
+		FROM COM_DETAIL_CODE_INFO
+		WHERE SUBSTR(COM_DET_CODE, 1, 5) = #{empDeptcd}
+	</select>
+	
+</mapper>

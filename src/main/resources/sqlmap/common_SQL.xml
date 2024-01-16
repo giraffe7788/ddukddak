@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.CommonMapper">
+	
+	<select id="list" resultType="patientVO">
+		SELECT * FROM PATIENT
+	</select>
+	
+	<select id="getPatientList" resultType="patientVO">
+		SELECT * FROM PATIENT
+	</select>
+	
+	<insert id="createPatientPost" parameterType="patientVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="paNo">
+			SELECT 'PA' || TRIM(TO_CHAR(SUBSTR(MAX(PA_NO),3)+1,'0000')) 
+			AS PA_NO FROM PATIENT
+		</selectKey>
+		INSERT INTO PATIENT(PA_NO, PA_REG, PA_NAME, PA_SEX, PA_PH, PA_ADD1, PA_ADD2, 
+		PZ_ZIP, PA_BLD_TYPE, PA_INSR_YN, PA_ADM_DT, PA_HEIGHT, PA_WEIGHT)
+		VALUES(#{paNo}, #{paReg}, #{paName}, #{paSex}, #{paPh}, #{paAdd1}, #{paAdd2},
+		#{pzZip}, #{paBldType}, #{paInsrYn}, 'AMYN02', #{paHeight}, #{paWeight})
+	</insert>
+	
+	<update id="updatePatientPost" parameterType="patientVO">
+		UPDATE PATIENT
+		SET
+		  PA_REG = #{paReg},
+		  PA_NAME = #{paName},
+		  PA_SEX = #{paSex},
+		  PA_PH = #{paPh},
+		  PA_ADD1 = #{paAdd1},
+		  PA_ADD2 = #{paAdd2},
+		  PZ_ZIP = #{pzZip},
+		  PA_BLD_TYPE = #{paBldType},
+		  PA_INSR_YN = #{paInsrYn},
+		  PA_HEIGHT = #{paHeight},
+		  PA_WEIGHT = #{paWeight}
+		WHERE
+		  PA_NO = #{paNo}
+	</update>
+	
+	<select id="patientRecordList" resultMap="patientRecordMap">
+		SELECT 
+		    PR.PARE_NO, 
+		    PR.PA_NO, 
+		    PR.PARE_CONT, 
+		    PR.PARE_ENDT, 
+		    PR.EMP_NO,
+		    E.EMP_NAME, 
+		    E.ATCH_FILE_CD, 
+		    E.EMP_DEPT_CD, 
+		    CD1.COM_DET_CODE_NM AS EMP_DEPT_NM,
+		    CD2.COM_DET_CODE_NM AS EMP_JBPS_NM,
+            AFD.ATCH_FILE_DETAIL_SAVENM AS PROFILE_NM
+		FROM 
+		    PATIENT_RECORD PR
+		INNER JOIN 
+		    EMPLOYEE E ON PR.EMP_NO = E.EMP_NO
+		INNER JOIN
+		    COM_DETAIL_CODE_INFO CD1 ON E.EMP_DEPT_CD = CD1.COM_DET_CODE
+		INNER JOIN 
+		    COM_DETAIL_CODE_INFO CD2 ON E.EMP_JBPS_CD = CD2.COM_DET_CODE
+		INNER JOIN
+		    ATCH_FILE_DETAIL AFD ON E.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		WHERE PR.PA_NO = #{paNo}
+		ORDER BY PR.PARE_ENDT
+	</select>
+	
+	<resultMap type="patientRecordVO" id="patientRecordMap">
+		<result property="pareNo" column="PARE_NO"/>
+		<result property="paNo" column="PA_NO"/>
+		<result property="pareCont" column="PARE_CONT"/>
+		<result property="pareEndt" column="PARE_ENDT"/>
+		<result property="empNo" column="EMP_NO"/>
+		<collection property="employeeVO" resultMap="employeeMap" />
+	</resultMap>
+	
+	<resultMap type="employeeVO" id="employeeMap">
+		<result property="empNo" column="EMP_NO" />
+		<result property="empPh" column="EMP_PH" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="empPw" column="EMP_PW" />
+		<result property="empAcntState" column="EMP_ACNT_STATE" />
+		<result property="empIn" column="EMP_IN" />
+		<result property="empOut" column="EMP_OUT" />
+		<result property="empMail" column="EMP_MAIL" />
+		<result property="empReg" column="EMP_REG" />
+		<result property="empZip" column="EMP_ZIP" />
+		<result property="empAdd1" column="EMP_ADD1" />
+		<result property="empAdd2" column="EMP_ADD2" />
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="empJbpsCd" column="EMP_JBPS_CD" />
+		<result property="empDeptNm" column="EMP_DEPT_NM" />
+		<result property="empJbpsNm" column="EMP_JBPS_NM" />
+		<result property="profileNm" column="PROFILE_NM" />
+	</resultMap>
+	
+	<insert id="createPatientRecordPost" parameterType="patientRecordVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="pareNo">
+			SELECT 'PR' || TRIM(TO_CHAR(SUBSTR(MAX(PARE_NO),3)+1,'0000')) 
+			AS PARE_NO FROM PATIENT_RECORD
+		</selectKey>
+		INSERT INTO PATIENT_RECORD (PARE_NO, PA_NO, PARE_CONT, PARE_ENDT, EMP_NO)
+        VALUES (#{pareNo}, #{paNo}, #{pareCont}, SYSDATE, #{empNo})
+	</insert>
+	
+	<select id="searchPatient" parameterType="String" resultType="patientVO">
+		SELECT 
+		    PA_NO, 
+		    PA_REG, 
+		    PA_NAME, 
+		    PA_SEX, 
+		    PA_PH, 
+		    PA_ADD1, 
+		    PA_ADD2, 
+		    PZ_ZIP, 
+		    PA_NOKNM, 
+		    PA_NOKPH, 
+		    PA_BLD_TYPE, 
+		    PA_INSR_YN, 
+		    PA_ADM_DT, 
+		    PA_HEIGHT, 
+		    PA_WEIGHT
+		FROM 
+		    PATIENT
+		WHERE 
+		    PA_NAME = #{paName}
+	</select>
+	
+	<select id="searchPatientByNo" parameterType="String" resultType="patientVO">
+		SELECT 
+		    PA_NO, 
+		    PA_REG, 
+		    PA_NAME, 
+		    PA_SEX, 
+		    PA_PH, 
+		    PA_ADD1, 
+		    PA_ADD2, 
+		    PZ_ZIP, 
+		    PA_NOKNM, 
+		    PA_NOKPH, 
+		    PA_BLD_TYPE, 
+		    PA_INSR_YN, 
+		    PA_ADM_DT, 
+		    PA_HEIGHT, 
+		    PA_WEIGHT
+		FROM 
+		    PATIENT
+		WHERE 
+		    PA_NO = #{paNo}
+	</select>
+	
+	<resultMap type="atchFileDetailVO" id="atchFileDetailMap">
+		<result property="atchFileCd" column="ATCH_FILE_CD"/>
+		<result property="atchFileDetailSeq" column="ATCH_FILE_DETAIL_SEQ"/>
+		<result property="atchFileDetailOrlng" column="ATCH_FILE_DETAIL_ORLNG"/>
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM"/>
+		<result property="atchFileDetailExt" column="ATCH_FILE_DETAIL_EXT"/>
+		<result property="atchFileDetailPath" column="ATCH_FILE_DETAIL_PATH"/>
+	</resultMap>
+	
+	<select id="getFileDetail" parameterType="String" resultType="atchFileDetailVO">
+		SELECT 
+           ATCH_FILE_DETAIL_SEQ, 
+           ATCH_FILE_DETAIL_ORLNG, 
+           ATCH_FILE_DETAIL_SAVENM, 
+           ATCH_FILE_DETAIL_EXT, 
+           ATCH_FILE_DETAIL_PATH
+        FROM 
+            ATCH_FILE_DETAIL
+        WHERE
+            ATCH_FILE_CD= #{atchFileCd}
+	</select>
+<!-- 진료실 상태와 진료중인 의사번호를 통해 의사이름과 프로필사진을 가져오는 쿼리 -->
+	<select id="getOfficesCondition" resultType="docOfficeVO">
+		SELECT 
+		    D.DO_NO, 
+		    D.EMP_NO,
+		    D.DO_STDT,
+		    D.DO_EDDT,
+		    E.EMP_NAME,
+		    E.ATCH_FILE_CD,
+		    A.ATCH_FILE_DETAIL_SAVENM
+		FROM DOC_OFFICE D
+		LEFT JOIN EMPLOYEE E ON D.EMP_NO = E.EMP_NO
+		LEFT JOIN ATCH_FILE_DETAIL A ON E.ATCH_FILE_CD = A.ATCH_FILE_CD
+		ORDER BY DO_NO
+	</select>
+</mapper>

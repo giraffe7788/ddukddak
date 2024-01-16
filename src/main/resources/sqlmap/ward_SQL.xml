@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.WardMapper">
+	
+	<!-- 입원번호로 해당 입원의 간호차트 리스트와 간단한 입원정보를 가져옴 -->
+	<select id="getNurseChartList" resultMap="admissionChartMap">
+		SELECT
+            AC.ADMI_NO,
+            AC.ADMI_INDT, 
+            AC.ADMI_EXP_OUTDT, 
+            E1.EMP_NAME AS ADMI_EMP_NAME,
+            NC.NUR_NO,
+            NC.NUR_ENDT
+		FROM ADMISSION_CHART AC
+        JOIN EMPLOYEE E1 ON AC.EMP_NO = E1.EMP_NO
+        LEFT JOIN NUR_CHART NC ON AC.ADMI_NO = NC.ADMI_CD AND NC.NUR_TYPE = 'NCSO01'
+		WHERE AC.ADMI_NO = #{admiNo}
+        ORDER BY NC.NUR_ENDT DESC
+	</select>
+	
+	<!-- 간호차트 번호로 간호차트 내용,작성자,작성일을 가져옴 -->
+	<select id="getNurseChartDetail" resultMap="nurChartMap">
+		SELECT
+            NC.NUR_NO,
+            E.EMP_NAME AS NUR_CHART_EMP_NAME,
+            NC.NUR_CONT,
+            NC.NUR_ENDT
+        FROM NUR_CHART NC
+        JOIN EMPLOYEE E ON NC.EMP_NO = E.EMP_NO
+        WHERE NC.NUR_NO = #{nurNo}
+	</select>
+	
+	<!-- 간호차트/인수인계 insert -->
+	<insert id="createNurseChart" parameterType="nurChartVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="nurNo">
+			SELECT 'NC' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(NUR_NO), 3) + 1, '0000')), '0001') AS NUR_NO FROM NUR_CHART
+		</selectKey>
+		INSERT INTO NUR_CHART(NUR_NO, EMP_NO, NUR_CONT, NUR_ENDT, NUR_TYPE, ADMI_CD)
+		VALUES(#{nurNo}, #{nurChartEmpNo}, #{nurCont}, sysdate, #{nurType}, #{admiCd})
+	</insert>
+	
+	<!-- 인수인계 리스트 뽑아오기 -->
+	<select id="getHandOverList" resultMap="nurChartMap">
+		SELECT
+            NC.NUR_NO,
+            E.EMP_NAME AS NUR_CHART_EMP_NAME,
+            NC.NUR_CONT,
+            NC.NUR_ENDT,
+            AFD.ATCH_FILE_DETAIL_SAVENM AS NUR_CHART_PROFILE_SAVENM,
+            AFD.ATCH_FILE_DETAIL_ORLNG AS NUR_CHART_PROFILE_ORLNG
+		FROM NUR_CHART NC 
+        JOIN EMPLOYEE E ON NC.EMP_NO = E.EMP_NO
+        LEFT JOIN ATCH_FILE_DETAIL AFD ON E.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		WHERE NC.ADMI_CD = #{admiCd}
+        AND NC.NUR_TYPE = 'NCSO02'
+        ORDER BY NC.NUR_ENDT ASC
+	</select>
+	
+	<!-- DB에서 처치내역 리스트를 가져온다 -->
+	<select id="getMedicineOrderList" resultMap="clinicChartMap">
+		SELECT 
+			CC.CLINIC_NO,
+            CC.CLINIC_DT AS CLINIC_DETAIL_DT,
+            MO.MEDI_CD,
+            MO.MDOD_PFYN
+		FROM CLINIC_CHART CC
+		JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+		WHERE CC.ADMI_CD = #{admiCd}
+		ORDER BY CC.CLINIC_DT DESC
+	</select>
+	
+	<!-- DB에서 처치내역 디테일을 가져온다 -->
+	<select id="getMedicineOrderDetail" resultMap="clinicChartMap">
+	    SELECT
+            CC.CLINIC_NO,
+            CC.CLINIC_OPINION,
+            ID.IJ_CD,
+            ID.INDI_TYPE,
+            ID.INDI_DT,
+            ID.BODY_CD,
+            IJ.IJ_NM,
+            MO.MEDI_CD,
+            MO.MDOD_DAY,
+            MO.MDOD_PER,
+            MO.MDOD_DOSE,
+            MO.MDOD_QT,
+            MO.MDOD_PFYN,
+            ME.MEDI_NM,
+            ME.MEDI_DETAIL
+        FROM CLINIC_CHART CC
+        LEFT JOIN INJURY_DIAGNOSIS ID ON CC.CLINIC_NO = ID.CLINIC_NO
+        LEFT JOIN INJURY IJ ON ID.IJ_CD = IJ.IJ_CD
+        LEFT JOIN MEDICINE_ORDER MO ON CC.CLINIC_NO = MO.CLINIC_NO
+        LEFT JOIN MEDICINE ME ON MO.MEDI_CD = ME.MEDI_CD
+        WHERE CC.CLINIC_NO = #{clinicNo}
+	</select>
+	
+	<!-- 처방오더 상태 대기에서 완료로 변경 -->
+	<update id="updateMedicineOrderState" parameterType="medicineOrderVO">
+		UPDATE MEDICINE_ORDER
+		SET MDOD_PFYN = 'MPYN02'
+		WHERE CLINIC_NO = #{clinicNo}
+		AND MEDI_CD = #{mediCd}
+	</update>
+	
+	<!-- 특정 입원에 대한 식이 정보 다 가져오기 -->
+	<select id="getDietList" resultMap="dietMap">
+		SELECT
+    		D.DIET_NO,
+    		D.ADMI_NO,
+		    D.DIET_TIME,
+		    D.DIET_QTY,
+		    D.MEAL_CD,
+		    M.MEAL_NAME,
+		    M.MEAL_KCAL
+		FROM DIET D
+		LEFT JOIN MEAL M ON D.MEAL_CD = M.MEAL_CD 
+		WHERE ADMI_NO = #{admiNo}
+		ORDER BY DIET_TIME DESC
+	</select>
+	
+	<!-- 식이 기록 넣기 -->
+	<insert id="insertDiet" parameterType="dietVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="dietNo">
+			SELECT 'DT' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(DIET_NO), 3) + 1, '0000')), '0001') AS DIET_NO FROM DIET
+		</selectKey>
+		INSERT INTO DIET(DIET_NO, ADMI_NO, DIET_TIME, DIET_QTY, MEAL_CD)
+		VALUES(#{dietNo}, #{admiNo}, #{dietTime}, #{dietQty}, #{mealCd})
+	</insert>
+	
+	<!-- 모든 식단 리스트 가져오기 -->
+	<select id="getMealList" resultType="mealVO">
+		SELECT *
+		FROM MEAL
+	</select>
+	
+	<!-- 식단 삭제 -->
+	<delete id="deleteMeal">
+		DELETE FROM MEAL
+		WHERE MEAL_CD = #{mealCd}
+	</delete>
+	
+	<!-- 식단 추가 -->
+	<insert id="insertMeal" parameterType="mealVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="mealCd">
+			SELECT 'ML' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(MEAL_CD), 3) + 1, '0000')), '0001') AS MEAL_CD FROM MEAL
+		</selectKey>
+		INSERT INTO MEAL(MEAL_CD, MEAL_NAME, MEAL_KCAL, MEAL_PRICE)
+		VALUES(#{mealCd}, #{mealName}, #{mealKcal}, #{mealPrice})
+	</insert>
+	
+	<!-- 혈압 리스트를 가져옴 -->
+	<select id="getBloodList" resultMap="vitalMap">
+		SELECT VITAL_NO, ADMI_NO, VIT_DT, VIT_LOW_PRESS, VIT_HIGH_PRESS
+		FROM VITAL
+		WHERE ADMI_NO = #{admiNo}
+		AND VIT_LOW_PRESS IS NOT NULL
+		AND VIT_HIGH_PRESS IS NOT NULL
+		ORDER BY VIT_DT ASC
+	</select>
+	
+	<!-- 혈압 기록 넣기 -->
+	<insert id="insertBlood" parameterType="vitalVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="vitalNo">
+			SELECT 'VT' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(VITAL_NO), 3) + 1, '0000')), '0001') AS VITAL_NO FROM VITAL
+		</selectKey>
+		INSERT INTO VITAL (VITAL_NO, ADMI_NO, VIT_DT, VIT_LOW_PRESS, VIT_HIGH_PRESS)
+		VALUES(#{vitalNo}, #{admiNo}, #{vitDt}, #{vitLowPress}, #{vitHighPress})
+	</insert>
+	
+	<!-- 체온 리스트를 가져옴 -->
+	<select id="getTempList" resultMap="vitalMap">
+		SELECT VITAL_NO, ADMI_NO, VIT_DT, VIT_TEMP
+		FROM VITAL
+		WHERE ADMI_NO = #{admiNo}
+		AND VIT_TEMP IS NOT NULL
+		ORDER BY VIT_DT ASC
+	</select>
+	
+	<!-- 체온 기록 넣기 -->
+	<insert id="insertTemp" parameterType="vitalVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="vitalNo">
+			SELECT 'VT' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(VITAL_NO), 3) + 1, '0000')), '0001') AS VITAL_NO FROM VITAL
+		</selectKey>
+		INSERT INTO VITAL (VITAL_NO, ADMI_NO, VIT_DT, VIT_TEMP)
+		VALUES(#{vitalNo}, #{admiNo}, #{vitDt}, #{vitTemp})
+	</insert>
+	
+	<!-- I/O 리스트를 가져옴 -->
+	<select id="getIoList" resultMap="ioMap">
+		SELECT IO_NO, ADMI_NO, IO_DT, IO_INTAKE, IO_DRAIN
+		FROM IO
+		WHERE ADMI_NO = #{admiNo}
+		ORDER BY IO_DT ASC
+	</select>
+	
+	<!-- I/O 기록 넣기 -->
+	<insert id="insertIo" parameterType="ioVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="ioNo">
+			SELECT 'IO' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(IO_NO), 3) + 1, '0000')), '0001') AS IO_NO FROM IO
+		</selectKey>
+		INSERT INTO IO(
+			IO_NO, 
+			ADMI_NO, 
+		<if test="ioIntake != '' and ioIntake != null">
+			IO_INTAKE,
+		</if>
+		<if test="ioDrain != '' and ioDrain != null">
+			IO_DRAIN,
+		</if>
+			IO_DT
+		)
+		VALUES(
+			#{ioNo}, 
+			#{admiNo}, 
+		<if test="ioIntake != '' and ioIntake != null">
+			#{ioIntake},
+		</if>
+		<if test="ioDrain != '' and ioDrain != null">
+			#{ioDrain},
+		</if>
+			#{ioDt}
+		)
+	</insert>
+	
+	<!-- 입원차트 resultMap -->
+	<resultMap type="admissionChartVO" id="admissionChartMap">
+		<result property="admiNo" column="ADMI_NO"/>
+		<result property="adrmRoomno" column="ADRM_ROOMNO"/>
+		<result property="adrmBedno" column="ADRM_BEDNO"/>
+		<result property="admiIndt" column="ADMI_INDT"/>
+		<result property="admiExpOutdt" column="ADMI_EXP_OUTDT"/>
+		<result property="admiOutdt" column="ADMI_OUTDT"/>
+		<result property="admiFile" column="ADMI_FILE"/>
+		<result property="paNo" column="PA_NO"/>
+		<result property="empNo" column="EMP_NO"/>
+		<result property="admiReason" column="ADMI_REASON"/>
+		
+		<result property="admiEmpName" column="ADMI_EMP_NAME"/>
+		<collection property="nurChartVOList" resultMap="nurChartMap"></collection>
+	</resultMap>
+	
+	<!-- 진료,회진차트 resultMap -->
+	<resultMap type="clinicChartVO" id="clinicChartMap">
+		<id property="clinicNo" column="CLINIC_NO" />
+		<result property="clinicDt" column="CLINIC_DT" />
+		<result property="clinicDetailDt" column="CLINIC_DETAIL_DT" />
+		<result property="clinicOpinion" column="CLINIC_OPINION" />
+		<result property="hsrpNo" column="HSRP_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="paNo" column="PA_NO" />
+		<result property="clinicInjnm" column="CLINIC_INJNM" />
+		
+		<result property="admiCd" column="ADMI_CD" />
+		<result property="clinicState" column="CLINIC_STATE" />
+		<result property="empName" column="EMP_NAME" />
+
+		<collection notNullColumn="MEDI_CD" property="medicineOrderVOList" resultMap="medicineOrderMap" />
+	</resultMap>
+	
+	<!-- 간호차트 resultMap -->
+	<resultMap type="nurChartVO" id="nurChartMap">
+		<result property="nurNo" column="NUR_NO"/>
+		<result property="nurChartEmpNo" column="NUR_CHART_EMP_NO"/>
+		<result property="nurCont" column="NUR_CONT"/>
+		<result property="nurEndt" column="NUR_ENDT"/>
+		<result property="nurType" column="NUR_TYPE"/>
+		<result property="admiCd" column="ADMI_CD"/>
+		
+		<result property="nurChartEmpName" column="NUR_CHART_EMP_NAME"/>
+		<result property="nurChartProfileSavenm" column="NUR_CHART_PROFILE_SAVENM"/>
+		<result property="nurChartProfileOrlng" column="NUR_CHART_PROFILE_ORLNG"/>
+	</resultMap>
+	
+	<!-- 처방오더 resultMap -->
+	<resultMap type="medicineOrderVO" id="medicineOrderMap">
+		<result property="mediCd" column="MEDI_CD" />
+		<result property="clinicNo" column="CLINIC_NO" />
+		<result property="mdodQt" column="MDOD_QT" />
+		<result property="mdodDay" column="MDOD_DAY" />
+		<result property="mdodPer" column="MDOD_PER" />
+		<result property="mdodDose" column="MDOD_DOSE" />
+		<result property="mdodPfyn"	column="MDOD_PFYN" />
+
+		<association property="medicineVO" resultMap="medicineMap" />
+	</resultMap>
+	
+	<!-- 약품코드 resultMap -->
+	<resultMap type="medicineVO" id="medicineMap">
+		<result property="mediCd" column="MEDI_CD" />
+		<result property="mediType" column="MEDI_TYPE" />
+		<result property="mediNm" column="MEDI_NM" />
+		<result property="mediStock" column="MEDI_STOCK" />
+		<result property="mediMaker" column="MEDI_MAKER" />
+		<result property="mediDetail" column="MEDI_DETAIL" />
+		<result property="mediCont" column="MEDI_CONT" />
+		<result property="mediPrice" column="MEDI_PRICE" />
+		<result property="insuYn" column="INSU_YN" />
+	</resultMap>
+	
+	<!-- 식이 resultMap -->
+	<resultMap type="dietVO" id="dietMap">
+		<result property="dietNo" column="DIET_NO"/>
+		<result property="admiNo" column="ADMI_NO"/>
+		<result property="dietTime" column="DIET_TIME"/>
+		<result property="mealCd" column="MEAL_CD"/>
+		<result property="dietQty" column="DIET_QTY"/>
+		
+		<association property="mealVO" resultMap="mealMap" />
+	</resultMap>
+	
+	<!-- 식단 resultMap -->
+	<resultMap type="mealVO" id="mealMap">
+		<result property="mealCd" column="MEAL_CD"/>
+		<result property="mealName" column="MEAL_NAME"/>
+		<result property="mealKcal" column="MEAL_KCAL"/>
+		<result property="mealPrice" column="MEAL_PRICE"/>
+	</resultMap>
+	
+	<!-- 바이탈 resultMap -->
+	<resultMap type="vitalVO" id="vitalMap">
+		<result property="vitalNo" column="VITAL_NO"/>
+		<result property="admiNo" column="ADMI_NO"/>
+		<result property="vitDt" column="VIT_DT"/>
+		<result property="vitLowPress" column="VIT_LOW_PRESS"/>
+		<result property="vitHighPress" column="VIT_HIGH_PRESS"/>
+		<result property="vitTemp" column="VIT_TEMP"/>
+	</resultMap>
+	
+	<!-- IO resultMap -->
+	<resultMap type="ioVO" id="ioMap">
+		<result property="ioNo" column="IO_NO"/>
+		<result property="admiNo" column="ADMI_NO"/>
+		<result property="ioDt" column="IO_DT"/>
+		<result property="ioIntake" column="IO_INTAKE"/>
+		<result property="ioDrain" column="IO_DRAIN"/>
+	</resultMap>
+</mapper>

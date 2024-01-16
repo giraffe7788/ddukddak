@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.CalendarMapper">
+	<insert id="createSch">
+		<selectKey resultType="String" order="BEFORE" keyProperty="dsNo">
+			SELECT 'SC' || TRIM(TO_CHAR(SUBSTR(MAX(DS_NO),3)+1,'00000000')) AS DS_NO_SEQ FROM DOC_SCHEDULE
+		</selectKey>
+	
+		INSERT INTO DOC_SCHEDULE(DS_NO, EMP_NO, DS_STR_DATE, DS_END_DATE, DS_CATE, DS_CONT, DS_AD)
+		VALUES(#{dsNo}, #{empNo}, #{dsStrDate}, #{dsEndDate}, #{dsCate}, #{dsCont}, #{dsAd})
+	</insert>
+	
+	<delete id="deleteSch" parameterType="String">
+		DELETE FROM DOC_SCHEDULE WHERE DS_NO = #{dsNo}
+	</delete>
+	
+	<select id="schList" parameterType="hashMap" resultType="docScheduleVO">
+		SELECT DS_NO, EMP_NO, DS_STR_DATE, DS_END_DATE, DS_CATE, DS_CONT, DS_AD
+		FROM DOC_SCHEDULE
+		WHERE SUBSTR(DS_STR_DATE, 1, 4) = #{year}
+		AND SUBSTR(DS_END_DATE, 1, 4) = #{year}
+	</select>
+	
+	<select id="schListByDoc" parameterType="hashMap" resultType="docScheduleVO">
+		SELECT DS_NO, EMP_NO, DS_STR_DATE, DS_END_DATE, DS_CATE, DS_CONT, DS_AD
+		FROM DOC_SCHEDULE
+		WHERE SUBSTR(DS_STR_DATE, 1, 4) = #{year}
+		AND SUBSTR(DS_END_DATE, 1, 4) = #{year}
+		AND EMP_NO = #{empNo}
+	</select>
+	
+	<select id="schListEmpNo" parameterType="hashMap" resultType="docScheduleVO">
+		SELECT DS_NO, DS_STR_DATE, DS_END_DATE, DS_CATE, DS_CONT, DS_AD
+		FROM DOC_SCHEDULE
+		WHERE SUBSTR(DS_STR_DATE, 1, 4) = #{year}
+		AND SUBSTR(DS_END_DATE, 1, 4) = #{year}
+		AND EMP_NO = #{empNo}
+	</select>
+	
+	<select id="selectSch" parameterType="String" resultType="docScheduleVO">
+		SELECT DS_NO, EMP_NO, DS_STR_DATE, DS_END_DATE, DS_CATE, DS_CONT, DS_AD
+		FROM DOC_SCHEDULE
+		WHERE DS_NO = #{dsNo}
+	</select>
+	
+	<update id="updateSch" parameterType="docScheduleVO">
+		UPDATE DOC_SCHEDULE
+		SET DS_STR_DATE=#{dsStrDate}, DS_END_DATE=#{dsEndDate}, DS_CATE=#{dsCate}, DS_CONT=#{dsCont}, DS_AD=#{dsAd}
+		WHERE DS_NO = #{dsNo}
+	</update>
+	
+	<select id="selectByDate" resultType="docScheduleVO" parameterType="Map">
+		SELECT DS_NO, EMP_NO, DS_STR_DATE, DS_END_DATE, DS_CATE, DS_CONT, DS_AD
+		FROM DOC_SCHEDULE
+		WHERE TRUNC(TO_DATE(#{rsvtDt})) BETWEEN TRUNC(TO_DATE(DS_STR_DATE, 'YYYY-MM-DD"T"HH24:MI')) AND TRUNC(TO_DATE(DS_END_DATE, 'YYYY-MM-DD"T"HH24:MI'))
+		AND EMP_NO = #{empNo}
+	</select>
+	
+<!-- 	통계 : 해당 월 의사 스케줄 분포도 -->
+	<select id="docSchListA" parameterType="String" resultType="HashMap">
+		SELECT DS_CATE, COUNT(*) docSchCount
+		FROM DOC_SCHEDULE
+		WHERE SUBSTR(DS_STR_DATE, 6, 2) = #{month}
+		GROUP BY DS_CATE
+	</select>
+
+<!-- 	통계 : 해당 월 의사 스케줄 분포도 -->
+	<select id="nurSchListA" parameterType="String" resultType="HashMap">
+		SELECT NURSC_TYPE, COUNT(*) nurCount
+		FROM NUR_SCHEDULE
+		WHERE SUBSTR(NURSC_DT, 4, 2) = #{month}
+		GROUP BY NURSC_TYPE
+		ORDER BY NURSC_TYPE
+	</select>
+	
+	<resultMap type="docScheduleVO" id="docScheduleMap">
+		<result property="dsNo" column="DS_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="dsStrDate" column="DS_STR_DATE" />
+		<result property="dsEndDate" column="DS_END_DATE" />
+		<result property="dsCont" column="DS_CONT" />
+		<result property="dsCate" column="DS_CATE" />
+		<result property="dsAd" column="DS_AD" />
+	</resultMap>
+</mapper>

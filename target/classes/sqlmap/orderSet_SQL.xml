@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.OrderSetMapper">
+	
+	<select id="getOrderSetList" resultType="orderSetVO">
+		SELECT * FROM ORDER_SET
+		WHERE EMP_NO = #{empNo}
+	</select>
+	
+	<insert id="createOrderSet" parameterType="orderSetVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="orderSetCd">
+			SELECT 'OS' || NVL(TRIM(TO_CHAR(SUBSTR(MAX(ORDER_SET_CD), 3) + 1, '0000')), '0001') AS ORDER_SET_CD FROM ORDER_SET
+		</selectKey>
+		INSERT INTO ORDER_SET(ORDER_SET_CD, EMP_NO, ORDER_SET_PARCD, ORDER_SET_TYPE, ORDER_SET_NM, ORDER_SET_ORDCD)
+		VALUES(#{orderSetCd}, #{empNo}, #{orderSetParcd}, #{orderSetType}, #{orderSetNm}, 
+			<if test="orderSetOrdcd != null">#{orderSetOrdcd}</if>
+            <if test="orderSetOrdcd == null">NULL</if>)
+	</insert>
+	
+	<delete id="deleteOrderSet" parameterType="orderSetVO">
+		DELETE FROM ORDER_SET
+		WHERE ORDER_SET_CD = #{orderSetCd}
+	</delete>
+	
+	<select id="getInjuryVOList" resultType="injuryVO">
+		SELECT * FROM INJURY
+	</select>
+	
+	<select id="getTestVOList" resultType="testVO">
+		SELECT * FROM TEST
+	</select>
+	
+	<select id="getMedicineVOList" resultType="medicineVO">
+		SELECT * FROM MEDICINE
+	</select>
+	
+	<select id="getTreatmentVOList" resultType="treatmentVO">
+		SELECT * FROM TREATMENT
+	</select>
+	
+	<select id="getInjuryVODetail" resultType="injuryVO">
+		SELECT * FROM INJURY
+		WHERE IJ_CD = #{ijCd}
+	</select>
+	
+	<select id="getTestVODetail" resultType="testVO">
+		SELECT * FROM TEST
+		WHERE TEST_CD = #{testCd}
+	</select>
+	
+	<select id="getMedicineVODetail" resultType="medicineVO">
+		SELECT * FROM MEDICINE
+		WHERE MEDI_CD = #{mediCd}
+	</select>
+	
+	<select id="getTreatmentVODetail" resultType="treatmentVO">
+		SELECT * FROM TREATMENT
+		WHERE TM_CD = #{tmCd}
+	</select>
+	
+</mapper>

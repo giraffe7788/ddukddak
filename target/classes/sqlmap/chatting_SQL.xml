@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.ChatMapper">
+	
+	<resultMap type="chatRoomVO" id="chatRoomMap">
+		<result property="chatRmNo" column="CHAT_RM_NO" />
+		<result property="chatRmNm" column="CHAT_RM_NM" />
+		<collection property="chatMemberVOList" resultMap="chatMemberMap"></collection>
+	</resultMap>
+
+	<resultMap type="chatMemberVO" id="chatMemberMap">
+		<result property="chatRmListNo" column="CHAT_RM_LIST_NO" />
+		<result property="chatRmNo" column="CHAT_RM_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM" />
+		<collection property="chatVOList" resultMap="chatMap"></collection>
+	</resultMap>
+	
+	<resultMap type="chatVO" id="chatMap">
+		<result property="chatNo" column="CHAT_NO" />
+		<result property="chatRmListNo" column="CHAT_RM_LIST_NO" />
+		<result property="chatRmNo" column="CHAT_RM_NO" />
+		<result property="chatCont" column="CHAT_CONT" />
+		<result property="chatFileCd" column="CHAT_FILE_CD" />
+		<result property="chatDate" column="CHAT_DATE" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM" />
+<!-- 		<collection property="employeeVOList" resultMap="employeeMap"></collection> -->
+	</resultMap>
+	
+<!-- 	<resultMap type="employeeVO" id="employeeMap"> -->
+<!-- 		<result property="empNo" column="EMP_NO" /> -->
+<!-- 		<result property="empPh" column="EMP_PH" /> -->
+<!-- 		<result property="empName" column="EMP_NAME" /> -->
+<!-- 		<result property="empPw" column="EMP_PW" /> -->
+<!-- 		<result property="empAcntState" column="EMP_ACNT_STATE" /> -->
+<!-- 		<result property="empIn" column="EMP_IN" /> -->
+<!-- 		<result property="empOut" column="EMP_OUT" /> -->
+<!-- 		<result property="empMail" column="EMP_MAIL" /> -->
+<!-- 		<result property="empReg" column="EMP_REG" /> -->
+<!-- 		<result property="empZip" column="EMP_ZIP" /> -->
+<!-- 		<result property="empAdd1" column="EMP_ADD1" /> -->
+<!-- 		<result property="empAdd2" column="EMP_ADD2" /> -->
+<!-- 		<result property="atchFileCd" column="ATCH_FILE_CD" /> -->
+<!-- 		<result property="empDeptcd" column="EMP_DEPT_CD" /> -->
+<!-- 		<result property="empJbpscd" column="EMP_JBPS_CD" /> -->
+<!-- 	</resultMap> -->
+	
+	<!-- 직원목록 불러오기 -->
+	<select id="employeeList" resultMap="employeeMap">
+		SELECT 
+			E.EMP_NO,
+			E.EMP_PH,
+			E.EMP_NAME,
+			E.EMP_PW,
+			E.EMP_ACNT_STATE,
+			E.EMP_IN,
+			E.EMP_OUT,
+			E.EMP_MAIL,
+			E.EMP_REG,
+			E.EMP_ZIP,
+			E.EMP_ADD1,
+			E.EMP_ADD2,
+			E.ATCH_FILE_CD,
+			E.EMP_DEPT_CD,
+			E.EMP_JBPS_CD,
+            AFD.ATCH_FILE_DETAIL_SAVENM
+		FROM 
+			EMPLOYEE E
+		INNER JOIN
+			ATCH_FILE_DETAIL AFD ON E.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		ORDER BY EMP_DEPT_CD
+	</select>
+	
+	<!-- 채팅방 리스트 불러오기 -->
+	<select id="chatRoomList" resultMap="chatRoomMap">
+		SELECT
+			CR.CHAT_RM_NO,
+			CR.CHAT_RM_NM,
+			CM.EMP_NO,
+			CM.EMP_NAME,
+			CM.EMP_DEPT_CD,
+			CM.ATCH_FILE_CD,
+			C.CHAT_CONT,
+			C.CHAT_DATE,
+			C.CHAT_RM_LIST_NO,
+			AFD.ATCH_FILE_DETAIL_SAVENM
+		FROM
+			CHAT_ROOM CR
+		JOIN
+			CHAT_MEMBER CM ON CR.CHAT_RM_NO = CM.CHAT_RM_NO
+		JOIN
+			CHAT C ON CM.CHAT_RM_LIST_NO = C.CHAT_RM_LIST_NO
+		INNER JOIN
+			ATCH_FILE_DETAIL AFD ON CM.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		ORDER BY
+			C.CHAT_DATE DESC
+	</select>
+	
+	<!-- 채팅방 생성 -->
+	<insert id="createRoom" parameterType="chatRoomVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="chatRmNo">
+			SELECT CHAT_RM_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>	
+	    INSERT INTO CHAT_ROOM(
+	    	CHAT_RM_NO, CHAT_RM_NM
+	   	) VALUES (
+	    	#{chatRmNo}, #{chatRmNm}
+	    )
+	</insert>
+	
+	<!-- 채팅방 생성시 채팅멤버 -->
+	<insert id="insertChatEmployee" parameterType="chatMemberVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="chatRmListNo">
+			SELECT CHAT_RM_LIST_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	
+	    INSERT INTO CHAT_MEMBER(
+	    	CHAT_RM_LIST_NO, CHAT_RM_NO, EMP_NO, EMP_NAME, EMP_DEPT_CD, ATCH_FILE_CD
+	    ) VALUES (
+	    	#{chatRmListNo}, #{chatRmNo}, #{empNo}
+	    		, (SELECT EMP_NAME FROM EMPLOYEE WHERE EMP_NO = #{empNo})
+	    		, (SELECT EMP_DEPT_CD FROM EMPLOYEE WHERE EMP_NO = #{empNo})
+	    		, (SELECT ATCH_FILE_CD FROM EMPLOYEE WHERE EMP_NO = #{empNo})
+	    )
+	</insert>
+	<!-- 채팅방 생성시 채팅데이터 -->
+	<insert id="insertFirstChat" parameterType="chatVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="chatNo">
+			SELECT CHAT_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	
+	    INSERT INTO CHAT(
+	    	CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_FILE_CD, CHAT_DATE, EMP_NO
+	    ) VALUES (
+	    	#{chatNo}, #{chatRmListNo}, #{chatRmNo}, null, null, SYSDATE, #{empNo}
+	    )
+	</insert>
+	
+	<!-- 채팅내역 출력 -->
+	<select id="chatList" resultMap="chatMap">
+		SELECT
+		    A.CHAT_NO, 
+		    A.CHAT_RM_LIST_NO, 
+		    A.CHAT_RM_NO, 
+		    A.CHAT_CONT, 
+		    A.CHAT_FILE_CD,
+		    A.CHAT_DATE,
+		    A.EMP_NO, 
+		    B.EMP_NAME, 
+		    B.EMP_DEPT_CD, 
+		    B.ATCH_FILE_CD,
+		    AFD.ATCH_FILE_DETAIL_SAVENM
+		FROM CHAT A
+			JOIN EMPLOYEE B ON A.EMP_NO = B.EMP_NO
+			INNER JOIN ATCH_FILE_DETAIL AFD ON B.ATCH_FILE_CD = AFD.ATCH_FILE_CD
+		WHERE A.CHAT_RM_NO = #{chatRmNo}
+			ORDER BY CHAT_DATE
+	</select>
+	
+ 	<!-- 채팅방에 속한 직원조회 -->
+	<select id="chatRoomEmployee" resultMap="chatRoomMap">
+		SELECT 
+			CM.EMP_NO, 
+			CM.EMP_NAME
+		FROM CHAT_ROOM CR
+			JOIN CHAT_MEMBER CM ON CR.CHAT_RM_NO = CM.CHAT_RM_NO
+		WHERE CR.CHAT_RM_NO = #{chatRmNo}
+	</select>
+	<!-- 채팅입력 -->
+	<!-- 파일코드 null 허용인데 왜 안들어갔을까.... -->
+	<insert id="chatInsert" parameterType="chatVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="chatNo">
+			SELECT CHAT_NO_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+	    INSERT INTO CHAT (
+		    CHAT_NO, CHAT_RM_LIST_NO, CHAT_RM_NO, CHAT_CONT, CHAT_DATE, EMP_NO
+		) VALUES (
+		    #{chatNo}, #{chatRmListNo}, #{chatRmNo}, #{chatCont}, SYSDATE, #{empNo}
+		)
+	</insert>
+	
+	<resultMap type="employeeVO" id="employeeMap">
+		<result property="empNo" column="EMP_NO" />
+		<result property="empPh" column="EMP_PH" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="empPw" column="EMP_PW" />
+		<result property="empAcntState" column="EMP_ACNT_STATE" />
+		<result property="empIn" column="EMP_IN" />
+		<result property="empOut" column="EMP_OUT" />
+		<result property="empMail" column="EMP_MAIL" />
+		<result property="empReg" column="EMP_REG" />
+		<result property="empZip" column="EMP_ZIP" />
+		<result property="empAdd1" column="EMP_ADD1" />
+		<result property="empAdd2" column="EMP_ADD2" />
+		<result property="atchFileCd" column="ATCH_FILE_CD" />
+		<result property="empDeptCd" column="EMP_DEPT_CD" />
+		<result property="empJbpsCd" column="EMP_JBPS_CD" />
+		<result property="empDeptNm" column="EMP_DEPT_NM" />
+		<result property="empJbpsNm" column="EMP_JBPS_NM" />
+		<result property="profileNm" column="PROFILE_NM" />
+		<result property="atchFileDetailSavenm" column="ATCH_FILE_DETAIL_SAVENM" />
+	</resultMap>
+
+</mapper>

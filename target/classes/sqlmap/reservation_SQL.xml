@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.ReservationMapper">
+	<select id="getReservationListByMonth" resultType="reservationVO" parameterType="map">
+		SELECT *
+		FROM RESERVATION
+			WHERE EXTRACT(YEAR FROM RSVT_DT) = #{year}
+			AND EXTRACT(MONTH FROM RSVT_DT) = #{month}
+	</select>
+	
+	<select id="getAllReservation" resultType="reservationVO">
+		SELECT *
+		FROM RESERVATION
+	</select>
+
+	<select id="getTodayReservation" resultType="reservationVO">
+		SELECT 
+		    R.RSVT_CD, 
+		    R.RSVT_DT,
+		    R.RSVT_TIME,
+		    R.RSVT_REASON, 
+		    R.EMP_NO, 
+		    R.PA_NO, 
+		    R.RSVT_STATE,
+		    P.PA_NAME,
+		    E.EMP_NAME
+		FROM RESERVATION R
+		JOIN PATIENT P ON R.PA_NO = P.PA_NO
+		JOIN EMPLOYEE E ON R.EMP_NO = E.EMP_NO
+		WHERE 
+		    TRUNC(R.RSVT_DT) = TRUNC(SYSDATE)
+	</select>
+	
+	<select id="getReservationUntilToday" resultMap="reservationMap">
+		SELECT 
+		    R.RSVT_CD, 
+		    R.RSVT_DT, 
+		    R.RSVT_REASON, 
+		    R.EMP_NO, 
+		    R.PA_NO, 
+		    R.RSVT_STATE, 
+            P.PA_REG, 
+            P.PA_NAME, 
+            P.PA_SEX, 
+            P.PA_PH, 
+            P.PA_ADD1, 
+            P.PA_ADD2, 
+            P.PZ_ZIP, 
+            P.PA_NOKNM, 
+            P.PA_NOKPH, 
+            P.PA_BLD_TYPE, 
+            P.PA_INSR_YN, 
+            P.PA_ADM_DT, 
+            P.PA_HEIGHT, 
+            P.PA_WEIGHT
+		FROM RESERVATION R
+		JOIN PATIENT P ON R.PA_NO = P.PA_NO
+		WHERE 
+	    TRUNC(R.RSVT_DT) = TRUNC(SYSDATE)
+        ORDER BY RSVT_DT ASC
+	</select>
+	
+	<insert id="createReservation" parameterType="reservationVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="rsvtCd">
+			SELECT 'RV' || TRIM(TO_CHAR(SUBSTR(MAX(RSVT_CD),3)+1,'0000')) 
+			AS RSVT_CD FROM RESERVATION
+		</selectKey>
+		INSERT INTO RESERVATION 
+			(RSVT_CD, RSVT_DT, RSVT_REASON, EMP_NO, PA_NO, RSVT_STATE, RSVT_TIME)
+		VALUES 
+			(#{rsvtCd}, #{rsvtDt}, #{rsvtReason}, #{empNo}, #{paNo}, 'RVST01', #{rsvtTime})
+	</insert>
+	
+	<select id="getReservationList" parameterType="reservationVO" resultType="reservationVO">
+		SELECT
+		    R.RSVT_CD, 
+		    R.RSVT_DT, 
+		    R.RSVT_REASON, 
+		    R.PA_NO, 
+		    R.RSVT_STATE, 
+		    R.RSVT_TIME,
+		    P.PA_NAME
+		FROM RESERVATION R
+		JOIN PATIENT P ON R.PA_NO = P.PA_NO
+		WHERE
+		    TRUNC(RSVT_DT) = TRUNC(#{rsvtDt})
+		AND EMP_NO = #{empNo} 
+		ORDER BY RSVT_TIME
+	</select>
+	
+	<resultMap type="reservationVO" id="reservationMap">
+		<result property="rsvtCd" column="RSVT_CD"/>
+		<result property="rsvtDt" column="RSVT_DT"/>
+		<result property="rsvtReason" column="RSVT_REASON"/>
+		<result property="empNo" column="EMP_NO"/>
+		<result property="paNo" column="PA_NO"/>
+		<result property="rsvtState" column="RSVT_STATE"/>
+		<collection property="patientVO" resultMap="patientMap"/>
+	</resultMap>
+	
+	<resultMap type="patientVO" id="patientMap">
+		<result property="paNo" column="PA_NO"/>
+		<result property="paReg" column="PA_REG"/>
+		<result property="paName" column="PA_NAME"/>
+		<result property="paSex" column="PA_SEX"/>
+		<result property="paPh" column="PA_PH"/>
+		<result property="paAdd1" column="PA_ADD1"/>
+		<result property="paAdd2" column="PA_ADD2"/>
+		<result property="pzZip" column="PZ_ZIP"/>
+		<result property="paNoknm" column="PA_NOKNM"/>
+		<result property="paNokph" column="PA_NOKPH"/>
+		<result property="paBldType" column="PA_BLD_TYPE"/>
+		<result property="paInsrYn" column="PA_INSR_YN"/>
+		<result property="paAdmDt" column="PA_ADM_DT"/>
+		<result property="paHeight" column="PA_HEIGHT"/>
+		<result property="paWeight" column="PA_WEIGHT"/>
+	</resultMap>
+</mapper>

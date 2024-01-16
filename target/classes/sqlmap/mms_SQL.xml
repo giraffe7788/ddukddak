@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.MmsMapper">
+
+	<insert id="addForm" parameterType="mmsFormVO">
+		<selectKey resultType="String" keyProperty="mmsFormCd" order="BEFORE">
+			SELECT 'M'||TRIM(TO_CHAR(SUBSTR(MAX(MMS_FORM_CD),2)+1,'00'))
+			FROM MMS_FORM
+		</selectKey>
+			INSERT INTO MMS_FORM(MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_NM)
+			VALUES (#{mmsFormCd}, #{mmsFormCont}, #{mmsFormNm})
+	</insert>
+	
+	<select id="getAllForm" resultType="mmsFormVO">
+		SELECT MMS_FORM_CD, MMS_FORM_CONT, MMS_FORM_NM
+		FROM MMS_FORM ORDER BY MMS_FORM_CD ASC
+	</select>
+	
+	<update id="updateForm" parameterType="mmsFormVO">
+		UPDATE MMS_FORM
+		SET MMS_FORM_CONT = #{mmsFormCont},
+			MMS_FORM_NM = #{mmsFormNm}
+		WHERE MMS_FORM_CD = #{mmsFormCd}
+	</update>
+	
+	<delete id="deleteForm" parameterType="mmsFormVO">
+		DELETE FROM MMS_FORM
+		WHERE MMS_FORM_CD = #{mmsFormCd}
+	</delete>
+	
+	<insert id="addHstr" parameterType="mmsHstrVO">
+		<selectKey resultType="String" keyProperty="mmsNo" order="BEFORE">
+<!-- 		환자 코드가 들어오면 그거랑 조합해서 입력하자 -->
+			SELECT 'M'||TRIM(TO_CHAR(SUBSTR(MAX(MMS_NO),2)+1,'0000'))
+			FROM MMS_HSTR
+		</selectKey>
+			INSERT INTO MMS_HSTR(MMS_NO, MMS_FORM_CD, MMS_SENT, MMS_RECV, MMS_DATE, MMS_CONT)
+			VALUES(#{mmsNo},#{mmsFormCd},#{mmsSent},#{mmsRecv},sysdate,#{mmsCont})
+	</insert>
+	
+	<select id="getAllHstr" resultType="mmsHstrVO">
+		SELECT MMS_NO, MMS_FORM_CD, MMS_SENT, MMS_RECV, MMS_DATE, MMS_CONT
+		FROM MMS_HSTR
+		ORDER BY MMS_DATE DESC
+	</select>
+</mapper>

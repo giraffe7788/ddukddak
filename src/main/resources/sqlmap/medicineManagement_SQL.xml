@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.MedicineManagementMapper">
+
+	<insert id="purchaseMedicines" parameterType="purchaseMedicineVO">
+		<selectKey resultType="String" keyProperty="prmeNo" order="BEFORE">
+<!-- 		SELECT 'PRME'||TRIM(TO_CHAR((NVL(MAX(PRME_NO),0))+1,'0000')) -->
+<!-- 		FROM PURCHASE_MEDICINE -->
+			SELECT 'PRME' || LPAD(NVL(TO_NUMBER(SUBSTR(MAX(PRME_NO), 5)), 0) + 1, 4, '0')
+			FROM PURCHASE_MEDICINE
+		</selectKey>
+        <!-- PMST01 = 미결재 -->
+		INSERT INTO PURCHASE_MEDICINE(PRME_NO, PRME_DT, PRME_APPL, PRME_ATRL_FST, PRME_ATRL_SEC, PRME_ATRL_STAT)
+		VALUES(#{prmeNo}, SYSDATE, #{prmeAppl}, #{prmeAtrlFst}, #{prmeAtrlSec}, 'PMST01')
+	</insert>
+	
+	<insert id="addMedicineDetail">
+		<selectKey resultType="String" keyProperty="prmeNo" order="BEFORE">
+			SELECT MAX(PRME_NO)
+			FROM PURCHASE_MEDICINE
+		</selectKey>
+		INSERT INTO PURCHASE_MEDICINE_DETAIL(PRME_NO, MEDI_CD, PRME_QT, PRME_STDT)
+		VALUES(#{prmeNo}, #{mediCd}, #{prmeQt}, null)
+	</insert>
+	
+	<select id="getAllPurchase" resultMap="purchaseMedicineMap">
+		SELECT 
+		    P.PRME_NO,
+		    P.PRME_DT,
+		    P.PRME_APPL,
+		    P.PRME_ATRL_FST,
+		    P.PRME_ATRL_SEC,
+		    P.PRME_ATRL_STAT,
+		    E1.EMP_NAME AS PRME_APPL_NAME,
+            E2.EMP_NAME AS PRME_ATRL_FST_NAME,
+            E3.EMP_NAME AS PRME_ATRL_SEC_NAME,
+		    PD.MEDI_CD,
+		    PD.PRME_QT,
+		    PD.PRME_STDT
+		FROM PURCHASE_MEDICINE P
+		JOIN EMPLOYEE E1 ON P.PRME_APPL = E1.EMP_NO
+        JOIN EMPLOYEE E2 ON P.PRME_ATRL_FST = E2.EMP_NO
+        JOIN EMPLOYEE E3 ON P.PRME_ATRL_SEC = E3.EMP_NO
+		JOIN PURCHASE_MEDICINE_DETAIL PD ON P.PRME_NO = PD.PRME_NO
+		ORDER BY PRME_NO DESC
+	</select>
+	
+	<resultMap type="purchaseMedicineVO" id="purchaseMedicineMap">
+		<result property="prmeNo" column="PRME_NO"/>
+		<result property="prmeDt" column="PRME_DT"/>
+		<result property="prmeAppl" column="PRME_APPL"/>
+		<result property="prmeAtrlFst" column="PRME_ATRL_FST"/>
+		<result property="prmeAtrlSec" column="PRME_ATRL_SEC"/>
+		<result property="prmeAtrlStat" column="PRME_ATRL_STAT"/>
+		<result property="prmeApplName" column="PRME_APPL_NAME"/>
+		<result property="prmeAtrlFstName" column="PRME_ATRL_FST_NAME"/>
+		<result property="prmeAtrlSecName" column="PRME_ATRL_SEC_NAME"/>
+		<collection property="purchaseMedicineDetailVOList" resultMap="purchaseMedicineDetailMap"/>
+	</resultMap>
+	
+	<resultMap type="purchaseMedicineDetailVO" id="purchaseMedicineDetailMap">
+		<result property="prmeNo" column="PRME_NO"/>
+		<result property="mediCd" column="MEDI_CD"/>
+		<result property="prmeQt" column="PRME_QT"/>
+		<result property="prmeStdt" column="PRME_STDT"/>
+	</resultMap>
+	
+	<update id="firstApprove" parameterType="purchaseMedicineVO">
+		UPDATE PURCHASE_MEDICINE 
+		SET 
+		PRME_ATRL_FST = #{prmeAtrlFst},
+		PRME_ATRL_STAT = 'PMST02'
+		WHERE 
+		PRME_NO = #{prmeNo}
+	</update>
+	
+	<update id="secondApprove" parameterType="purchaseMedicineVO">
+		UPDATE PURCHASE_MEDICINE 
+		SET 
+		PRME_ATRL_SEC = #{prmeAtrlSec},
+		PRME_ATRL_STAT = 'PMST03'
+		WHERE 
+		PRME_NO = #{prmeNo}
+	</update>
+	
+	<update id="denyPurchase" parameterType="purchaseMedicineVO">
+		UPDATE PURCHASE_MEDICINE 
+		SET 
+		PRME_ATRL_FST = #{prmeAtrlFst},
+		PRME_ATRL_STAT = 'PMST04'
+		WHERE 
+		PRME_NO = #{prmeNo}
+	</update>
+	
+	<select id="getAllPurchaseDetail" parameterType="purchaseMedicineVO" resultType="purchaseMedicineDetailVO">
+		SELECT MEDI_CD, PRME_QT
+		FROM PURCHASE_MEDICINE_DETAIL
+		WHERE PRME_NO = #{prmeNo}
+	</select>
+	
+	<update id="modifyMedicineStock" parameterType="purchaseMedicineDetailVO">
+		UPDATE MEDICINE
+		SET MEDI_STOCK = MEDI_STOCK + #{prmeQt}
+		WHERE MEDI_CD = #{mediCd}
+	</update>
+	
+	<select id="getAllPurchasedMedicine" resultType="purchaseMedicineDetailVO">
+<!-- 		SELECT  -->
+<!-- 	        M.MEDI_NM, PM.PRME_ATRL_STAT, -->
+<!-- 	        SUM(PD.PRME_QT) AS PRME_QT -->
+<!-- 	    FROM PURCHASE_MEDICINE_DETAIL PD -->
+<!-- 	    JOIN MEDICINE M ON M.MEDI_CD = PD.MEDI_CD -->
+<!-- 	    JOIN PURCHASE_MEDICINE PM ON PD.PRME_NO = PM.PRME_NO -->
+<!-- 	    GROUP BY M.MEDI_NM, PM.PRME_ATRL_STAT -->
+		SELECT 
+		    M.MEDI_NM, PM.PRME_ATRL_STAT, TO_CHAR(PM.PRME_DT, 'YYYY-MM') AS PRME_DT,
+		    SUM(PD.PRME_QT) AS PRME_QT
+		FROM PURCHASE_MEDICINE_DETAIL PD
+		JOIN MEDICINE M ON M.MEDI_CD = PD.MEDI_CD
+		JOIN PURCHASE_MEDICINE PM ON PD.PRME_NO = PM.PRME_NO
+		GROUP BY M.MEDI_NM, PM.PRME_ATRL_STAT, TO_CHAR(PM.PRME_DT, 'YYYY-MM')
+	</select>
+</mapper>

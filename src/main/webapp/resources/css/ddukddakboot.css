@@ -1,0 +1,1111 @@
+@charset "UTF-8";
+/*!
+ * Bootstrap v5.1.3 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+@font-face {
+	font-family: 'Pretendard1';
+	font-weight: 100;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Thin.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Thin.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Thin.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Thin.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Thin.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard2';
+	font-weight: 200;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraLight.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraLight.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraLight.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraLight.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraLight.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard3';
+	font-weight: 300;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Light.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Light.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Light.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Light.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Light.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard4';
+	font-weight: 400;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard5';
+	font-weight: 500;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Medium.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Medium.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Medium.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Medium.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Medium.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard6';
+	font-weight: 600;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard7';
+	font-weight: 700;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard8';
+	font-weight: 800;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraBold.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraBold.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraBold.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraBold.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-ExtraBold.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Pretendard9';
+	font-weight: 900;
+	font-style: normal;
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Black.eot');
+	src:
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Black.eot?#iefix')
+		format('embedded-opentype'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Black.woff2')
+		format('woff2'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Black.woff')
+		format('woff'),
+		url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Black.ttf')
+		format("truetype");
+	font-display: swap;
+}
+
+body {
+	
+}
+ 
+::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 6px;
+	background: var(--black-05, #E0E6E9);
+  }
+  
+ ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+a {
+  text-decoration-line: none !important;
+}
+
+a:hover {
+  text-decoration-line: none !important;
+  color: #0ABAB5 !important;
+}
+
+h1 {
+	color: var(--black-01, #333) !important;
+	font-family: 'Pretendard7' !important;
+	font-size: 24px !important;
+	font-style: normal !important;
+	line-height: normal !important;
+}
+
+h2{
+	color: var(--black-01, #333) !important;
+	font-family: 'Pretendard6' !important;
+	font-size: 18px !important;
+	font-style: normal !important;
+	line-height: 32px !important;
+}
+
+h3 {
+	color: var(--black-01, #333) !important;
+	font-family: 'Pretendard6' !important;
+	font-size: 16px !important;
+	font-style: normal !important;
+	line-height: 24px !important;
+}
+
+h4 {
+	color: var(--black-01, #333) !important;
+	font-family: 'Pretendard5' !important;
+	font-size: 16px !important;
+	font-style: normal !important;
+	line-height: 24px !important;
+}
+
+input:disabled {
+	color: #757575;
+    background: #EEEEEE;
+}
+
+input:checked {
+  border: 2px solid #0ABAB5;
+}
+
+.form-check-input:checked {
+    background-color: #0ABAB5;
+    border-color: #0ABAB5;
+}
+
+.subTitle-margin {
+	margin: 8px;
+}
+
+.dark-gray-text {
+    color: var(--black-03, #64767C) !important;
+    font-family: 'Pretendard5';
+}
+
+.gray-text {
+	color: var(--black-03, #8D9EA5) !important;
+	font-family: 'Pretendard5';
+}
+
+.light-gray-text {
+	color: #E0E6E9;
+	font-family: 'Pretendard5';
+}
+
+.mar-b-16 {
+	margin-bottom: 16px;
+}
+
+.mar-b-8 {
+	margin-bottom: 8px;
+}
+
+.mar-l-8 {
+	margin-left: 8px;
+}
+
+.mar-t-16 {
+	margin-top: 16px;
+}
+
+.mar-t-8 {
+	margin-top: 8px;
+}
+
+.pa-b-4 {
+	padding-bottom: 4px;	
+}
+
+.w-100 {
+	width: 100%;
+}
+
+.h-100 {
+	height: 100%;
+}
+
+.w-70 {
+	width: 70%;
+}
+
+.h-70 {
+	height: 70%;
+}
+
+.w-60 {
+	width: 60%;
+}
+
+.h-60 {
+	height: 60%;
+}
+
+.w-50 {
+	width: 50%;
+}
+
+.h-50 {
+	height: 50%;
+}
+
+.w-30 {
+	width: 30%;
+}
+
+.h-30 {
+	height: 30%;
+}
+
+.w-20 {
+	width: 20%;
+}
+
+.h-20 {
+	height: 20%;
+}
+
+.spa-betw{
+	display: flex!important;
+    justify-content: space-between;
+}
+
+.flex-end {
+	display: flex;
+    justify-content: flex-end;
+}
+
+.f-end {
+	display: flex;
+    justify-content: flex-end;
+}
+
+.absolute-center {
+	display: flex!important;
+	align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-d-col {
+	display: flex!important;
+	flex-direction: column;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.gap-ver-8 {
+	display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+
+.gap-ver-16 {
+	display: flex;
+    gap: 16px;
+    flex-direction: column;
+}
+
+.gap-ver-32 {
+	display: flex;
+    gap: 32px;
+    flex-direction: column;
+}
+
+.gap-row-8 {
+	display: flex;
+    gap: 8px;
+}
+
+.gap-row-16 {
+	display: flex;
+    gap: 16px;
+}
+
+.gap-32 {
+	gap: 32px;
+}
+
+.p-8 {
+	padding: 8px;
+}
+
+.m-8 {
+	margin: 8px;
+}
+
+.m-16 {
+	margin: 16px;
+}
+
+.text16 {
+	font-size: 16px;
+}
+
+.w-30 {
+	width: 30%;
+}
+
+.w-40 {
+	width: 40%;
+}
+
+.w-20 {
+	width: 20%;
+}
+
+.dduck-input {
+	border-radius: 12px;
+	border: 1px solid var(--border, #EBEFF0);
+	background: var(--bg-01, #F8F9FC);
+	padding-left: 16px;
+	font-family: 'Pretendard5';
+	font-size: 14px;
+	line-height: 160%; /* 22.4px */
+}
+
+.dduck-input:focus {
+	outline: 2px solid var(--ci-01, #0ABAB5);
+}
+
+.dduk-nav-ci{
+	width: 160px;
+	height: 64px;
+	flex-shrink: 0;
+	margin: 24px 32px 0px 32px;
+	display: flex;
+    align-items: center;
+}
+
+.aside-title {
+	color: var(--black-01, #333);
+	/* Title/Midium */
+	font-family: 'Pretendard7';
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 160%; /* 32px */
+	padding-top: 4px;
+}
+
+.dduk-nav-var {
+	width: 224px;
+	height: 100vh;
+	flex-shrink: 0;
+	border-right: 1px solid var(--border, #E0E8E6);
+	background: var(--bg-01, #F8F9FC);
+}
+
+.dduk-nav-header {
+	width: 1696px;
+	height: 100px;
+	flex-shrink: 0;
+	border-bottom: 1px solid var(--border, #E0E8E6);
+	background: var(--white, #FFF);
+}
+
+.dduk-nav-ul {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 24px; /*구현 끝나면 24로 수정-완 */
+	margin-block-start: 52px !important;
+    margin-block-end: 0px !important;
+    margin-inline-start: 24px !important;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px !important;
+}
+
+.dduk-nav-li {
+	display:flex;
+	width: 200px;
+	padding: 13px 24px;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	border-radius: 16px 0px 0px 16px;
+	box-sizing: border-box;
+	cursor: pointer;
+	transition: color 0.3s linear;
+}
+
+.dduk-nav-li:hover {
+	color: var(--ci-01, #0ABAB5);
+	z-index: 100;
+}
+
+.dduk-nav-li::before {
+	content: "";
+	width: 196px;
+	height: 0px;
+	margin-left: 4px;
+	position: absolute;
+	border-radius: 16px 0px 0px 16px;
+	background: var(--bg-02, #DBF2F4);
+	z-index: -1;
+	transition: 0.3s;
+}
+
+.dduk-nav-li:hover::before {
+	height: 56px;
+}
+
+.dduk-nav-li:after {
+	content: "";
+	position: absolute;
+	margin-left: 195px;
+	height: 0px;
+	border-right: 4px solid var(--ci-01, #0ABAB5);
+	transition: 0.3s;
+}
+
+.dduk-nav-li:hover:after {
+	height: 56px;
+}
+
+
+.dduk-nav-menu {
+	width: 120px;
+	color: var(--black-02, #647675);
+	font-size: 20px;
+	font-family: 'Pretendard5';
+}
+
+.dduk-nav-menu:hover {
+	width: 120px;
+	color: var(--ci-02, #00A9A4);
+	font-size: 20px;
+	font-family: 'Pretendard5';
+}
+
+.header-div {
+	height:100%;
+	margin-inline-start: 40px;
+    margin-inline-end: 64px;
+}
+
+.header-text-bold {
+	color: var(--black-01, #333);
+	font-family: 'Pretendard5';
+	font-size: 22px;
+	display: flex;
+}
+
+.header-text {
+	color: var(--black-02, #647675);
+	font-family: 'Pretendard4';
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+}
+
+#header-profile {
+	width: 48px;
+	height: 48px;
+	flex-shrink: 0;
+	fill: var(--bg-02, #DBF2F4);
+	stroke-width: 4px;
+	margin-inline-start: 32px;
+	border-radius: 100%;
+	object-fit: cover;
+}
+
+.header-icon-set {
+	gap: 8px;
+	margin-inline-start: 24px !important;
+}
+
+.header-icon {
+	width: 48px;
+	height: 48px;
+	padding: 8px;
+}
+
+.header-icon:hover {
+	border-radius: 16px;
+	background: var(--bg-02, #DBF2F4);
+}
+ 
+/*************************** 모든 구역 분할에 쓰는 보더!!!! *******************************/
+.dduk-body-border {
+	border-radius: 24px;
+	border: 1px solid var(--border, #E0E8E6);
+	padding: 16px;
+}
+
+.dduk-inner-border {
+	border-radius: 24px;
+	border: 1px solid var(--border, #E0E8E6);
+	padding: 16px;
+	background: var(--white, #FFF);
+}
+
+.dduk-popover {
+	align-items: center;
+	height:36px;
+	margin-left: 8px;
+	margin-right: 8px;
+	padding: 0px 12px;
+	font-family:'Pretendard4'; 
+	color: var(--black-02, #647675); 
+	font-size: 16px;
+}
+
+.dduk-popover:hover {
+	color: var(--ci-01, #0ABAB5);
+	z-index: 100;
+	background-color: var(--bg-02, #DBF2F4);
+}
+
+.dduk-popover::after {
+	position: absolute;
+	height:36px;
+	width: 120px;
+	margin-left: 4px;
+	margin-right: 4px;
+	padding: 0px 12px;
+	background-color: var(--bg-02, #DBF2F4);
+	transition: 0.3s;
+}
+
+.popover-b {
+	margin-top: -12px !important;
+}
+
+.dduk-body {
+	margin: 24px 64px 116px 24px;
+	width: 1592px;
+	height: 840px;
+	display: flex;
+	gap: 16px;
+}
+
+.main-title-set {
+	position: absolute;
+	margin: 80px 40px;
+}
+
+.main-img {
+	width: 1100px;
+	height: 680px;
+	flex-shrink: 0;
+	margin: 60px 276px auto 200px;
+}
+
+.main-fir{
+	color: var(--ci-01, #0ABAB5);
+	font-family: 'Pretendard7';
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	margin-bottom: 0px;
+}
+
+.main-title{
+	color: var(--black-01, #333);
+	font-family: 'Pretendard7';
+	font-size: 64px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	margin-top: 12px;
+	margin-bottom: 0px;
+}
+
+.main-sub{
+	color: var(--black-03, #8D9EA2);
+	font-family: Pretendard;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+	margin-top: 20px;
+}
+
+.login-img{
+	margin: 136px auto auto 176px;
+	width: 780px;
+}
+
+.dduk-login-form {
+	width: 640px;
+	height: 1000px;
+	flex-shrink: 0;
+	border-radius: 40px;
+	border: 1px solid var(--border, #EBEFF0);
+	background: var(--white, #FFF);
+	margin-left: 240px;
+	margin-top: 16px;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-ci {
+	display: flex;
+	margin-top: 80px;
+    margin-bottom: 64px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-ci-title {
+	color: var(--black-01, #333);
+	/* Title/Large */
+	font-family: 'Pretendard6';
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 40px; /* 166.667% */	
+}
+
+.login-input-label {
+	color: var(--black-01, #333);
+	font-family: 'Pretendard6';
+	font-size: 14px;
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+}
+
+.dduk-login-d{
+	margin-bottom: 24px;
+}
+
+.dduk-login-input {
+	width: 320px;
+	height: 48px;
+	flex-shrink: 0;
+	border-radius: 12px;
+	border: 1px solid var(--border, #EBEFF0);
+	background: var(--bg-01, #F8F9FC);
+	color: var(--black-01, #333);
+	/* Body/Small */
+	font-family: 'Pretendard5';
+	font-size: 14px;
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	padding-left: 16px;
+	margin: 8px 0px 0px 0px;
+}
+
+.dduk-login-input:focus-visible {
+	    outline:  #0ABAB5 auto 1px;
+}
+
+.dduk-login-btn {
+	width: 320px;
+	height: 56px;
+	flex-shrink: 0;
+	border-radius: 12px;
+	background: var(--black-01, #333);
+	color: #FFF;
+	/* Title/XSmall */
+	font-family: 'Pretendard6';
+	font-size: 16px;
+	font-style: normal;
+	line-height: 24px; /* 150% */
+	margin-top: 16px;
+}
+
+.search-passwd{
+	color: var(--black-03, #8D9EA2);
+	font-family: 'Pretendard5';
+	font-size: 14px;
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	text-decoration-line: underline !important;
+	margin-left: 4px;
+/* 	border-bottom: 1px solid var(--black-03, #8D9EA2); */
+}
+
+.search-passwd:hover {
+	color: var(--ci-01, #0ABAB5);
+}
+
+.join-link {
+	display: flex;
+	justify-content: center;
+	margin-top: 144px;
+	gap: 16px;
+	font-family: 'Pretendard5';
+	color: var(--black-01, #333);
+	font-size: 16px;
+	line-height: 160%;
+}
+
+.join-link a {
+	color: var(--ci-01, #0ABAB5) !important;
+	text-decoration-line: underline !important;
+}
+
+button {
+	display: flex;
+	padding: 5px 10px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 0px solid var(--ci-01, #0ABAB5);
+	background: var(--black-02, #64767C);
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	border: 0px;
+	justify-content: center !important;
+}
+
+.dduk-btn-normal {
+	display: inline-flex;
+	padding: 5px 12px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	background: var(--black-02, #64767C);
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	border: 0px;
+}
+
+.dduk-btn-normal:hover {
+	background: #0ABAB5;
+}
+
+.dduk-btn-active {
+	display: flex;
+	padding: 5px 12px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 0px solid var(--ci-01, #0ABAB5);
+	background: var(--ci-01, #0ABAB5) !important;
+	color: var(--white, #FFF);
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	border: 0px;
+}
+
+.dduk-btn-disabled {
+	display: flex;
+	padding: 5px 12px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 0px solid var(--black-05, #E0E6E9);
+	background: var(--black-05, #E0E6E9) !important;
+	font-family: 'Pretendard5';
+	color: var(--black-03, #8D9EA5);
+	border: 0px;
+}
+
+.dduk-btn-info {
+	display: flex;
+	padding: 5px 12px;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	border: 0px solid var(--black-05, #E0E6E9);
+	background: var(--black-05, #DBF2F4) !important;
+	font-family: 'Pretendard5';
+	color: var(--black-03, #0abab5);
+	border: 0px;
+}
+
+.dduk-btn-danger {
+	display: flex;
+	padding: 5px 12px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	border-radius: 8px;
+	background: #FFECEC !important;
+	color: var(--red, #FF4040);
+	/* Body/Small */
+	font-family: 'Pretendard5';
+	font-style: normal;
+	line-height: 160%; /* 22.4px */
+	border: 0px;
+}
+
+.dduk-title-area{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px;
+	margin-bottom: 16px;
+}
+
+.dduk-x-pd8 {
+	padding: 0px 8px;
+}
+
+.patient-list-table {
+	padding: 0px 8px;
+	width: 100%;
+}
+
+.tr-padding {
+	padding: 0px 24px; 
+}
+
+.tr-padding:hover {
+	background: var(--bg-01, #F8F9FC);
+}
+
+.td-padding {
+	padding: 13px 0px; 
+}
+
+.patient-list {
+	width: 324px;
+	height: 100%;
+	flex-shrink: 0;
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.patient-info {
+	width: 327px;
+	height: 40px;
+	flex-shrink: 0;
+	border-radius: 12px;
+	background: var(--bg-01, #F8F9FC);
+	justify-content: space-around;
+    align-items: center;
+    margin-left: 100px;
+}
+
+.admiss-room-info {
+	width: 360px;
+	height: 100px;
+	flex-shrink: 0;
+	border-radius: 12px;
+	background: var(--bg-01, #F8F9FC);
+	justify-content: space-around;
+    margin-left: 100px;
+}
+
+
+.dduk-history {
+	height: 759px;
+	width: 289px;
+	margin: -17px -16px -16px -16px;
+	padding: 16px;
+	border-right: 1px solid  var(--border, #EBEFF0);
+}
+
+.dduk-history-list, .dduk-admi-list{
+	display: flex;
+	padding: 16px;
+	flex-direction: column;
+	align-items: flex-start;
+	border-radius: 16px;
+	background: #FFF;
+	width: 252px;
+	height: 112px;
+	margin-top: 8px;
+	margin-left: -2px;
+}
+
+.dduk-history-list:hover, .dduk-admi-list:hover{
+	background: var(--bg-01, #F8F9FC);
+}
+
+.dduk-history-list .history-btn, .dduk-admi-list .history-btn{
+	display: flex;
+	padding: 1px 6px;
+	align-items: center;
+	gap: 4px;
+	border-radius: 6px;
+	border: 1px solid var(--black-04, #D5D9DB);
+	background: var(--white, #FFF);
+}
+
+.dduk-history-list .history-title, .dduk-admi-list .history-title {
+	color: var(--black-01, #333);
+	/* Body/Midium */
+	font-family: 'Pretendard5';
+	font-size: 16px;
+	font-style: normal;
+	line-height: 160%;
+}
+
+.history-btn-list{
+	margin-top: 8px;
+	gap: 4px;
+}
+
+.dduk-history-list .history-array {
+	width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.history-scroll {
+	height: 450px;
+	overflow-y: scroll;
+}
+
+.patient-record {
+	width: 601px;
+	height: 757px;
+	flex-shrink: 0;
+	border-radius: 0px 0px 24px 0px;
+	background: var(--bg-01, #F8F9FC);
+	margin: -17px -17px -16px 16px;
+	padding: 16px;
+}
+
+.record-img {
+	width: 232px;
+	height: auto;
+	border-radius: 8px;
+	margin: 4px 0px;
+}
+
+.record-img-scroll {
+	height: 270px;
+	overflow-y: scroll;
+	position: relative !important;
+	z-index: auto !important;
+}
+
+
+.patient-record-chat {
+	display: flex;
+	padding: 12px 16px;
+	align-items: flex-start;
+	gap: 10px;
+	border-radius: 16px;
+	background: var(--bg-01, #F8F9FC);
+	width: 272px;
+	min-height: 46px;
+}
+
+.record-profile-img {
+	width: 40px;
+	height: 40px;
+	stroke-width: 1px;
+	stroke: rgba(0, 0, 0, 0.04);
+	border-radius: 24px;
+	margin-right: 16px;
+	object-fit: cover;
+}
+
+.img-circle{
+	width: 100px;
+	height: 100px;
+	border-radius: 64px;
+	margin: 16px;
+	overflow: hidden;
+	object-fit: cover;
+}
+
+.dduk-row {
+	display: flex;
+    gap: 24px;
+}
+
+.modal-header {
+	background: var(--black-01, #333);
+}
+
+.modal-title {
+	color: #ffffff !important;
+}
+
+.notice-text {
+	height: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 1.7em;
+}
+
+.patientTbody {
+	display: block;
+    max-height: 640px;
+    overflow: scroll;
+    width: 290px;
+}
+
+.auto-complete-btn {
+	background-color: transparent;
+}
+/*# sourceMappingURL=bootstrap.css.map */

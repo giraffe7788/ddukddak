@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!--Mybatis 설정 -->
+	<settings>
+		<!-- 전통적인 데이터베이스 컬럼명 형태인 A_COLUMN을 CamelCase형태의 자바 프로퍼티명 형태인 aColumn으로 자동으로 매핑하도록 함 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"></setting>
+		<!--  파라미터에 Null 값이 있을 경우 에러 처리 -->
+		<setting name="jdbcTypeForNull" value="VARCHAR"></setting>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="kr.or.dduk.vo.EmployeeVO" alias="employeeVO" />
+		<typeAlias type="kr.or.dduk.vo.AuthorityVO" alias="authorityVO" />
+		<typeAlias type="kr.or.dduk.vo.NoticeVO" alias="noticeVO" />
+		<typeAlias type="kr.or.dduk.vo.AtchFileVO" alias="atchFileVO" />
+		<typeAlias type="kr.or.dduk.vo.AtchFileDetailVO" alias="atchFileDetailVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatVO" alias="chatVO" />
+		<typeAlias type="kr.or.dduk.vo.ComCodeInfoVO" alias="comCodeInfoVO" />
+		<typeAlias type="kr.or.dduk.vo.ComDetailCodeInfoVO" alias="comDetailCodeInfoVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatRoomVO" alias="chatRoomVO" />
+		<typeAlias type="kr.or.dduk.vo.ChatMemberVO" alias="chatMemberVO" />
+		<typeAlias type="kr.or.dduk.vo.HospitalReceptionVO" alias="hospitalReceptionVO" />
+		<typeAlias type="kr.or.dduk.vo.PatientVO" alias="patientVO" />
+		<typeAlias type="kr.or.dduk.vo.PatientRecordVO" alias="patientRecordVO" />
+		<typeAlias type="kr.or.dduk.vo.ProofApplicationVO" alias="proofApplicationVO" />
+		<typeAlias type="kr.or.dduk.vo.NurScheduleVO" alias="nurScheduleVO" />
+		<typeAlias type="kr.or.dduk.vo.DocOfficeVO" alias="docOfficeVO" />
+		
+		<!-- 예약VO -->
+		<typeAlias type="kr.or.dduk.vo.ReservationVO" alias="reservationVO" />
+		
+		<!-- 진료관련VO 시작 -->
+		<typeAlias type="kr.or.dduk.vo.ClinicChartVO" alias="clinicChartVO" />
+		<typeAlias type="kr.or.dduk.vo.InjuryDiagnosisVO" alias="injuryDiagnosisVO" />
+		<typeAlias type="kr.or.dduk.vo.InjuryVO" alias="injuryVO" />
+		<typeAlias type="kr.or.dduk.vo.TestOrderVO" alias="testOrderVO" />
+		<typeAlias type="kr.or.dduk.vo.TestVO" alias="testVO" />
+		<typeAlias type="kr.or.dduk.vo.MedicineOrderVO" alias="medicineOrderVO" />
+		<typeAlias type="kr.or.dduk.vo.MedicineVO" alias="medicineVO" />
+		<typeAlias type="kr.or.dduk.vo.TreatmentOrderVO" alias="treatmentOrderVO" />
+		<typeAlias type="kr.or.dduk.vo.TreatmentVO" alias="treatmentVO" />
+		<typeAlias type="kr.or.dduk.vo.TreatmentRoomVO" alias="treatmentRoomVO" />
+		<typeAlias type="kr.or.dduk.vo.TreatmentStatsVO" alias="treatmentStatsVO" />
+		<typeAlias type="kr.or.dduk.vo.OrderSetVO" alias="orderSetVO" />
+		<!-- 진료관련VO 끝 -->
+		
+		<!-- 문자관련VO 시작 -->
+		<typeAlias type="kr.or.dduk.vo.MmsFormVO" alias="mmsFormVO" />
+		<typeAlias type="kr.or.dduk.vo.MmsHstrVO" alias="mmsHstrVO" />
+		<!-- 문자관련VO 끝 -->
+		
+		<!-- 입퇴원VO -->
+		<typeAlias type="kr.or.dduk.vo.AdmissionRoomVO" alias="admissionRoomVO" />
+		<typeAlias type="kr.or.dduk.vo.AdmissionChartVO" alias="admissionChartVO" />
+		
+		<!-- 캘린더VO -->
+		<typeAlias type="kr.or.dduk.vo.DocScheduleVO" alias="docScheduleVO"/>
+		
+		<!-- 약품관리VO -->
+		<typeAlias type="kr.or.dduk.vo.PurchaseMedicineVO" alias="purchaseMedicineVO"/>
+		<typeAlias type="kr.or.dduk.vo.PurchaseMedicineDetailVO" alias="purchaseMedicineDetailVO"/>
+		
+		<!-- 간호차트 VO -->
+		<typeAlias type="kr.or.dduk.vo.NurChartVO" alias="nurChartVO" />
+		<typeAlias type="kr.or.dduk.vo.DietVO" alias="dietVO" />
+		<typeAlias type="kr.or.dduk.vo.MealVO" alias="mealVO" />
+		<typeAlias type="kr.or.dduk.vo.VitalVO" alias="vitalVO" />
+		<typeAlias type="kr.or.dduk.vo.IoVO" alias="ioVO" />
+		
+		<!-- 수납 VO -->
+		<typeAlias type="kr.or.dduk.vo.PayVO" alias="payVO" />
+		<typeAlias type="kr.or.dduk.vo.PayRecordVO" alias="payRecordVO" />
+		<typeAlias type="kr.or.dduk.vo.ReceiptVO" alias="receiptVO" />
+	</typeAliases>
+	
+</configuration> 
+
+

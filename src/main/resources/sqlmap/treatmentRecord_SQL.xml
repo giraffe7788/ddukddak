@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.dduk.mapper.TreatmentRecordMapper">
+	<!-- 환자 resultMap -->
+	<resultMap type="patientVO" id="patientMap">
+		<result property="paNo" column="PA_NO"/>
+		<result property="paReg" column="PA_REG"/>
+		<result property="paName" column="PA_NAME"/>
+		<result property="paSex" column="PA_SEX"/>
+		<result property="paPh" column="PA_PH"/>
+		<result property="paAdd1" column="PA_ADD1"/>
+		<result property="paAdd2" column="PA_ADD2"/>
+		<result property="pzZip" column="PZ_ZIP"/>
+		<result property="paNoknm" column="PA_NOKNM"/>
+		<result property="paNokph" column="PA_NOKPH"/>
+		<result property="paBldType" column="PA_BLD_TYPE"/>
+		<result property="paInsrYn" column="PA_INSR_YN"/>
+		<result property="paAdmDt" column="PA_ADM_DT"/>
+		<result property="paHeight" column="PA_HEIGHT"/>
+		<result property="paWeight" column="PA_WEIGHT"/>
+		
+		<collection property="clinicChartVOList" resultMap="clinicChartMap"></collection>
+	</resultMap>
+	
+	<!-- 진료,회진차트 resultMap -->
+	<resultMap type="clinicChartVO" id="clinicChartMap">
+		<id property="clinicNo" column="CLINIC_NO" />
+		<result property="clinicDt" column="CLINIC_DT" />
+		<result property="clinicOpinion" column="CLINIC_OPINION" />
+		<result property="hsrpNo" column="HSRP_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="paNo" column="PA_NO" />
+		<result property="clinicInjnm" column="CLINIC_INJNM" />
+		<result property="admiCd" column="ADMI_CD" />
+		<result property="clinicState" column="CLINIC_STATE" />
+		<result property="empName" column="EMP_NAME" />
+
+		<collection notNullColumn="TM_CD" property="treatmentOrderVOList"
+			resultMap="treatmentOrderMap" />
+	</resultMap>
+	
+	<!-- 치료오더 resultMap -->
+	<resultMap type="treatmentOrderVO" id="treatmentOrderMap">
+		<result property="tmCd" column="TM_CD" />
+		<result property="clinicNo" column="CLINIC_NO" />
+		<result property="bodyCd" column="BODY_CD" />
+		<result property="trodCont" column="TROD_CONT" />
+		<result property="treatmentOrderEmpNo" column="EMP_NO" />
+		
+		<result property="treatmentOrderEmpName" column="TREATMENT_ORDER_EMP_NAME" />
+		<result property="treatmentOrderBodyCdNm" column="TREATMENT_ORDER_BODY_CD_NM" />
+		<result property="treatmentOrderEmpJbpsNm" column="TREATMENT_ORDER_EMP_JBPS_CD" />
+
+		<association property="treatmentVO"
+			resultMap="treatmentMap" />
+	</resultMap>
+
+	<!-- 치료코드 resultMap -->
+	<resultMap type="treatmentVO" id="treatmentMap">
+		<result property="tmCd" column="TM_CD" />
+		<result property="tmNm" column="TM_NM" />
+		<result property="tmPrice" column="TM_PRICE" />
+		<result property="insuYn" column="INSU_YN" />
+	</resultMap>
+	
+	
+	<!-- 치료완료환자 리스트 -->
+	<select id="treatmentPatientList" resultMap="patientMap">
+		SELECT 
+			A.PA_NO, 
+			A.PA_REG, 
+			A.PA_NAME, 
+			A.PA_SEX, 
+			A.PA_PH, 
+			A.PA_ADD1, 
+			A.PA_ADD2, 
+			A.PA_BLD_TYPE, 
+			A.PA_INSR_YN, 
+			A.PA_HEIGHT, 
+			A.PA_WEIGHT,
+			B.CLINIC_NO, 
+			B.EMP_NO, 
+			B.CLINIC_DT, 
+			B.CLINIC_INJNM, 
+			B.CLINIC_STATE,
+			C.EMP_NO,
+			C.BODY_CD, 
+			C.TROD_CONT,
+			D.TM_CD, 
+			D.TM_NM, 
+			D.TM_PRICE, 
+			D.INSU_YN
+		FROM PATIENT A
+			JOIN CLINIC_CHART B ON A.PA_NO = B.PA_NO
+			JOIN TREATMENT_ORDER C ON B.CLINIC_NO = C.CLINIC_NO
+			JOIN TREATMENT D ON C.TM_CD = D.TM_CD
+		WHERE 
+			C.EMP_NO IS NOT NULL
+		AND
+			C.TROD_CONT IS NULL
+		AND 
+			C.BODY_CD IS NOT NULL
+	</select>
+	
+	<!-- 선택한환자 정보가져오기 -->
+	<select id="selectTreatmentPatientInfo" resultMap="patientMap">
+		SELECT 
+			A.PA_NO, 
+			A.PA_REG, 
+			A.PA_NAME, 
+			A.PA_SEX, 
+			A.PA_PH, 
+			A.PA_ADD1, 
+			A.PA_ADD2, 
+			A.PA_BLD_TYPE, 
+			A.PA_INSR_YN, 
+			A.PA_HEIGHT, 
+			A.PA_WEIGHT,
+			B.CLINIC_NO, 
+			B.EMP_NO, 
+			B.CLINIC_DT, 
+			B.CLINIC_INJNM, 
+			B.CLINIC_STATE,
+			C.EMP_NO,
+			C.BODY_CD, 
+			C.TROD_CONT,
+			D.TM_CD, 
+			D.TM_NM, 
+			D.TM_PRICE, 
+			D.INSU_YN
+		FROM PATIENT A
+			JOIN CLINIC_CHART B ON A.PA_NO = B.PA_NO
+			JOIN TREATMENT_ORDER C ON B.CLINIC_NO = C.CLINIC_NO
+			JOIN TREATMENT D ON C.TM_CD = D.TM_CD
+		WHERE 
+			C.EMP_NO IS NOT NULL
+		AND 
+			C.BODY_CD IS NOT NULL
+		AND 
+			C.TROD_CONT IS NULL
+		AND 
+			A.PA_NO = #{paNo}
+		ORDER BY 
+			CLINIC_DT ASC
+	</select>
+	
+	<!-- 선택한환자 치료기록가져오기 -->
+	<select id="getTreatmentInfo" resultMap="patientMap">
+		SELECT 
+			A.PA_NO, 
+			A.PA_REG, 
+			A.PA_NAME, 
+			A.PA_SEX, 
+			A.PA_PH, 
+			A.PA_ADD1, 
+			A.PA_ADD2, 
+			A.PA_BLD_TYPE, 
+			A.PA_INSR_YN, 
+			A.PA_HEIGHT, 
+			A.PA_WEIGHT,
+			B.CLINIC_NO, 
+			B.EMP_NO, 
+			B.CLINIC_DT, 
+			B.CLINIC_INJNM, 
+			B.CLINIC_STATE,
+			C.EMP_NO,
+			C.BODY_CD, 
+			C.TROD_CONT,
+			D.TM_CD, 
+			D.TM_NM, 
+			D.TM_PRICE, 
+			D.INSU_YN
+		FROM PATIENT A
+			JOIN CLINIC_CHART B ON A.PA_NO = B.PA_NO
+			JOIN TREATMENT_ORDER C ON B.CLINIC_NO = C.CLINIC_NO
+			JOIN TREATMENT D ON C.TM_CD = D.TM_CD
+		WHERE 
+			C.EMP_NO IS NOT NULL
+		AND 
+			C.BODY_CD IS NOT NULL
+		AND 
+			C.TROD_CONT IS NOT NULL
+		AND 
+			A.PA_NO = #{paNo}
+		ORDER BY 
+			CLINIC_DT ASC
+	</select>
+	
+	<!-- 선택한 환자 당일 치료내역 -->
+	<select id="selectTodayTreatmentInfo" resultMap="patientMap">
+		SELECT 
+			A.PA_NO, 
+			A.PA_REG, 
+			A.PA_NAME, 
+			A.PA_SEX, 
+			A.PA_PH, 
+			A.PA_ADD1, 
+			A.PA_ADD2, 
+			A.PA_BLD_TYPE, 
+			A.PA_INSR_YN, 
+			A.PA_HEIGHT, 
+			A.PA_WEIGHT,
+			B.CLINIC_NO, 
+			B.EMP_NO, 
+			B.CLINIC_DT, 
+			B.CLINIC_INJNM, 
+			B.CLINIC_STATE,
+			C.EMP_NO,
+            E.EMP_NAME AS TREATMENT_ORDER_EMP_NAME,
+			C.BODY_CD, 
+			C.TROD_CONT,
+			D.TM_CD, 
+			D.TM_NM, 
+			D.TM_PRICE, 
+			D.INSU_YN
+		FROM PATIENT A
+			JOIN CLINIC_CHART B ON A.PA_NO = B.PA_NO
+			JOIN TREATMENT_ORDER C ON B.CLINIC_NO = C.CLINIC_NO
+			JOIN TREATMENT D ON C.TM_CD = D.TM_CD
+			JOIN EMPLOYEE E ON C.EMP_NO = E.EMP_NO 
+		WHERE 
+			C.EMP_NO IS NOT NULL
+		AND 
+			C.BODY_CD IS NOT NULL
+		AND 
+			C.TROD_CONT IS NULL
+		AND 
+			A.PA_NO = #{paNo}
+	</select>
+	
+	<!-- 선택한환자 진료정보가져오기 -->
+	<select id="selectTreatmentInfo" resultMap="patientMap">
+		SELECT 
+			A.PA_NO, 
+			A.PA_REG, 
+			A.PA_NAME, 
+			A.PA_SEX, 
+			A.PA_PH, 
+			A.PA_ADD1, 
+			A.PA_ADD2, 
+			A.PA_BLD_TYPE, 
+			A.PA_INSR_YN, 
+			A.PA_HEIGHT, 
+			A.PA_WEIGHT,
+			B.CLINIC_NO, 
+			B.EMP_NO, 
+			B.CLINIC_DT, 
+			B.CLINIC_INJNM, 
+			B.CLINIC_STATE,
+			C.EMP_NO,
+			C.BODY_CD, 
+			C.TROD_CONT,
+			D.TM_CD, 
+			D.TM_NM, 
+			D.TM_PRICE, 
+			D.INSU_YN
+		FROM PATIENT A
+			JOIN CLINIC_CHART B ON A.PA_NO = B.PA_NO
+			JOIN TREATMENT_ORDER C ON B.CLINIC_NO = C.CLINIC_NO
+			JOIN TREATMENT D ON C.TM_CD = D.TM_CD
+		WHERE 
+			C.EMP_NO IS NOT NULL
+		AND C.BODY_CD IS NOT NULL
+<!-- 		AND A.PA_NO = #{paNo} -->
+		AND B.CLINIC_NO = #{clinicNo}
+<!-- 		AND D.TM_CD = #{tmCd} -->
+	</select>
+	
+	<!-- 치료기록 작성 -->
+	<update id="updateTrodCont" parameterType="treatmentOrderVO">
+		UPDATE 
+			TREATMENT_ORDER
+		SET 
+			TROD_CONT = #{trodCont}
+		WHERE 
+			CLINIC_NO = #{clinicNo}
+	</update>
+	
+	<!-- 환부 통계 -->
+	<select id="bodyCdStatisticsList" resultType="treatmentStatsVO">
+<!-- 		<![CDATA[ -->
+<!-- 		    SELECT * FROM ( -->
+<!-- 		        SELECT  -->
+<!-- 		            BODY_CD,  -->
+<!-- 		            COUNT(*) AS TREATMENT_COUNT -->
+<!-- 		        FROM  -->
+<!-- 		            TREATMENT_ORDER -->
+<!-- 		        GROUP BY  -->
+<!-- 		            BODY_CD -->
+<!-- 		        ORDER BY  -->
+<!-- 		            TREATMENT_COUNT DESC -->
+<!-- 		    ) WHERE ROWNUM <= 6 -->
+<!-- 	    ]]> -->
+
+		<!-- 월별 환부 통계 -->
+		SELECT 
+			TO_CHAR(C.CLINIC_DT, 'YYYY-MM') AS MONTH,
+		    T.BODY_CD,
+		    COUNT(*) AS TREATMENT_COUNT
+		FROM 
+			CLINIC_CHART C
+		JOIN 
+			TREATMENT_ORDER T ON C.CLINIC_NO = T.CLINIC_NO
+		GROUP BY 
+			TO_CHAR(C.CLINIC_DT, 'YYYY-MM'), T.BODY_CD
+		ORDER BY 
+			MONTH, TREATMENT_COUNT DESC
+	</select>
+	
+	<select id="getAllTreatmentOrderList" resultMap="clinicChartMap">
+<!-- 		SELECT  -->
+<!-- 		    CC.CLINIC_NO, -->
+<!-- 		    CC.CLINIC_DT, -->
+<!-- 		    TOD.TM_CD, -->
+<!-- 		    CDC.COM_DET_CODE_NM AS TREATMENT_ORDER_BODY_CD_NM, -->
+<!-- 		    E.EMP_NAME AS TREATMENT_ORDER_EMP_NAME, -->
+<!-- 		    TM.TM_NM, -->
+<!-- 		    TM.TM_PRICE, -->
+<!-- 		    TM.INSU_YN -->
+<!-- 		FROM CLINIC_CHART CC -->
+<!-- 		JOIN TREATMENT_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO -->
+<!-- 		JOIN TREATMENT TM ON TOD.TM_CD = TM.TM_CD -->
+<!-- 		JOIN COM_DETAIL_CODE_INFO CDC ON TOD.BODY_CD = CDC.COM_DET_CODE  -->
+<!-- 		JOIN EMPLOYEE E ON TOD.EMP_NO = E.EMP_NO -->
+
+			SELECT 
+			    CC.CLINIC_NO,
+			    CC.CLINIC_DT,
+			    TOD.TM_CD,
+			    CDC1.COM_DET_CODE_NM AS TREATMENT_ORDER_BODY_CD_NM,
+			    E.EMP_NAME AS TREATMENT_ORDER_EMP_NAME,
+			    E.EMP_JBPS_CD,
+			    CDC2.COM_DET_CODE_NM AS TREATMENT_ORDER_EMP_JBPS_CD,
+			    TM.TM_NM,
+			    TM.TM_PRICE,
+			    TM.INSU_YN
+			FROM CLINIC_CHART CC
+			JOIN TREATMENT_ORDER TOD ON CC.CLINIC_NO = TOD.CLINIC_NO
+			JOIN TREATMENT TM ON TOD.TM_CD = TM.TM_CD
+			JOIN COM_DETAIL_CODE_INFO CDC1 ON TOD.BODY_CD = CDC1.COM_DET_CODE 
+			JOIN EMPLOYEE E ON TOD.EMP_NO = E.EMP_NO
+			JOIN COM_DETAIL_CODE_INFO CDC2 ON E.EMP_JBPS_CD = CDC2.COM_DET_CODE
+	</select>
+</mapper>
