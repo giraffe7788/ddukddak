@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.dduk.mapper.HospitalReceptionMapper">
 
+	<!-- 담당의가 나인 환자의 대기목록을 갱신 -->
 	<select id="getReceptionList" resultType="hospitalReceptionVO">
 		SELECT
 			HR.HSRP_NO,
@@ -13,17 +14,27 @@
 			HR.HSRP_STATE,
 			P.PA_NAME,
 			P.PA_REG,
-            C.CLINIC_STATE
+                        C.CLINIC_STATE
 		FROM
 			HOSPITAL_RECEPTION HR
 		JOIN
 			PATIENT P ON HR.PA_NO = P.PA_NO
-        LEFT JOIN
-            CLINIC_CHART C ON HR.HSRP_NO = C.HSRP_NO
+                LEFT JOIN
+            		CLINIC_CHART C ON HR.HSRP_NO = C.HSRP_NO
 		WHERE
 			HR.EMP_NO = #{empNo}
-            AND (C.CLINIC_STATE IS NULL OR (C.CLINIC_STATE != 'CRST04' AND C.CLINIC_STATE != 'CRST06' AND C.CLINIC_STATE != 'CRST07' AND C.CLINIC_STATE != 'CRST08'))
+			<!-- 진료가 완료됐으면 데이터를 가져오면 안됨 -->
+           	AND 
+	            	(C.CLINIC_STATE IS NULL OR 
+	            		(
+	            			C.CLINIC_STATE != 'CRST04' AND 
+	            			C.CLINIC_STATE != 'CRST06' AND 
+	            			C.CLINIC_STATE != 'CRST07' AND 
+	            			C.CLINIC_STATE != 'CRST08'
+	            		)
+	            	)
 		ORDER BY
+			<!-- 예약환자 우선으로 가져옴 -->
 			CASE WHEN HR.HSRP_TYPE = 'RCTY02' THEN 0 ELSE 1 END,
 			HR.HSRP_NO ASC
 	</select>
