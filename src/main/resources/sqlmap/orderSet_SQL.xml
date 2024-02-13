@@ -52,25 +52,25 @@
 		SELECT * FROM TREATMENT
 	</select>
 
-	<!-- 오더세트 추가 모달에서 상병 선택시 해당 상병에 대한 정보를 가져옴 -->
+	<!-- 오더세트를 반영할 때 선택한 노드가 상병이면 해당 상병에 대한 정보를 가져오고 상병진단 테이블에 동적으로 출력 -->
 	<select id="getInjuryVODetail" resultType="injuryVO">
 		SELECT * FROM INJURY
 		WHERE IJ_CD = #{ijCd}
 	</select>
 
-	<!-- 오더세트 추가 모달에서 검사 선택시 해당 검사에 대한 정보를 가져옴 -->
+	<!-- 오더세트를 반영할 때 선택한 노드가 검사면 해당 검사에 대한 정보를 가져오고 검사오더 테이블에 동적으로 출력 -->
 	<select id="getTestVODetail" resultType="testVO">
 		SELECT * FROM TEST
 		WHERE TEST_CD = #{testCd}
 	</select>
 
-	<!-- 오더세트 추가 모달에서 처방 선택시 해당 처방에 대한 정보를 가져옴 -->
+	<!-- 오더세트를 반영할 때 선택한 노드가 처방이면 해당 처방에 대한 정보를 가져오고 처방오더 테이블에 동적으로 출력 -->
 	<select id="getMedicineVODetail" resultType="medicineVO">
 		SELECT * FROM MEDICINE
 		WHERE MEDI_CD = #{mediCd}
 	</select>
 
-	<!-- 오더세트 추가 모달에서 치료 선택시 해당 치료에 대한 정보를 가져옴 -->
+	<!-- 오더세트를 반영할 때 선택한 노드가 치료면 해당 치료에 대한 정보를 가져오고 치료오더 테이블에 동적으로 출력 -->
 	<select id="getTreatmentVODetail" resultType="treatmentVO">
 		SELECT * FROM TREATMENT
 		WHERE TM_CD = #{tmCd}
