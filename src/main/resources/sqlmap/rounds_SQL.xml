@@ -14,18 +14,18 @@
 	<!-- 입원번호로 해당 입원에서 받은 회진들의 심플 리스트를 뽑아옴 -->
 	<select id="simpleRoundsChartList" resultMap="admissionChartMap">
 		SELECT
-            AC.ADMI_NO,
-            AC.ADMI_REASON,
+            		AC.ADMI_NO,
+            		AC.ADMI_REASON,
 			C.CLINIC_NO,
 			C.CLINIC_DT,
 			C.CLINIC_OPINION,
-            ID.IJ_CD,
-            TOC.TEST_CD,
-            MO.MEDI_CD,
-            TROC.TM_CD
+            		ID.IJ_CD,
+            		TOC.TEST_CD,
+            		MO.MEDI_CD,
+            		TROC.TM_CD
 		FROM ADMISSION_CHART AC
-        LEFT JOIN CLINIC_CHART C ON C.ADMI_CD = AC.ADMI_NO
-        LEFT JOIN INJURY_DIAGNOSIS ID ON ID.CLINIC_NO = C.CLINIC_NO
+        	LEFT JOIN CLINIC_CHART C ON C.ADMI_CD = AC.ADMI_NO
+        	LEFT JOIN INJURY_DIAGNOSIS ID ON ID.CLINIC_NO = C.CLINIC_NO
 		LEFT JOIN TEST_ORDER TOC ON C.CLINIC_NO = TOC.CLINIC_NO
 		LEFT JOIN MEDICINE_ORDER MO ON C.CLINIC_NO = MO.CLINIC_NO
 		LEFT JOIN TREATMENT_ORDER TROC ON C.CLINIC_NO = TROC.CLINIC_NO
@@ -35,18 +35,18 @@
 	<!-- 입원번호로 현재 입원정보 및 현재 입원에서 받은 모든 심플회진정보를 가져옴 -->
 	<select id="currentSimpleAdmissionChartList" resultMap="simpleAdmissionChartMap">
 		SELECT 
-            AC.ADMI_NO, 
-            AC.ADMI_INDT, 
-            AC.ADMI_EXP_OUTDT, 
-            E.EMP_NAME AS ADMI_EMP_NAME,
-            C.CLINIC_NO,
-            C.CLINIC_STATE,
-            C.CLINIC_DT
+           		AC.ADMI_NO, 
+            		AC.ADMI_INDT, 
+            		AC.ADMI_EXP_OUTDT, 
+            		E.EMP_NAME AS ADMI_EMP_NAME,
+            		C.CLINIC_NO,
+            		C.CLINIC_STATE,
+            		C.CLINIC_DT
 		FROM ADMISSION_CHART AC
 		JOIN EMPLOYEE E ON AC.EMP_NO = E.EMP_NO 
-        LEFT JOIN CLINIC_CHART C ON AC.ADMI_NO = C.ADMI_CD
+        	LEFT JOIN CLINIC_CHART C ON AC.ADMI_NO = C.ADMI_CD
 		WHERE AC.ADMI_NO = #{admiNo}
-        ORDER BY CLINIC_DT
+        	ORDER BY CLINIC_DT
 	</select>
 	
 	<!-- 회진차트 insert시켜줌 -->
@@ -57,11 +57,13 @@
 		INSERT INTO CLINIC_CHART(CLINIC_NO, CLINIC_OPINION, EMP_NO, PA_NO, ADMI_CD, CLINIC_STATE, CLINIC_DT)
 		VALUES(#{clinicNo}, #{clinicOpinion}, #{empNo}, #{paNo}, #{admiCd}, #{clinicState}, sysdate)
 	</insert>
-	
+
+	<!-- 회진차트 update -->
 	<update id="updateRoundsChart" parameterType="clinicChartVO">
 		UPDATE CLINIC_CHART
-		SET CLINIC_OPINION = #{clinicOpinion},
-    		CLINIC_STATE = #{clinicState}
+		SET 
+			CLINIC_OPINION = #{clinicOpinion},
+	    		CLINIC_STATE = #{clinicState}
 		WHERE CLINIC_NO = #{clinicNo}
 	</update>
 	
