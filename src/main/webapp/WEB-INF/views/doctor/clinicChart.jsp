@@ -2578,114 +2578,114 @@ $(function(){
  		
  		data = [];
  		
-        $.ajax({
-            url: "/orderSet/getOrderSetList",
-            dataType: "json",
-            type: "post",
-            beforeSend:function(xhr){
+        	$.ajax({
+            		url: "/orderSet/getOrderSetList",
+            		dataType: "json",
+            		type: "post",
+            		beforeSend:function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
 			},
-            success: function(rst) {
+            		success: function(rst) {
             	
-            	console.log("불러온 오더세트VO 리스트 : ", rst);
+            			console.log("불러온 오더세트VO 리스트 : ", rst);
             	
-                $.each(rst, function (idx, chart) {
+                		$.each(rst, function (idx, chart) {
                 	
-                	// 트리뷰 한 줄에대한 정보를 tempObj에 저장
-                    let tempObj = {
-                        id: chart.orderSetCd,
-                        parent: chart.orderSetParcd,
-                        text: chart.orderSetNm,
-                        osty: chart.orderSetType,
-                        orderCode: chart.orderSetOrdcd,
-                        type: "file"
-                    };
+	                		// 트리뷰 한 줄에대한 정보를 tempObj에 저장
+	                   		let tempObj = {
+	                        		id: chart.orderSetCd,
+	                        		parent: chart.orderSetParcd,
+	                        		text: chart.orderSetNm,
+	                        		osty: chart.orderSetType,
+	                        		orderCode: chart.orderSetOrdcd,
+	                        		type: "file"
+	                    		};
                 	
-                    if (tempObj.orderCode == null){
-                    	tempObj.orderCode = "";
-                    }
+                    			if (tempObj.orderCode == null){
+                    				tempObj.orderCode = "";
+                    			}
                     
-                    // 오더세트 타입이 오더세트 오더파일이면
-                    if (tempObj.osty == "OSTY01") {
-                        tempObj.type = "folder";
-                    }
-                    // 오더세트 타입이 상병진단이면
-                    if (tempObj.osty == "OSTY02") {
-                        tempObj.type = "injury";
-                    }
-                    // 오더세트 타입이 약처방이면
-                    if (tempObj.osty == "OSTY03") {
-                        tempObj.type = "medicine";
-                    }
-                    // 오더세트 타입이 주사면
-                    if (tempObj.osty == "OSTY04") {
-                        tempObj.type = "injection";
-                    }
-                    // 오더세트 타입이 검사면
-                    if (tempObj.osty == "OSTY05") {
-                        tempObj.type = "test";
-                    }
-                    // 오더세트 타입이 치료면
-                    if (tempObj.osty == "OSTY06") {
-                        tempObj.type = "treatment";
-                    }
+		                    	// 오더세트 타입이 오더세트 오더파일이면
+		                    	if (tempObj.osty == "OSTY01") {
+		                        	tempObj.type = "folder";
+		                    	}
+		                    	// 오더세트 타입이 상병진단이면
+		                    	if (tempObj.osty == "OSTY02") {
+		                        	tempObj.type = "injury";
+		                    	}
+		                    	// 오더세트 타입이 약처방이면
+		                    	if (tempObj.osty == "OSTY03") {
+		                        	tempObj.type = "medicine";
+		                    	}
+		                    	// 오더세트 타입이 주사면
+		                    	if (tempObj.osty == "OSTY04") {
+		                        	tempObj.type = "injection";
+		                    	}
+			                    // 오더세트 타입이 검사면
+		                   	if (tempObj.osty == "OSTY05") {
+		                        	tempObj.type = "test";
+		                    	}
+		                    	// 오더세트 타입이 치료면
+		                    	if (tempObj.osty == "OSTY06") {
+		                        	tempObj.type = "treatment";
+		                    	}
                     
-                   	// 이렇게 설정된 노드1개의 정보를 위에서 선언한 data배열에 추가
-                    data.push(tempObj);
-                });
+                   			// 이렇게 설정된 노드1개의 정보를 위에서 선언한 data배열에 추가
+                   			data.push(tempObj);
+                		});
                 
-                // js트리를 한번 부순 후 생성
-                $(".orderset-body").jstree('destroy');
+                		// 기존의 js트리를 한번 부순 후 생성
+                		$(".orderset-body").jstree('destroy');
                 
-                // 위에서 설정된 data를 이용해 트리구조 생성
-                $(".orderset-body").jstree({
-                    core: {
-                        data: data,
-                        check_callback: true
-                    },
-                    plugins : ["search", "types", "checkbox"],
-                    types : {
-                        'folder' : {
-                        	"checkbox" : false,
-                            "icon" : "/resources/images/icons/icon-folder.png"
-                        },
-                        'file' : {
-                            "icon" : "/resources/images/icons/icon-file.png",
-                        },
-                        'injury' : {
-                            "icon" : "/resources/images/icons/icon-injury.png",
-                        },
-                        'medicine' : {
-                            "icon" : "/resources/images/icons/icon-medicine.png",
-                        },
-                        'treatment' : {
-                            "icon" : "/resources/images/icons/icon-treatment.png",
-                        },
-                        'test' : {
-                            "icon" : "/resources/images/icons/icon-test.png",
-                        },
-                        'injection' : {
-                        	"icon" : "/resources/images/icons/icon-injection.png",
-                        },
-                        default: {
-                            "icon": "/resources/images/icons/icon-file.png"
-                        }
-                    }
-                });
-            },
-            error: function(xhr, status, error){
-				console.log('Error:', xhr, status, error);
-			}
+                		// 위에서 설정된 data를 이용해 트리구조 생성
+                		$(".orderset-body").jstree({
+                    			core: {
+                        			data: data,
+                        			check_callback: true
+                    			},
+                    			plugins : ["search", "types", "checkbox"],
+                    			types : {
+                        			'folder' : {
+                        				"checkbox" : false,
+                            				"icon" : "/resources/images/icons/icon-folder.png"
+                        			},
+			                        'file' : {
+			                            "icon" : "/resources/images/icons/icon-file.png",
+			                        },
+			                        'injury' : {
+			                            "icon" : "/resources/images/icons/icon-injury.png",
+			                        },
+			                        'medicine' : {
+			                            "icon" : "/resources/images/icons/icon-medicine.png",
+			                        },
+			                        'treatment' : {
+			                            "icon" : "/resources/images/icons/icon-treatment.png",
+			                        },
+			                        'test' : {
+			                            "icon" : "/resources/images/icons/icon-test.png",
+			                        },
+			                        'injection' : {
+			                        	"icon" : "/resources/images/icons/icon-injection.png",
+			                        },
+			                        default: {
+			                            "icon": "/resources/images/icons/icon-file.png"
+			                        }
+                   			}
+                		});
+            		},
+            	error: function(xhr, status, error){
+			console.log('Error:', xhr, status, error);
+		}
         });
     }
  	
  	
- 	// 오더세트 추가 버튼 누를 시 모달창 띄우기
+	// 오더세트 추가 버튼 누를 시 모달창 띄우기
  	$(document).on('click', '#createOrderset', function(){
-        $('#createOrdersetModal').modal('show');
-        // 오더세트를 연속으로 추가할 때 이전에 남아있던 배열이 있을 수 있어서 한번 초기화
-        data = [];
-    });
+        	$('#createOrdersetModal').modal('show');
+        	// 오더세트를 연속으로 추가할 때 이전에 남아있던 배열이 있을 수 있어서 한번 초기화
+        	data = [];
+    	});
 
  	
 	// 모달 저장버튼 누를시 
